@@ -17,13 +17,19 @@
   "dependencies": {
     "firebase": "^11.6.1",
     "pinia": "^3.0.1",
+    "vee-validate": "^4.5.8",
     "vue": "^3.5.13",
     "vue-router": "^4.5.0",
-    "vuefire": "^3.2.1"
+    "vue-toastification": "^2.0.0-rc.5",
+    "vuefire": "^3.2.1",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
+    "@iconify-json/heroicons": "^1.2.2",
+    "@iconify-json/logos": "^1.2.4",
     "@tsconfig/node22": "^22.0.1",
     "@types/node": "^22.14.0",
+    "@unocss/preset-icons": "^66.1.0-beta.12",
     "@unocss/vite": "^66.1.0-beta.12",
     "@vitejs/plugin-vue": "^5.2.3",
     "@vue/eslint-config-prettier": "^10.2.0",
