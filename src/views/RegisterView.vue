@@ -1,14 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { Form, Field, ErrorMessage, type GenericFormValues } from 'vee-validate';
-import * as yup from 'yup';
-import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/firebase';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
+import {
+  ErrorMessage,
+  Field,
+  Form,
+  type GenericFormValues,
+} from 'vee-validate';
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import * as yup from 'yup';
 
 const router = useRouter();
 const toast = useToast();

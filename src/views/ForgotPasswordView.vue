@@ -1,13 +1,18 @@
 <script setup lang="ts">
+import { auth } from '@/firebase';
+import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
+import AuthLayout from '@/layouts/AuthLayout.vue';
+import { sendPasswordResetEmail, type AuthError } from 'firebase/auth';
+import {
+  ErrorMessage,
+  Field,
+  Form,
+  type GenericFormValues,
+} from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Form, Field, ErrorMessage, type GenericFormValues } from 'vee-validate';
-import * as yup from 'yup';
-import { sendPasswordResetEmail, type AuthError } from 'firebase/auth';
-import { auth } from '@/firebase';
 import { useToast } from 'vue-toastification';
-import AuthLayout from '@/layouts/AuthLayout.vue';
-import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
+import * as yup from 'yup';
 
 const router = useRouter();
 const toast = useToast();
@@ -16,7 +21,12 @@ const resetError = ref<string | null>(null);
 const processing = ref(false);
 
 const schema = yup.object({
-  email: yup.string().trim().lowercase().required('Email is required').email('Please enter a valid email address'),
+  email: yup
+    .string()
+    .trim()
+    .lowercase()
+    .required('Email is required')
+    .email('Please enter a valid email address'),
 });
 
 const handlePasswordReset = async (values: GenericFormValues) => {
@@ -38,7 +48,6 @@ const handlePasswordReset = async (values: GenericFormValues) => {
     setTimeout(() => {
       router.push({ name: 'login' });
     }, 3000);
-
   } catch (error) {
     console.error('Password reset error:', error);
     const authError = error as AuthError;
@@ -48,8 +57,8 @@ const handlePasswordReset = async (values: GenericFormValues) => {
         resetError.value = 'No account found with this email address.';
         break;
       case 'auth/invalid-email':
-         resetError.value = 'Please enter a valid email address.';
-         break;
+        resetError.value = 'Please enter a valid email address.';
+        break;
       default:
         resetError.value = 'An unexpected error occurred. Please try again.';
     }
