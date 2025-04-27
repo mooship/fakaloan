@@ -2,13 +2,9 @@
 import { auth } from '@/firebase';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import type { GenericFormValues } from '@/types/forms.types';
 import { sendPasswordResetEmail, type AuthError } from 'firebase/auth';
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  type GenericFormValues,
-} from 'vee-validate';
+import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -33,7 +29,7 @@ const handlePasswordReset = async (values: GenericFormValues) => {
   resetError.value = null;
   processing.value = true;
 
-  const formValues = values as ForgotPasswordForm;
+  const formValues = values as unknown as ForgotPasswordForm;
 
   try {
     console.log('Attempting password reset for:', formValues.email);

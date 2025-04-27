@@ -1,15 +1,12 @@
 <script setup lang="ts">
+import { LanguageCode, Theme } from '@/enums/user.enums';
 import { auth, db } from '@/firebase';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
+import type { GenericFormValues } from '@/types/forms.types';
 import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import {
-  ErrorMessage,
-  Field,
-  Form,
-  type GenericFormValues,
-} from 'vee-validate';
+import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -62,11 +59,22 @@ const registerUser = async (values: GenericFormValues) => {
     const userDocRef = doc(db, 'users', user.uid);
     await setDoc(userDocRef, {
       uid: user.uid,
-      name: formValues.name.trim(),
+      name: user.displayName || 'Google User',
       email: user.email,
       createdAt: serverTimestamp(),
       cellphone: null,
       isPremium: false,
+      preferences: { theme: Theme.Light },
+      preferredLanguage: LanguageCode.English,
+      paystackCustomerId: null,
+      paystackSubscriptionId: null,
+      paystackPlanId: null,
+      subscriptionStatus: null,
+      subscriptionStartDate: null,
+      nextBillingDate: null,
+      lastPaymentDate: null,
+      lastPaymentAmount: null,
+      trialEndsAt: null,
     });
     console.log('Firestore document created successfully.');
 
