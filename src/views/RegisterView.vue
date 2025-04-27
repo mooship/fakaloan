@@ -4,6 +4,7 @@ import { auth, db } from '@/firebase';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
+import { useTitle } from '@vueuse/core';
 import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
 import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { ErrorMessage, Field, Form } from 'vee-validate';
@@ -11,6 +12,8 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+
+useTitle('Register | Fakaloan');
 
 const router = useRouter();
 const toast = useToast();

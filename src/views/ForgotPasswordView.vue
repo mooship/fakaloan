@@ -3,12 +3,15 @@ import { auth } from '@/firebase';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
+import { useTitle } from '@vueuse/core';
 import { sendPasswordResetEmail, type AuthError } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+
+useTitle('Forgot Password | Fakaloan');
 
 const router = useRouter();
 const toast = useToast();

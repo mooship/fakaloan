@@ -4,6 +4,7 @@ import { auth, db } from '@/firebase';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
+import { useTitle } from '@vueuse/core';
 import {
   GoogleAuthProvider,
   signInWithEmailAndPassword,
@@ -16,6 +17,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+useTitle('Login | Fakaloan');
 
 const router = useRouter();
 const toast = useToast();
