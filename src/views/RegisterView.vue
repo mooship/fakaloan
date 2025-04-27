@@ -1,14 +1,14 @@
 <script setup lang="ts">
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+import { Form, Field, ErrorMessage, type GenericFormValues } from 'vee-validate';
+import * as yup from 'yup';
+import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { auth, db } from '@/firebase';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
-import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
-import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
-import * as yup from 'yup';
 
 const router = useRouter();
 const toast = useToast();
@@ -32,20 +32,23 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
-const registerUser = async (values: RegisterFormValues) => {
+const registerUser = async (values: GenericFormValues) => {
   registrationError.value = null;
 
-  if (!values.email || !values.password || !values.name) {
+  const formValues = values as RegisterFormValues;
+
+  if (!formValues.email || !formValues.password || !formValues.name) {
     registrationError.value = 'Please fill in all required fields.';
+    toast.error('Please fill in all required fields.');
     return;
   }
 
   try {
-    console.log('Attempting Firebase registration for:', values.email);
+    console.log('Attempting Firebase registration for:', formValues.email);
     const userCredential = await createUserWithEmailAndPassword(
       auth,
-      values.email,
-      values.password
+      formValues.email,
+      formValues.password
     );
     const user = userCredential.user;
     console.log('Firebase Auth user created:', user.uid);
@@ -54,7 +57,7 @@ const registerUser = async (values: RegisterFormValues) => {
     const userDocRef = doc(db, 'users', user.uid);
     await setDoc(userDocRef, {
       uid: user.uid,
-      name: values.name.trim(),
+      name: formValues.name.trim(),
       email: user.email,
       createdAt: serverTimestamp(),
       cellphone: null,
@@ -162,7 +165,7 @@ const goToLogin = () => {
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
             ]"
-            placeholder="Password (min. 8 characters)"
+            placeholder="Minimum 8 characters"
             aria-describedby="password-error"
           />
         </Field>
@@ -191,7 +194,7 @@ const goToLogin = () => {
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
             ]"
-            placeholder="Confirm Password"
+            placeholder="Confirm your password"
             aria-describedby="passwordConfirmation-error"
           />
         </Field>
