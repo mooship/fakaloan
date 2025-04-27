@@ -19,7 +19,6 @@ service cloud.firestore {
                       && request.resource.data.createdAt == resource.data.createdAt
                       && request.resource.data.isPremium == resource.data.isPremium;
 
-
       allow delete: if false;
     }
   }
