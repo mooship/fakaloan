@@ -23,7 +23,7 @@ coverage/
 
 # Environment variables & Local overrides
 *.local
-.env* # Includes .env files potentially holding Firebase API keys/config
+.env*
 
 # Cypress artifacts
 /cypress/videos/
