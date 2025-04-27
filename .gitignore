@@ -14,7 +14,7 @@ lerna-debug.log*
 node_modules/
 
 # Build artifacts / Output
-dist/ # Includes build artifacts, potentially from Functions
+dist/
 dist-ssr/
 *.tsbuildinfo
 

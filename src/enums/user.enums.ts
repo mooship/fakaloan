@@ -3,11 +3,8 @@
  */
 export enum LanguageCode {
   English = 'en',
-  Afrikaans = 'af',
   Zulu = 'zu',
   Xhosa = 'xh',
-  Sotho = 'st',
-  Tswana = 'tn',
 }
 
 /**
