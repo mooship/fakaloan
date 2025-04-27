@@ -1,0 +1,93 @@
+{
+  "common": {
+    "emailLabel": "Email address",
+    "passwordLabel": "Password",
+    "confirmPasswordLabel": "Confirm Password",
+    "nameLabel": "Full Name",
+    "logout": "Logout",
+    "loading": "Loading...",
+    "processing": "Processing...",
+    "signingIn": "Signing in...",
+    "sending": "Sending..."
+  },
+  "home": {
+    "title": "Welcome to Fakaloan!",
+    "loggedInAs": "You are logged in as:",
+    "loadingUser": "Loading user information...",
+    "logoutButton": "Logout"
+  },
+  "login": {
+    "title": "Login to Fakaloan",
+    "forgotPasswordLink": "Forgot password?",
+    "submitButton": "Sign in",
+    "submitButtonProcessing": "Signing in...",
+    "orContinueWith": "Or continue with",
+    "googleButton": "Sign in with Google",
+    "googleButtonProcessing": "Signing in...",
+    "registerPrompt": "Don't have an account?",
+    "registerLink": "Create one"
+  },
+  "register": {
+    "title": "Create Fakaloan Account",
+    "passwordHint": "Minimum 8 characters",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "submitButton": "Create Account",
+    "submitButtonProcessing": "Creating Account...",
+    "loginPrompt": "Already have an account?",
+    "loginLink": "Sign in"
+  },
+  "forgotPassword": {
+    "title": "Reset Password",
+    "successMessage": "Password reset email sent successfully to the provided address. Please check your inbox and spam folder. You will be redirected shortly.",
+    "prompt": "Enter the email address associated with your account, and we'll send you a link to reset your password.",
+    "submitButton": "Send Reset Link",
+    "submitButtonProcessing": "Sending...",
+    "backToLoginLink": "Back to Login"
+  },
+  "errors": {
+    "validation": {
+      "required": "{field} is required",
+      "email": "Please enter a valid email address",
+      "min": "Password must be at least 8 characters",
+      "oneOf": "Passwords must match",
+      "nameRequired": "Name is required",
+      "emailRequired": "Email is required",
+      "passwordRequired": "Password is required",
+      "confirmPasswordRequired": "Please confirm your password"
+    },
+    "login": {
+      "emailPasswordRequired": "Email and password are required.",
+      "invalidEmail": "Invalid email address format.",
+      "userDisabled": "This user account has been disabled.",
+      "invalidCredentials": "Invalid email or password.",
+      "unexpectedError": "An unexpected error occurred during login.",
+      "googleFail": "Failed to sign in with Google. Please try again.",
+      "googleCancelled": "Google sign-in cancelled.",
+      "googleAccountExists": "An account already exists with this email using a different sign-in method.",
+      "googleUnexpectedError": "An unexpected error occurred during Google sign-in.",
+      "googleProfileSaveError": "Login successful, but couldn't save profile details.",
+      "loginFailedFallback": "Login failed"
+    },
+    "register": {
+      "allFieldsRequired": "Please fill in all required fields.",
+      "emailInUse": "This email address is already registered.",
+      "invalidEmail": "Please enter a valid email address.",
+      "weakPassword": "Password is too weak. It must be at least 8 characters long.",
+      "unexpectedError": "An unexpected error occurred during registration. Please try again.",
+      "registrationFailedFallback": "Registration failed"
+    },
+    "forgotPassword": {
+      "userNotFound": "No account found with this email address.",
+      "invalidEmail": "Please enter a valid email address.",
+      "unexpectedError": "An unexpected error occurred. Please try again.",
+      "passwordResetFailedFallback": "Password reset failed."
+    }
+  },
+  "toast": {
+    "logoutSuccess": "You have been logged out.",
+    "logoutFailed": "Logout failed. Please try again.",
+    "loginSuccess": "Login successful!",
+    "registrationSuccess": "Registration successful! Please log in.",
+    "passwordResetSent": "Password reset email sent. Please check your inbox (and spam folder)."
+  }
+}

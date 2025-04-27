@@ -1,0 +1,93 @@
+{
+  "common": {
+    "emailLabel": "Idilesi ye-imeyile",
+    "passwordLabel": "Igama lokugqitha",
+    "confirmPasswordLabel": "Qinisekisa igama lokugqitha",
+    "nameLabel": "Igama elipheleleyo",
+    "logout": "Phuma",
+    "loading": "Iyalayisha...",
+    "processing": "Iyaqhuba...",
+    "signingIn": "Ngena...",
+    "sending": "Iyathumela..."
+  },
+  "home": {
+    "title": "Wamkelekile kwi-Fakaloan!",
+    "loggedInAs": "Ungene njengo:",
+    "loadingUser": "Ilayisha inkcazelo yomsebenzisi...",
+    "logoutButton": "Phuma"
+  },
+  "login": {
+    "title": "Ngena kwi-Fakaloan",
+    "forgotPasswordLink": "Ulibele igama lokugqitha?",
+    "submitButton": "Ngena",
+    "submitButtonProcessing": "Ngena...",
+    "orContinueWith": "Okanye qhubeka no",
+    "googleButton": "Ngena ngeGoogle",
+    "googleButtonProcessing": "Ngena...",
+    "registerPrompt": "Awunayo iakhawunti?",
+    "registerLink": "Yenza enye"
+  },
+  "register": {
+    "title": "Yenza iAkhawunti yeFakaloan",
+    "passwordHint": "Ubuncinane oonobumba abasi-8",
+    "confirmPasswordPlaceholder": "Qinisekisa igama lakho lokugqitha",
+    "submitButton": "Yenza iAkhawunti",
+    "submitButtonProcessing": "Yenza iAkhawunti...",
+    "loginPrompt": "Sele unayo iakhawunti?",
+    "loginLink": "Ngena"
+  },
+  "forgotPassword": {
+    "title": "Cwangcisa kwakhona igama lokugqitha",
+    "successMessage": "I-imeyile yokuseta kwakhona igama lokugqitha ithunyelwe ngempumelelo kwidilesi enikiweyo. Nceda ujonge ibhokisi yakho engenayo kunye nefolda yogaxekile. Uza kuthunyelwa kwakhona kungekudala.",
+    "prompt": "Faka idilesi ye-imeyile ehambelana neakhawunti yakho, kwaye siza kukuthumelela ikhonkco lokuseta kwakhona igama lakho lokugqitha.",
+    "submitButton": "Thumela ikhonkco lokuseta kwakhona",
+    "submitButtonProcessing": "Iyathumela...",
+    "backToLoginLink": "Buyela kuNgeno"
+  },
+  "errors": {
+    "validation": {
+      "required": "{field} iyafuneka",
+      "email": "Nceda ufake idilesi ye-imeyile esebenzayo",
+      "min": "Igama lokugqitha kufuneka libe nobuncinane oonobumba abasi-8",
+      "oneOf": "Amagama okugqitha kufuneka afane",
+      "nameRequired": "Igama liyafuneka",
+      "emailRequired": "Idilesi ye-imeyile iyafuneka",
+      "passwordRequired": "Igama lokugqitha liyafuneka",
+      "confirmPasswordRequired": "Nceda uqinisekise igama lakho lokugqitha"
+    },
+    "login": {
+      "emailPasswordRequired": "Idilesi ye-imeyile kunye negama lokugqitha ziyafuneka.",
+      "invalidEmail": "Ifomathi yedilesi ye-imeyile ayilunganga.",
+      "userDisabled": "Le akhawunti yomsebenzisi ivaliwe.",
+      "invalidCredentials": "Idilesi ye-imeyile okanye igama lokugqitha alilunganga.",
+      "unexpectedError": "Kukho impazamo engalindelekanga eyenzekileyo ngexesha lokungena.",
+      "googleFail": "Ayiphumelelanga ukungena ngeGoogle. Nceda uzame kwakhona.",
+      "googleCancelled": "Ukungena ngeGoogle kurhoxisiwe.",
+      "googleAccountExists": "Iakhawunti sele ikhona ngale dilesi ye-imeyile kusetyenziswa indlela eyahlukileyo yokungena.",
+      "googleUnexpectedError": "Kukho impazamo engalindelekanga eyenzekileyo ngexesha lokungena ngeGoogle.",
+      "googleProfileSaveError": "Ukungena kuphumelele, kodwa ayikwazanga ukugcina iinkcukacha zeprofayile.",
+      "loginFailedFallback": "Ukungena akuphumelelanga"
+    },
+    "register": {
+      "allFieldsRequired": "Nceda ugcwalise onke amacandelo afunekayo.",
+      "emailInUse": "Le dilesi ye-imeyile sele ibhalisiwe.",
+      "invalidEmail": "Nceda ufake idilesi ye-imeyile esebenzayo.",
+      "weakPassword": "Igama lokugqitha libuthathaka kakhulu. Kufuneka libe nobuncinane oonobumba abasi-8.",
+      "unexpectedError": "Kukho impazamo engalindelekanga eyenzekileyo ngexesha lobhaliso. Nceda uzame kwakhona.",
+      "registrationFailedFallback": "Ubhaliso aluphumelelanga"
+    },
+    "forgotPassword": {
+      "userNotFound": "Akukho akhawunti ifunyenweyo ngale dilesi ye-imeyile.",
+      "invalidEmail": "Nceda ufake idilesi ye-imeyile esebenzayo.",
+      "unexpectedError": "Kukho impazamo engalindelekanga eyenzekileyo. Nceda uzame kwakhona.",
+      "passwordResetFailedFallback": "Ukuseta kwakhona igama lokugqitha akuphumelelanga."
+    }
+  },
+  "toast": {
+    "logoutSuccess": "Uphumile.",
+    "logoutFailed": "Ukuphuma akuphumelelanga. Nceda uzame kwakhona.",
+    "loginSuccess": "Ukungena kuphumelele!",
+    "registrationSuccess": "Ubhaliso luphumelele! Nceda ungene.",
+    "passwordResetSent": "I-imeyile yokuseta kwakhona igama lokugqitha ithunyelwe. Nceda ujonge ibhokisi yakho engenayo (kunye nefolda yogaxekile)."
+  }
+}

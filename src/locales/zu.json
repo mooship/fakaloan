@@ -1,0 +1,93 @@
+{
+  "common": {
+    "emailLabel": "Ikheli le-imeyili",
+    "passwordLabel": "Iphasiwedi",
+    "confirmPasswordLabel": "Qinisekisa Iphasiwedi",
+    "nameLabel": "Igama eligcwele",
+    "logout": "Phuma",
+    "loading": "Iyalayisha...",
+    "processing": "Iyacubungula...",
+    "signingIn": "Ngena ngemvume...",
+    "sending": "Iyathumela..."
+  },
+  "home": {
+    "title": "Siyakwamukela ku-Fakaloan!",
+    "loggedInAs": "Ungene ngemvume njengo:",
+    "loadingUser": "Ilayisha imininingwane yomsebenzisi...",
+    "logoutButton": "Phuma"
+  },
+  "login": {
+    "title": "Ngena ku-Fakaloan",
+    "forgotPasswordLink": "Ukhohlwe iphasiwedi?",
+    "submitButton": "Ngena ngemvume",
+    "submitButtonProcessing": "Ngena ngemvume...",
+    "orContinueWith": "Noma qhubeka no",
+    "googleButton": "Ngena nge-Google",
+    "googleButtonProcessing": "Ngena ngemvume...",
+    "registerPrompt": "Awunayo i-akhawunti?",
+    "registerLink": "Dala eyodwa"
+  },
+  "register": {
+    "title": "Dala i-Akhawunti ye-Fakaloan",
+    "passwordHint": "Okungenani izinhlamvu eziyi-8",
+    "confirmPasswordPlaceholder": "Qinisekisa iphasiwedi yakho",
+    "submitButton": "Dala i-Akhawunti",
+    "submitButtonProcessing": "Idala i-Akhawunti...",
+    "loginPrompt": "Usuvele unayo i-akhawunti?",
+    "loginLink": "Ngena ngemvume"
+  },
+  "forgotPassword": {
+    "title": "Setha kabusha Iphasiwedi",
+    "successMessage": "I-imeyili yokusetha kabusha iphasiwedi ithunyelwe ngempumelelo ekhelini elinikeziwe. Sicela uhlole ibhokisi lakho lokungenayo kanye nefolda yogaxekile. Uzoqondiswa kabusha maduze.",
+    "prompt": "Faka ikheli le-imeyili elihlotshaniswa ne-akhawunti yakho, futhi sizokuthumelela isixhumanisi sokusetha kabusha iphasiwedi yakho.",
+    "submitButton": "Thumela Isixhumanisi Sokusetshwa Kabusha",
+    "submitButtonProcessing": "Iyathumela...",
+    "backToLoginLink": "Buyela Ekungeneni"
+  },
+  "errors": {
+    "validation": {
+      "required": "{field} iyadingeka",
+      "email": "Sicela ufake ikheli le-imeyili elivumelekile",
+      "min": "Iphasiwedi kumele okungenani ibe nezinhlamvu eziyi-8",
+      "oneOf": "Amaphasiwedi kumele afane",
+      "nameRequired": "Igama liyadingeka",
+      "emailRequired": "Ikheli le-imeyili liyadingeka",
+      "passwordRequired": "Iphasiwedi iyadingeka",
+      "confirmPasswordRequired": "Sicela uqinisekise iphasiwedi yakho"
+    },
+    "login": {
+      "emailPasswordRequired": "Ikheli le-imeyili nephasiwedi kuyadingeka.",
+      "invalidEmail": "Ifomethi yekheli le-imeyili ayilungile.",
+      "userDisabled": "Le akhawunti yomsebenzisi ikhutshaziwe.",
+      "invalidCredentials": "Ikheli le-imeyili noma iphasiwedi ayilungile.",
+      "unexpectedError": "Kwenzeke iphutha elingalindelekile ngesikhathi sokungena.",
+      "googleFail": "Yehlulekile ukungena nge-Google. Sicela uzame futhi.",
+      "googleCancelled": "Ukungena nge-Google kukhanseliwe.",
+      "googleAccountExists": "I-akhawunti isivele ikhona ngaleli kheli le-imeyili kusetshenziswa indlela yokungena ehlukile.",
+      "googleUnexpectedError": "Kwenzeke iphutha elingalindelekile ngesikhathi sokungena nge-Google.",
+      "googleProfileSaveError": "Ukungena ngemvume kuphumelele, kodwa yehlulekile ukugcina imininingwane yephrofayili.",
+      "loginFailedFallback": "Ukungena kwehlulekile"
+    },
+    "register": {
+      "allFieldsRequired": "Sicela ugcwalise zonke izinkambu ezidingekayo.",
+      "emailInUse": "Leli kheli le-imeyili selivele libhalisiwe.",
+      "invalidEmail": "Sicela ufake ikheli le-imeyili elivumelekile.",
+      "weakPassword": "Iphasiwedi ibuthakathaka kakhulu. Kumele okungenani ibe nezinhlamvu eziyi-8.",
+      "unexpectedError": "Kwenzeke iphutha elingalindelekile ngesikhathi sokubhalisa. Sicela uzame futhi.",
+      "registrationFailedFallback": "Ukubhalisa kwehlulekile"
+    },
+    "forgotPassword": {
+      "userNotFound": "Ayikho i-akhawunti etholakele ngaleli kheli le-imeyili.",
+      "invalidEmail": "Sicela ufake ikheli le-imeyili elivumelekile.",
+      "unexpectedError": "Kwenzeke iphutha elingalindelekile. Sicela uzame futhi.",
+      "passwordResetFailedFallback": "Ukusetha kabusha iphasiwedi kwehlulekile."
+    }
+  },
+  "toast": {
+    "logoutSuccess": "Uphumile.",
+    "logoutFailed": "Ukuphuma kwehlulekile. Sicela uzame futhi.",
+    "loginSuccess": "Ukungena kuphumelele!",
+    "registrationSuccess": "Ukubhalisa kuphumelele! Sicela ungene ngemvume.",
+    "passwordResetSent": "I-imeyili yokusetha kabusha iphasiwedi ithunyelwe. Sicela uhlole ibhokisi lakho lokungenayo (nefolda yogaxekile)."
+  }
+}

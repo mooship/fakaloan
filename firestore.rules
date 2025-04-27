@@ -2,8 +2,25 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if false;
+    match /users/{userId} {
+      function isOwner() {
+        return request.auth != null && request.auth.uid == userId;
+      }
+
+      allow create: if isOwner()
+                      && request.resource.data.uid == request.auth.uid
+                      && request.resource.data.isPremium == false;
+
+      allow read: if isOwner();
+
+      
+      allow update: if isOwner()
+                      && request.resource.data.uid == resource.data.uid
+                      && request.resource.data.createdAt == resource.data.createdAt
+                      && request.resource.data.isPremium == resource.data.isPremium;
+
+
+      allow delete: if false;
     }
   }
 }
