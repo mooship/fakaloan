@@ -9,3 +9,7 @@ export interface RegisterFormValues {
   password?: string | null;
   passwordConfirmation?: string | null;
 }
+
+export interface ForgotPasswordForm {
+  email: string;
+}

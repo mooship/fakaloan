@@ -44,7 +44,7 @@ const loginWithEmail = async (values: LoginFormValues) => {
     const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
     console.log('Successfully logged in:', userCredential.user);
     toast.success("Login successful!");
-    router.push('/home');
+    router.push('/');
   } catch (error) {
     console.error('Firebase email login error:', error);
     const authError = error as AuthError;
@@ -63,6 +63,7 @@ const loginWithEmail = async (values: LoginFormValues) => {
       default:
         loginError.value = 'An unexpected error occurred during login.';
     }
+    toast.error(loginError.value || 'Login failed');
   }
 };
 
@@ -96,13 +97,13 @@ const loginWithGoogle = async () => {
         console.error("Error creating Firestore document for Google user:", firestoreError);
         googleLoginError.value = "Login successful, but couldn't save profile details.";
         toast.success("Login successful!");
-        router.push('/home');
+        router.push('/');
         return;
       }
     }
 
     toast.success("Login successful!");
-    router.push('/home');
+    router.push('/');
 
   } catch (error) {
     console.error('Firebase Google login error:', error);
@@ -118,11 +119,16 @@ const loginWithGoogle = async () => {
         default:
             googleLoginError.value = 'An unexpected error occurred during Google sign-in.';
     }
+    toast.error(googleLoginError.value || 'Google sign-in failed');
   }
 };
 
 const goToRegister = () => {
-  router.push('/register');
+  router.push({ name: 'register' });
+};
+
+const goToForgotPassword = () => {
+  router.push({ name: 'forgot-password' });
 };
 </script>
 
@@ -145,13 +151,22 @@ const goToRegister = () => {
         </Field>
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
+
       <div>
-        <label for="password" class="form-label">Password</label>
+        <div class="flex items-center justify-between">
+          <label for="password" class="form-label">Password</label>
+          <div class="text-sm">
+            <button type="button" @click="goToForgotPassword" class="btn-link">
+              Forgot password?
+            </button>
+          </div>
+        </div>
         <Field id="password" name="password" type="password" autocomplete="current-password" v-slot="{ field, errors }" :validate-on-input="true">
           <input v-bind="field" type="password" :class="['form-input-base', errors.length ? 'form-input-invalid' : 'form-input-valid']" placeholder="Password" aria-describedby="password-error" />
         </Field>
         <ErrorMessage name="password" id="password-error" class="form-error-text" />
       </div>
+
       <div>
         <button type="submit" class="btn-primary">
           Sign in

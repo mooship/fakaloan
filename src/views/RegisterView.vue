@@ -78,6 +78,7 @@ const registerUser = async (values: RegisterFormValues) => {
       default:
         registrationError.value = 'An unexpected error occurred during registration. Please try again.';
     }
+    toast.error(registrationError.value || 'Registration failed.');
   }
 };
 
