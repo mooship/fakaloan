@@ -1,0 +1,32 @@
+# Logs
+logs
+*.log # Includes firebase-debug.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules # Includes functions/node_modules if using Firebase Functions
+.DS_Store
+dist # Includes build artifacts, potentially from Functions
+dist-ssr
+coverage
+*.local
+.env* # Includes .env files potentially holding Firebase API keys/config
+
+/cypress/videos/
+/cypress/screenshots/
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*.tsbuildinfo
+
