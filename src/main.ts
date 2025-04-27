@@ -1,18 +1,18 @@
-import '@unocss/reset/tailwind.css'
-import { createPinia } from 'pinia'
-import 'virtual:uno.css'
-import { createApp } from 'vue'
-import { VueFire, VueFireAuth } from 'vuefire'
-import App from './App.vue'
-import { firebaseApp } from './firebase'
-import router from './router'
-import "vue-toastification/dist/index.css"
-import Toast, { POSITION, type PluginOptions } from 'vue-toastification'
+import '@unocss/reset/tailwind.css';
+import { createPinia } from 'pinia';
+import 'virtual:uno.css';
+import { createApp } from 'vue';
+import Toast, { POSITION, type PluginOptions } from 'vue-toastification';
+import 'vue-toastification/dist/index.css';
+import { VueFire, VueFireAuth } from 'vuefire';
+import App from './App.vue';
+import { firebaseApp } from './firebase';
+import router from './router';
 
-const app = createApp(App)
+const app = createApp(App);
 
-app.use(createPinia())
-app.use(router)
+app.use(createPinia());
+app.use(router);
 
 const options: PluginOptions = {
   position: POSITION.TOP_RIGHT,
@@ -24,16 +24,16 @@ const options: PluginOptions = {
   draggablePercent: 0.6,
   showCloseButtonOnHover: false,
   hideProgressBar: true,
-  closeButton: "button",
+  closeButton: 'button',
   icon: true,
-  rtl: false
+  rtl: false,
 };
 
 app.use(VueFire, {
   firebaseApp,
-  modules: [VueFireAuth()]
-})
+  modules: [VueFireAuth()],
+});
 
 app.use(Toast, options);
 
-app.mount('#app')
+app.mount('#app');

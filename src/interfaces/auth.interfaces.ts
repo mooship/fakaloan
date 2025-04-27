@@ -1,6 +1,6 @@
 export interface LoginFormValues {
-  email?: string | null
-  password?: string | null
+  email?: string | null;
+  password?: string | null;
 }
 
 export interface RegisterFormValues {

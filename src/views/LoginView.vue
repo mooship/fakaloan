@@ -1,19 +1,19 @@
 <script setup lang="ts">
+import { auth, db } from '@/firebase';
+import type { LoginFormValues } from '@/interfaces/auth.interfaces';
+import AuthLayout from '@/layouts/AuthLayout.vue';
+import {
+  GoogleAuthProvider,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+  type AuthError,
+} from 'firebase/auth';
+import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
+import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { Form, Field, ErrorMessage } from 'vee-validate';
+import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
-import type { LoginFormValues } from '@/interfaces/auth.interfaces';
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-  type AuthError
-} from 'firebase/auth';
-import { doc, setDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { db, auth } from '@/firebase';
-import { useToast } from "vue-toastification";
-import AuthLayout from '@/layouts/AuthLayout.vue';
 
 const router = useRouter();
 const toast = useToast();
@@ -41,9 +41,13 @@ const loginWithEmail = async (values: LoginFormValues) => {
 
   try {
     console.log('Attempting Firebase email login with:', values.email);
-    const userCredential = await signInWithEmailAndPassword(auth, values.email, values.password);
+    const userCredential = await signInWithEmailAndPassword(
+      auth,
+      values.email,
+      values.password
+    );
     console.log('Successfully logged in:', userCredential.user);
-    toast.success("Login successful!");
+    toast.success('Login successful!');
     router.push('/');
   } catch (error) {
     console.error('Firebase email login error:', error);
@@ -76,13 +80,20 @@ const loginWithGoogle = async () => {
     console.log('Attempting Firebase Google login...');
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    console.log('Successfully logged in with Google:', user.uid, user.displayName);
+    console.log(
+      'Successfully logged in with Google:',
+      user.uid,
+      user.displayName
+    );
 
     const userDocRef = doc(db, 'users', user.uid);
     const userDocSnap = await getDoc(userDocRef);
 
     if (!userDocSnap.exists()) {
-      console.log('First time Google login, creating Firestore document for:', user.uid);
+      console.log(
+        'First time Google login, creating Firestore document for:',
+        user.uid
+      );
       try {
         await setDoc(userDocRef, {
           uid: user.uid,
@@ -94,30 +105,35 @@ const loginWithGoogle = async () => {
         });
         console.log('Firestore document created for Google user.');
       } catch (firestoreError) {
-        console.error("Error creating Firestore document for Google user:", firestoreError);
-        googleLoginError.value = "Login successful, but couldn't save profile details.";
-        toast.success("Login successful!");
+        console.error(
+          'Error creating Firestore document for Google user:',
+          firestoreError
+        );
+        googleLoginError.value =
+          "Login successful, but couldn't save profile details.";
+        toast.success('Login successful!');
         router.push('/');
         return;
       }
     }
 
-    toast.success("Login successful!");
+    toast.success('Login successful!');
     router.push('/');
-
   } catch (error) {
     console.error('Firebase Google login error:', error);
     const authError = error as AuthError;
     googleLoginError.value = 'Failed to sign in with Google. Please try again.';
     switch (authError.code) {
-        case 'auth/popup-closed-by-user':
-            googleLoginError.value = 'Google sign-in cancelled.';
-            break;
-        case 'auth/account-exists-with-different-credential':
-            googleLoginError.value = 'An account already exists with this email using a different sign-in method.';
-            break;
-        default:
-            googleLoginError.value = 'An unexpected error occurred during Google sign-in.';
+      case 'auth/popup-closed-by-user':
+        googleLoginError.value = 'Google sign-in cancelled.';
+        break;
+      case 'auth/account-exists-with-different-credential':
+        googleLoginError.value =
+          'An account already exists with this email using a different sign-in method.';
+        break;
+      default:
+        googleLoginError.value =
+          'An unexpected error occurred during Google sign-in.';
     }
     toast.error(googleLoginError.value || 'Google sign-in failed');
   }
@@ -143,11 +159,30 @@ const goToForgotPassword = () => {
       </div>
     </template>
 
-    <Form :validation-schema="schema" @submit="loginWithEmail" class="space-y-4">
+    <Form
+      :validation-schema="schema"
+      @submit="loginWithEmail"
+      class="space-y-4"
+    >
       <div>
         <label for="email" class="form-label">Email address</label>
-        <Field id="email" name="email" type="email" autocomplete="email" v-slot="{ field, errors }" :validate-on-input="true">
-          <input v-bind="field" :class="['form-input-base', errors.length ? 'form-input-invalid' : 'form-input-valid']" placeholder="you@example.com" aria-describedby="email-error" />
+        <Field
+          id="email"
+          name="email"
+          type="email"
+          autocomplete="email"
+          v-slot="{ field, errors }"
+          :validate-on-input="true"
+        >
+          <input
+            v-bind="field"
+            :class="[
+              'form-input-base',
+              errors.length ? 'form-input-invalid' : 'form-input-valid',
+            ]"
+            placeholder="you@example.com"
+            aria-describedby="email-error"
+          />
         </Field>
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
@@ -161,16 +196,34 @@ const goToForgotPassword = () => {
             </button>
           </div>
         </div>
-        <Field id="password" name="password" type="password" autocomplete="current-password" v-slot="{ field, errors }" :validate-on-input="true">
-          <input v-bind="field" type="password" :class="['form-input-base', errors.length ? 'form-input-invalid' : 'form-input-valid']" placeholder="Password" aria-describedby="password-error" />
+        <Field
+          id="password"
+          name="password"
+          type="password"
+          autocomplete="current-password"
+          v-slot="{ field, errors }"
+          :validate-on-input="true"
+        >
+          <input
+            v-bind="field"
+            type="password"
+            :class="[
+              'form-input-base',
+              errors.length ? 'form-input-invalid' : 'form-input-valid',
+            ]"
+            placeholder="Password"
+            aria-describedby="password-error"
+          />
         </Field>
-        <ErrorMessage name="password" id="password-error" class="form-error-text" />
+        <ErrorMessage
+          name="password"
+          id="password-error"
+          class="form-error-text"
+        />
       </div>
 
       <div>
-        <button type="submit" class="btn-primary">
-          Sign in
-        </button>
+        <button type="submit" class="btn-primary">Sign in</button>
       </div>
     </Form>
 
@@ -193,9 +246,7 @@ const goToForgotPassword = () => {
 
       <div class="text-sm text-center mt-4">
         <span class="text-gray-600">Don't have an account? </span>
-        <button @click="goToRegister" class="btn-link">
-          Create one
-        </button>
+        <button @click="goToRegister" class="btn-link">Create one</button>
       </div>
     </template>
   </AuthLayout>
