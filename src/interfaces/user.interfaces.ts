@@ -21,8 +21,10 @@ export interface UserProfile {
   isPremium: boolean; // Whether user has premium features
 
   // User preferences
-  preferences: { theme: Theme }; // UI preferences like light/dark mode
-  preferredLanguage: LanguageCode; // Preferred language for the interface
+  preferences: {
+    theme: Theme;
+    preferredLanguage: LanguageCode;
+  };
 
   // Paystack payment integration details
   paystackCustomerId: string | null; // ID in Paystack system

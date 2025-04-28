@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
-import { SubscriptionStatus } from '@/enums/user.enums';
+import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
 import { updateEmail, updatePassword } from 'firebase/auth';
@@ -9,58 +9,53 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-// Set the page title
 useTitle('Profile | Fakaloan');
 
-// Get user data and authentication state
 const { currentUser, userProfile, isLoading: authLoading } = useAuth();
 const router = useRouter();
 const toast = useToast();
 
-// Form state management
 const isEditingContact = ref(false);
 const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
 const isUpdating = ref(false);
 
-// User editable fields
 const cellphoneInput = ref(userProfile.value?.cellphone || '');
-
-// Password update fields
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
-
-// Email update fields
 const newEmail = ref(userProfile.value?.email || '');
 
-// Premium status computed property
 const isPremium = computed(() => userProfile.value?.isPremium || false);
 const subscriptionStatus = computed(
   () => userProfile.value?.subscriptionStatus || null
 );
+const hasActiveSubscription = computed(() =>
+  [SubscriptionStatus.Active, SubscriptionStatus.Trialing].includes(
+    subscriptionStatus.value as SubscriptionStatus
+  )
+);
 
-// Check if subscription is active
-const hasActiveSubscription = computed(() => {
-  return (
-    subscriptionStatus.value === SubscriptionStatus.Active ||
-    subscriptionStatus.value === SubscriptionStatus.Trialing
-  );
+const displayLanguage = computed(() => {
+  const lang = userProfile.value?.preferences.preferredLanguage;
+  switch (lang) {
+    case LanguageCode.English:
+      return 'English';
+    case LanguageCode.Zulu:
+      return 'Zulu';
+    case LanguageCode.Xhosa:
+      return 'Xhosa';
+    default:
+      return lang || 'Not set';
+  }
 });
 
-// Create confirmation dialog for sensitive actions
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-/**
- * Navigate back to home page
- */
 const goToHome = () => {
   router.push('/');
 };
 
-/**
- * Updates user's cellphone number
- */
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) return;
 
@@ -80,24 +75,16 @@ const updateCellphone = async () => {
   }
 };
 
-/**
- * Updates user's email address
- */
 const updateUserEmail = async () => {
   if (!currentUser.value) return;
 
   try {
     isUpdating.value = true;
-
-    // Update email in Firebase Auth
     await updateEmail(currentUser.value, newEmail.value);
-
-    // Update email in Firestore
     const userDocRef = doc(db, 'users', currentUser.value.uid);
     await updateDoc(userDocRef, {
       email: newEmail.value,
     });
-
     isEditingEmail.value = false;
     toast.success('Email updated successfully');
   } catch (error) {
@@ -108,12 +95,8 @@ const updateUserEmail = async () => {
   }
 };
 
-/**
- * Updates user's password
- */
 const updateUserPassword = async () => {
   if (!currentUser.value) return;
-
   if (newPassword.value !== confirmPassword.value) {
     toast.error('Passwords do not match');
     return;
@@ -121,16 +104,11 @@ const updateUserPassword = async () => {
 
   try {
     isUpdating.value = true;
-
-    // Update password in Firebase Auth
     await updatePassword(currentUser.value, newPassword.value);
-
-    // Reset fields and close form
     currentPassword.value = '';
     newPassword.value = '';
     confirmPassword.value = '';
     isEditingPassword.value = false;
-
     toast.success('Password updated successfully');
   } catch (error) {
     console.error('Failed to update password:', error);
@@ -142,26 +120,18 @@ const updateUserPassword = async () => {
   }
 };
 
-/**
- * Navigates to premium subscription page
- */
 const goToPremiumPage = () => {
   router.push('/premium');
 };
 
-/**
- * Confirms and handles cancellation of subscription
- */
-const handleCancelSubscription = async () => {
+const handleCancelSubscription = () => {
   reveal();
 };
 
 const confirmCancelSubscription = async (choice: boolean) => {
   if (!choice) return;
-
   try {
-    // Here you would implement the actual subscription cancellation logic
-    // This would typically involve API calls to your payment processor
+    // implement cancellation logic (e.g., API call)
     toast.success('Subscription cancellation request submitted');
   } catch (error) {
     console.error('Failed to cancel subscription:', error);
@@ -175,7 +145,6 @@ const confirmCancelSubscription = async (choice: boolean) => {
     class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
   >
     <div class="w-full max-w-2xl p-8 bg-white rounded shadow-md space-y-6">
-      <!-- Profile Header -->
       <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
         Your Profile
       </h1>
@@ -185,7 +154,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
         Loading profile...
       </div>
 
-      <!-- User Information Display -->
+      <!-- Profile Content -->
       <div v-else-if="currentUser && userProfile" class="space-y-8">
         <!-- Premium Status -->
         <div
@@ -233,7 +202,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
         </div>
 
-        <!-- Basic Account Information -->
+        <!-- Account Information -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Account Information
@@ -347,7 +316,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
             </div>
           </div>
 
-          <!-- Cell Phone -->
+          <!-- Phone -->
           <div>
             <div
               v-if="!isEditingContact"
@@ -399,7 +368,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
         </div>
 
-        <!-- Account Details -->
+        <!-- Additional Information -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Additional Information
@@ -425,16 +394,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 >Language Preference:</span
               >
               <span class="text-gray-800 capitalize">
-                <span v-if="userProfile.preferredLanguage === 'en'"
-                  >English</span
-                >
-                <span v-else-if="userProfile.preferredLanguage === 'zu'"
-                  >Zulu</span
-                >
-                <span v-else-if="userProfile.preferredLanguage === 'xh'"
-                  >Xhosa</span
-                >
-                <span v-else>{{ userProfile.preferredLanguage }}</span>
+                {{ displayLanguage }}
               </span>
             </div>
           </div>
@@ -446,7 +406,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
         Could not load user information. Please try logging in again.
       </div>
 
-      <!-- Navigation Button -->
+      <!-- Back Button -->
       <div class="text-center mt-8 t-6">
         <button @click="goToHome" class="btn-secondary !w-auto">
           Back to Home

@@ -84,6 +84,20 @@ export function useAuth() {
     error: profileError,
   } = useDocument<UserProfile>(userDocRef);
 
+  // add a computed wrapper to supply default prefs when missing
+  const userProfileWithDefaults = computed<UserProfile | null>(() => {
+    const profile = userProfile.value;
+    if (!profile) return null;
+    return {
+      ...profile,
+      preferences: {
+        theme: profile.preferences?.theme ?? Theme.Light,
+        preferredLanguage:
+          profile.preferences?.preferredLanguage ?? LanguageCode.English,
+      },
+    };
+  });
+
   // Watch for profile loading errors
   watch(profileError, (newError) => {
     if (newError) {
@@ -111,8 +125,10 @@ export function useAuth() {
           createdAt: serverTimestamp(),
           cellphone: null,
           isPremium: false,
-          preferences: { theme: Theme.Light },
-          preferredLanguage: LanguageCode.English,
+          preferences: {
+            theme: Theme.Light,
+            preferredLanguage: LanguageCode.English,
+          },
           paystackCustomerId: null,
           paystackSubscriptionId: null,
           paystackPlanId: null,
@@ -358,7 +374,7 @@ export function useAuth() {
   //------------------------------------------------------------
   return {
     currentUser,
-    userProfile,
+    userProfile: userProfileWithDefaults,
     isLoading: computed(() => isLoading.value || profileLoading.value),
     authLoading: isLoading,
     profileLoading,
