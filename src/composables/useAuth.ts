@@ -5,6 +5,7 @@ import type {
   LoginFormValues,
   RegisterFormValues,
 } from '@/interfaces/auth.interfaces';
+import type { UserProfile } from '@/interfaces/user.interfaces'; // Import UserProfile type
 import { useNetwork, useToggle } from '@vueuse/core';
 import {
   createUserWithEmailAndPassword,
@@ -16,10 +17,40 @@ import {
   type AuthError,
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
-import { useCurrentUser } from 'vuefire';
+import { useCurrentUser, useDocument } from 'vuefire';
+
+// Export db for direct use if needed elsewhere, though ProfileView will get it via getFirestore
+export { db };
+
+// Export mapAuthError for use in components
+export const mapAuthError = (authError: AuthError): string => {
+  switch (authError.code) {
+    case 'auth/invalid-email':
+      return 'Invalid email address format.';
+    case 'auth/user-disabled':
+      return 'This user account has been disabled.';
+    case 'auth/user-not-found':
+    case 'auth/wrong-password':
+    case 'auth/invalid-credential':
+      return 'Invalid email or password.';
+    case 'auth/email-already-in-use':
+      return 'This email address is already registered.';
+    case 'auth/weak-password':
+      return 'Password is too weak. It must be at least 8 characters long.';
+    case 'auth/popup-closed-by-user':
+      return 'Sign-in cancelled.';
+    case 'auth/account-exists-with-different-credential':
+      return 'An account already exists with this email using a different sign-in method.';
+    case 'auth/requires-recent-login':
+      return 'This operation is sensitive and requires recent authentication. Please log in again.';
+    default:
+      console.error('Unhandled Auth Error:', authError);
+      return 'An unexpected error occurred. Please try again.';
+  }
+};
 
 export function useAuth() {
   const router = useRouter();
@@ -27,44 +58,43 @@ export function useAuth() {
   const currentUser = useCurrentUser();
   const { isOnline } = useNetwork();
 
-  const [isLoading, toggleLoading] = useToggle(false);
-  const error = ref<string | null>(null);
+  const [isLoading, toggleLoading] = useToggle(false); // General loading for auth actions
+  const authError = ref<string | null>(null); // Renamed from 'error' to avoid conflict
   const [emailSent, toggleEmailSent] = useToggle(false);
+
+  // --- Fetch User Profile ---
+  // Create a ref for the user document path, dependent on currentUser
+  const userDocRef = computed(() =>
+    currentUser.value ? doc(db, 'users', currentUser.value.uid) : null
+  );
+
+  // Use useDocument to reactively fetch the user profile
+  // Pass undefined as initial data type, let vuefire infer from Firestore
+  const {
+    data: userProfile,
+    pending: profileLoading,
+    error: profileError,
+  } = useDocument<UserProfile>(userDocRef);
+
+  // Watch for profile loading errors
+  watch(profileError, (newError) => {
+    if (newError) {
+      console.error('Error loading user profile:', newError);
+      toast.error('Could not load user profile details.');
+    }
+  });
+  // --- End Fetch User Profile ---
 
   const checkNetwork = (): boolean => {
     if (!isOnline.value) {
       const msg =
         'No internet connection. Please connect to the internet and try again.';
-      error.value = msg;
+      authError.value = msg;
       toast.error(msg);
       return false;
     }
-    error.value = null;
+    authError.value = null;
     return true;
-  };
-
-  const mapAuthError = (authError: AuthError): string => {
-    switch (authError.code) {
-      case 'auth/invalid-email':
-        return 'Invalid email address format.';
-      case 'auth/user-disabled':
-        return 'This user account has been disabled.';
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-      case 'auth/invalid-credential':
-        return 'Invalid email or password.';
-      case 'auth/email-already-in-use':
-        return 'This email address is already registered.';
-      case 'auth/weak-password':
-        return 'Password is too weak. It must be at least 8 characters long.';
-      case 'auth/popup-closed-by-user':
-        return 'Sign-in cancelled.';
-      case 'auth/account-exists-with-different-credential':
-        return 'An account already exists with this email using a different sign-in method.';
-      default:
-        console.error('Unhandled Auth Error:', authError);
-        return 'An unexpected error occurred. Please try again.';
-    }
   };
 
   const createUserProfile = async (
@@ -104,9 +134,9 @@ export function useAuth() {
         'Error accessing/creating Firestore document for user:',
         firestoreError
       );
-      error.value =
+      authError.value =
         "Operation successful, but couldn't save/update profile details.";
-      toast.warning(error.value);
+      toast.warning(authError.value);
     }
   };
 
@@ -116,19 +146,19 @@ export function useAuth() {
     }
 
     if (!values.email) {
-      error.value = 'Email is required.';
-      toast.error(error.value);
+      authError.value = 'Email is required.';
+      toast.error(authError.value);
       return;
     }
 
     if (!values.password) {
-      error.value = 'Password is required.';
-      toast.error(error.value);
+      authError.value = 'Password is required.';
+      toast.error(authError.value);
       return;
     }
 
     toggleLoading(true);
-    error.value = null;
+    authError.value = null;
 
     try {
       console.log('Attempting Firebase email login with:', values.email);
@@ -142,8 +172,8 @@ export function useAuth() {
       router.push('/');
     } catch (err) {
       console.error('Firebase email login error:', err);
-      error.value = mapAuthError(err as AuthError);
-      toast.error(error.value || 'Login failed');
+      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      toast.error(authError.value || 'Login failed');
     } finally {
       toggleLoading(false);
     }
@@ -155,7 +185,7 @@ export function useAuth() {
     }
 
     toggleLoading(true);
-    error.value = null;
+    authError.value = null;
     const provider = new GoogleAuthProvider();
 
     try {
@@ -178,8 +208,8 @@ export function useAuth() {
       router.push('/');
     } catch (err) {
       console.error('Firebase Google login error:', err);
-      error.value = mapAuthError(err as AuthError);
-      toast.error(error.value || 'Google sign-in failed');
+      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      toast.error(authError.value || 'Google sign-in failed');
     } finally {
       toggleLoading(false);
     }
@@ -191,25 +221,25 @@ export function useAuth() {
     }
 
     if (!values.email) {
-      error.value = 'Email is required for registration.';
-      toast.error(error.value);
+      authError.value = 'Email is required for registration.';
+      toast.error(authError.value);
       return;
     }
 
     if (!values.password) {
-      error.value = 'Password is required for registration.';
-      toast.error(error.value);
+      authError.value = 'Password is required for registration.';
+      toast.error(authError.value);
       return;
     }
 
     if (!values.name) {
-      error.value = 'Name is required for registration.';
-      toast.error(error.value);
+      authError.value = 'Name is required for registration.';
+      toast.error(authError.value);
       return;
     }
 
     toggleLoading(true);
-    error.value = null;
+    authError.value = null;
 
     try {
       console.log('Attempting Firebase registration for:', values.email);
@@ -228,8 +258,8 @@ export function useAuth() {
       router.push({ name: 'login' });
     } catch (err) {
       console.error('Registration failed:', err);
-      error.value = mapAuthError(err as AuthError);
-      toast.error(error.value || 'Registration failed.');
+      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      toast.error(authError.value || 'Registration failed.');
     } finally {
       toggleLoading(false);
     }
@@ -237,7 +267,7 @@ export function useAuth() {
 
   const logout = async () => {
     toggleLoading(true);
-    error.value = null;
+    authError.value = null;
     try {
       console.log('Attempting logout...');
       await signOut(auth);
@@ -246,8 +276,8 @@ export function useAuth() {
       router.push({ name: 'login' });
     } catch (err) {
       console.error('Logout failed:', err);
-      error.value = 'Logout failed. Please try again.';
-      toast.error(error.value);
+      authError.value = 'Logout failed. Please try again.'; // Use renamed error ref
+      toast.error(authError.value);
     } finally {
       toggleLoading(false);
     }
@@ -259,13 +289,13 @@ export function useAuth() {
     }
 
     if (!values.email) {
-      error.value = 'Email is required to reset password.';
-      toast.error(error.value);
+      authError.value = 'Email is required to reset password.';
+      toast.error(authError.value);
       return;
     }
 
     toggleLoading(true);
-    error.value = null;
+    authError.value = null;
     toggleEmailSent(false);
 
     try {
@@ -278,8 +308,8 @@ export function useAuth() {
       );
     } catch (err) {
       console.error('Password reset error:', err);
-      error.value = mapAuthError(err as AuthError);
-      toast.error(error.value || 'Password reset failed.');
+      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      toast.error(authError.value || 'Password reset failed.');
       toggleEmailSent(false);
     } finally {
       toggleLoading(false);
@@ -288,8 +318,12 @@ export function useAuth() {
 
   return {
     currentUser,
-    isLoading,
-    error,
+    userProfile, // Return userProfile
+    isLoading: computed(() => isLoading.value || profileLoading.value), // Combine general loading with profile loading
+    authLoading: isLoading, // Keep original name if needed elsewhere
+    profileLoading, // Expose profile loading state specifically
+    error: authError, // Return renamed error ref
+    profileError, // Expose profile loading error specifically
     emailSent,
     isOnline,
     loginWithEmail,
@@ -297,5 +331,6 @@ export function useAuth() {
     registerWithEmail,
     logout,
     sendPasswordReset,
+    // mapAuthError is exported separately now
   };
 }
