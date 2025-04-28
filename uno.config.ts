@@ -15,6 +15,12 @@ export default defineConfig({
       'btn w-full inline-flex items-center justify-center text-gray-700 bg-white border border-gray-300 shadow-sm hover:bg-gray-50',
     'btn-link':
       'font-medium text-indigo-600 hover:text-indigo-500 focus:outline-0 focus:underline',
+    // Premium buttons
+    'btn-premium':
+      'bg-purple-600 text-white font-extrabold px-6 py-3 rounded-md hover:bg-purple-700 shadow-xl transform hover:scale-105 transition-transform border-2 border-purple-600 text-lg tracking-wide',
+    'btn-premium-text': 'drop-shadow-lg text-white',
+    'btn-renew-premium':
+      'bg-red-500 text-white font-extrabold px-6 py-3 rounded-md hover:bg-red-600 shadow-xl transform hover:scale-105 transition-transform border-2 border-red-500 text-lg tracking-wide',
     // Text
     'form-label': 'block text-sm font-medium text-gray-700',
     'form-error-text': 'mt-1 text-sm text-red-600',
@@ -47,4 +53,5 @@ export default defineConfig({
       },
     }),
   ],
+  safelist: ['btn‑premium', 'btn‑premium‑text', 'btn‑renew‑premium'],
 });
