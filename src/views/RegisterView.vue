@@ -19,7 +19,8 @@ const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 // Form Validation Schema
 //---------------------------------------------------------------------------------
 const schema = yup.object({
-  name: yup.string().trim().required('Name is required'),
+  firstName: yup.string().trim().required('First Name is required'),
+  lastName: yup.string().trim().required('Last Name is required'),
   email: yup
     .string()
     .trim()
@@ -76,14 +77,14 @@ const goToLogin = () => {
       @submit="handleRegister"
       class="space-y-4"
     >
-      <!-- Full Name Field -->
+      <!-- First Name Field -->
       <div>
-        <label for="name" class="form-label">Full Name</label>
+        <label for="firstName" class="form-label">First Name</label>
         <Field
-          id="name"
-          name="name"
+          id="firstName"
+          name="firstName"
           type="text"
-          autocomplete="name"
+          autocomplete="firstName"
           v-slot="{ field, errors }"
           :validate-on-input="true"
         >
@@ -93,11 +94,39 @@ const goToLogin = () => {
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
             ]"
-            placeholder="Thabo Mokoena"
+            placeholder="Thabo"
             aria-describedby="name-error"
           />
         </Field>
-        <ErrorMessage name="name" id="name-error" class="form-error-text" />
+        <ErrorMessage
+          name="firstName"
+          id="name-error"
+          class="form-error-text"
+        />
+      </div>
+
+      <!-- Last Name Field -->
+      <div>
+        <label for="lastName" class="form-label">Last Name</label>
+        <Field
+          id="lastName"
+          name="lastName"
+          type="lastName"
+          autocomplete="lastName"
+          v-slot="{ field, errors }"
+          :validate-on-input="true"
+        >
+          <input
+            v-bind="field"
+            :class="[
+              'form-input-base',
+              errors.length ? 'form-input-invalid' : 'form-input-valid',
+            ]"
+            placeholder="Mokoena"
+            aria-describedby="name-error"
+          />
+        </Field>
+        <ErrorMessage name="lastName" id="name-error" class="form-error-text" />
       </div>
 
       <!-- Email Field -->

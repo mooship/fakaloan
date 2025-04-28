@@ -9,11 +9,14 @@ import type { UserProfile } from '@/interfaces/user.interfaces';
 import { useNetwork, useToggle } from '@vueuse/core';
 import {
   createUserWithEmailAndPassword,
+  EmailAuthProvider,
+  updatePassword as firebaseUpdatePassword, // Add import
   GoogleAuthProvider,
+  reauthenticateWithCredential, // Add import
   sendPasswordResetEmail,
   signInWithEmailAndPassword,
   signInWithPopup,
-  signOut,
+  signOut, // Add import and alias
   type AuthError,
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
@@ -124,12 +127,14 @@ export function useAuth() {
    * Creates a user profile document in Firestore if it doesn't exist.
    * Called after successful registration or first Google login.
    * @param userId - The Firebase Auth UID of the user.
-   * @param name - The user's display name.
+   * @param firstName - The user's first name.
+   * @param lastName - The user's last name.
    * @param email - The user's email address.
    */
   const createUserProfile = async (
     userId: string,
-    name: string,
+    firstName: string,
+    lastName: string,
     email: string | null
   ) => {
     const userDocRef = doc(db, 'users', userId);
@@ -138,7 +143,8 @@ export function useAuth() {
       if (!docSnap.exists()) {
         await setDoc(userDocRef, {
           uid: userId,
-          name: name,
+          firstName: firstName,
+          lastName: lastName,
           email: email,
           createdAt: serverTimestamp(),
           cellphone: null,
@@ -265,7 +271,8 @@ export function useAuth() {
 
       await createUserProfile(
         user.uid,
-        user.displayName || 'Google User',
+        user.displayName?.split(' ')[0] || 'Google',
+        user.displayName?.split(' ')[1] || 'User',
         user.email
       );
 
@@ -283,7 +290,7 @@ export function useAuth() {
   /**
    * Handles user registration with email, password, and name.
    * Creates a user profile upon successful registration.
-   * @param values - Object containing name, email, and password.
+   * @param values - Object containing first name, last name, email, and password.
    */
   const registerWithEmail = async (values: RegisterFormValues) => {
     if (!checkNetwork()) {
@@ -302,8 +309,14 @@ export function useAuth() {
       return;
     }
 
-    if (!values.name) {
-      authError.value = 'Name is required for registration.';
+    if (!values.firstName) {
+      authError.value = 'First name is required for registration.';
+      toast.error(authError.value);
+      return;
+    }
+
+    if (!values.lastName) {
+      authError.value = 'Last name is required for registration.';
       toast.error(authError.value);
       return;
     }
@@ -322,7 +335,12 @@ export function useAuth() {
       const user = userCredential.user;
       console.log('Firebase Auth user created:', user.uid);
 
-      await createUserProfile(user.uid, values.name, user.email);
+      await createUserProfile(
+        user.uid,
+        values.firstName,
+        values.lastName,
+        user.email
+      );
 
       toast.success('Registration successful! Please log in.');
       router.push({ name: 'login' });
@@ -394,6 +412,53 @@ export function useAuth() {
     }
   };
 
+  /**
+   * Updates the user's password after re-authenticating with the current password.
+   * @param currentPassword - The user's current password.
+   * @param newPassword - The desired new password.
+   * @returns boolean - True if the password update was successful, false otherwise.
+   */
+  const updatePassword = async (
+    currentPassword: string,
+    newPassword: string
+  ): Promise<boolean> => {
+    if (!checkNetwork()) return false;
+    if (!currentUser.value || !currentUser.value.email) {
+      authError.value = 'User not logged in or email missing.';
+      toast.error(authError.value);
+      return false;
+    }
+
+    toggleLoading(true);
+    authError.value = null;
+
+    try {
+      // Create credential with current password
+      const credential = EmailAuthProvider.credential(
+        currentUser.value.email,
+        currentPassword
+      );
+
+      // Re-authenticate the user
+      console.log('Attempting re-authentication for password change...');
+      await reauthenticateWithCredential(currentUser.value, credential);
+      console.log('Re-authentication successful.');
+
+      // Update the password
+      console.log('Attempting password update...');
+      await firebaseUpdatePassword(currentUser.value, newPassword);
+      console.log('Password updated successfully in Firebase Auth.');
+      toggleLoading(false);
+      return true; // Indicate success
+    } catch (err) {
+      console.error('Password update failed:', err);
+      authError.value = mapAuthError(err as AuthError);
+      toast.error(authError.value || 'Failed to update password.');
+      toggleLoading(false);
+      return false; // Indicate failure
+    }
+  };
+
   //------------------------------------------------------------
   // Exported State and Methods
   //------------------------------------------------------------
@@ -415,5 +480,6 @@ export function useAuth() {
     registerWithEmail,
     logout,
     sendPasswordReset,
+    updatePassword,
   };
 }

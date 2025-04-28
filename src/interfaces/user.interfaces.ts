@@ -12,9 +12,14 @@ import type { Timestamp } from 'firebase/firestore';
 export interface UserProfile {
   // Basic user information
   uid: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string | null;
   createdAt: Timestamp;
+  /**
+   * User's cellphone number.
+   * Should adhere to E.164 format (e.g., +271234567890).
+   */
   cellphone: string | null;
 
   // Premium status

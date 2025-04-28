@@ -3,7 +3,7 @@ import { useAuth } from '@/composables/useAuth';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
-import { updateEmail, updatePassword } from 'firebase/auth';
+import { updateEmail } from 'firebase/auth'; // Remove updatePassword import
 import { doc, updateDoc } from 'firebase/firestore';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -13,7 +13,13 @@ import { useToast } from 'vue-toastification';
 // Setup & State
 //---------------------------------------------------------------------------------
 useTitle('Profile | Fakaloan');
-const { currentUser, userProfile, isLoading: authLoading } = useAuth();
+const {
+  currentUser,
+  userProfile,
+  isLoading: authLoading,
+  updatePassword, // Import updatePassword from useAuth
+  error: authError, // Import authError for potential feedback
+} = useAuth();
 const router = useRouter();
 const toast = useToast();
 
@@ -21,11 +27,11 @@ const toast = useToast();
 const isEditingContact = ref(false);
 const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
-const isUpdating = ref(false); // General loading state for update operations
+const isUpdating = ref(false);
 
 // Input models for editing fields
 const cellphoneInput = ref(userProfile.value?.cellphone || '');
-const currentPassword = ref(''); // Needed for re-authentication potentially
+const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
@@ -73,12 +79,15 @@ const goToHome = () => {
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) return;
 
+  const trimmedCellphone = cellphoneInput.value.replace(/\s+/g, '');
+
   try {
     isUpdating.value = true;
     const userDocRef = doc(db, 'users', currentUser.value.uid);
     await updateDoc(userDocRef, {
-      cellphone: cellphoneInput.value,
+      cellphone: trimmedCellphone,
     });
+    cellphoneInput.value = trimmedCellphone;
     isEditingContact.value = false;
     toast.success('Phone number updated successfully');
   } catch (error) {
@@ -110,30 +119,42 @@ const updateUserEmail = async () => {
   }
 };
 
-/** Update user's password in Firebase Auth. */
-const updateUserPassword = async () => {
+/** Handle the password update process using the useAuth composable. */
+const handlePasswordUpdate = async () => {
   if (!currentUser.value) return;
   if (newPassword.value !== confirmPassword.value) {
-    toast.error('Passwords do not match');
+    toast.error('New passwords do not match');
+    return;
+  }
+  if (!currentPassword.value) {
+    toast.error('Current password is required');
+    return;
+  }
+  if (!newPassword.value) {
+    toast.error('New password is required');
     return;
   }
 
-  try {
-    isUpdating.value = true;
-    await updatePassword(currentUser.value, newPassword.value);
+  isUpdating.value = true;
+  authError.value = null; // Clear previous auth errors
+
+  const success = await updatePassword(
+    currentPassword.value,
+    newPassword.value
+  );
+
+  if (success) {
     currentPassword.value = '';
     newPassword.value = '';
     confirmPassword.value = '';
     isEditingPassword.value = false;
     toast.success('Password updated successfully');
-  } catch (error) {
-    console.error('Failed to update password:', error);
-    toast.error(
-      'Failed to update password. You may need to log in again for security reasons.'
-    );
-  } finally {
-    isUpdating.value = false;
+  } else {
+    // Error message is handled within useAuth via toast
+    // toast.error(authError.value || 'Failed to update password.'); // Already handled by useAuth
   }
+
+  isUpdating.value = false;
 };
 
 /** Navigate to the premium features/upgrade page. */
@@ -217,7 +238,6 @@ const confirmCancelSubscription = async (choice: boolean) => {
                   subscriptionStatus
                 }}</span>
               </p>
-              <!-- TODO: Add more subscription details like next billing date -->
             </div>
             <!-- Action Buttons based on status -->
             <button
@@ -320,11 +340,15 @@ const confirmCancelSubscription = async (choice: boolean) => {
             </div>
             <!-- Password Change Form -->
             <div v-else class="space-y-3">
-              <!-- Current Password (May be needed depending on Firebase rules/re-auth needs) -->
-              <!-- <div class="space-y-1">
+              <div class="space-y-1">
                 <label class="form-label text-sm">Current Password</label>
-                <input v-model="currentPassword" type="password" class="form-input-base form-input-valid" />
-              </div> -->
+                <input
+                  v-model="currentPassword"
+                  type="password"
+                  class="form-input-base form-input-valid"
+                  placeholder="Enter current password"
+                />
+              </div>
               <div class="space-y-1">
                 <label class="form-label text-sm">New Password</label>
                 <input
@@ -345,7 +369,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
               </div>
               <div class="flex space-x-2 mt-2">
                 <button
-                  @click="updateUserPassword"
+                  @click="handlePasswordUpdate"
                   :disabled="isUpdating"
                   class="btn-primary !w-auto text-sm"
                 >
@@ -424,7 +448,9 @@ const confirmCancelSubscription = async (choice: boolean) => {
           <div class="grid grid-cols-1 gap-3 text-sm">
             <div class="flex justify-between items-center">
               <span class="text-gray-600 font-medium">Name:</span>
-              <span class="text-gray-800">{{ userProfile.name }}</span>
+              <span class="text-gray-800">{{
+                `${userProfile.firstName} ${userProfile.lastName}`
+              }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-gray-600 font-medium">User ID:</span>
