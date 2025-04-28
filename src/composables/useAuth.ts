@@ -5,7 +5,7 @@ import type {
   LoginFormValues,
   RegisterFormValues,
 } from '@/interfaces/auth.interfaces';
-import type { UserProfile } from '@/interfaces/user.interfaces'; // Import UserProfile type
+import type { UserProfile } from '@/interfaces/user.interfaces';
 import { useNetwork, useToggle } from '@vueuse/core';
 import {
   createUserWithEmailAndPassword,
@@ -22,10 +22,11 @@ import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import { useCurrentUser, useDocument } from 'vuefire';
 
-// Export db for direct use if needed elsewhere, though ProfileView will get it via getFirestore
 export { db };
 
-// Export mapAuthError for use in components
+/**
+ * Maps Firebase authentication error codes to user-friendly messages
+ */
 export const mapAuthError = (authError: AuthError): string => {
   switch (authError.code) {
     case 'auth/invalid-email':
@@ -52,17 +53,24 @@ export const mapAuthError = (authError: AuthError): string => {
   }
 };
 
+/**
+ * Composable that provides authentication functionality
+ * Handles login, logout, registration, password reset, and user profile data
+ */
 export function useAuth() {
   const router = useRouter();
   const toast = useToast();
   const currentUser = useCurrentUser();
   const { isOnline } = useNetwork();
 
-  const [isLoading, toggleLoading] = useToggle(false); // General loading for auth actions
-  const authError = ref<string | null>(null); // Renamed from 'error' to avoid conflict
+  const [isLoading, toggleLoading] = useToggle(false);
+  const authError = ref<string | null>(null);
   const [emailSent, toggleEmailSent] = useToggle(false);
 
-  // --- Fetch User Profile ---
+  //------------------------------------------------------------
+  // User Profile Management
+  //------------------------------------------------------------
+
   // Create a ref for the user document path, dependent on currentUser
   const userDocRef = computed(() =>
     currentUser.value ? doc(db, 'users', currentUser.value.uid) : null
@@ -83,20 +91,10 @@ export function useAuth() {
       toast.error('Could not load user profile details.');
     }
   });
-  // --- End Fetch User Profile ---
 
-  const checkNetwork = (): boolean => {
-    if (!isOnline.value) {
-      const msg =
-        'No internet connection. Please connect to the internet and try again.';
-      authError.value = msg;
-      toast.error(msg);
-      return false;
-    }
-    authError.value = null;
-    return true;
-  };
-
+  /**
+   * Creates or updates a user profile in Firestore
+   */
   const createUserProfile = async (
     userId: string,
     name: string,
@@ -140,6 +138,33 @@ export function useAuth() {
     }
   };
 
+  //------------------------------------------------------------
+  // Helper Functions
+  //------------------------------------------------------------
+
+  /**
+   * Checks if the device is online before proceeding with auth operations
+   * @returns boolean - true if online, false otherwise
+   */
+  const checkNetwork = (): boolean => {
+    if (!isOnline.value) {
+      const msg =
+        'No internet connection. Please connect to the internet and try again.';
+      authError.value = msg;
+      toast.error(msg);
+      return false;
+    }
+    authError.value = null;
+    return true;
+  };
+
+  //------------------------------------------------------------
+  // Authentication Methods
+  //------------------------------------------------------------
+
+  /**
+   * Handles email/password login
+   */
   const loginWithEmail = async (values: LoginFormValues) => {
     if (!checkNetwork()) {
       return;
@@ -172,13 +197,16 @@ export function useAuth() {
       router.push('/');
     } catch (err) {
       console.error('Firebase email login error:', err);
-      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      authError.value = mapAuthError(err as AuthError);
       toast.error(authError.value || 'Login failed');
     } finally {
       toggleLoading(false);
     }
   };
 
+  /**
+   * Handles Google OAuth login
+   */
   const loginWithGoogle = async () => {
     if (!checkNetwork()) {
       return;
@@ -208,13 +236,16 @@ export function useAuth() {
       router.push('/');
     } catch (err) {
       console.error('Firebase Google login error:', err);
-      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      authError.value = mapAuthError(err as AuthError);
       toast.error(authError.value || 'Google sign-in failed');
     } finally {
       toggleLoading(false);
     }
   };
 
+  /**
+   * Handles user registration with email and password
+   */
   const registerWithEmail = async (values: RegisterFormValues) => {
     if (!checkNetwork()) {
       return;
@@ -258,13 +289,16 @@ export function useAuth() {
       router.push({ name: 'login' });
     } catch (err) {
       console.error('Registration failed:', err);
-      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      authError.value = mapAuthError(err as AuthError);
       toast.error(authError.value || 'Registration failed.');
     } finally {
       toggleLoading(false);
     }
   };
 
+  /**
+   * Logs out the current user
+   */
   const logout = async () => {
     toggleLoading(true);
     authError.value = null;
@@ -276,13 +310,16 @@ export function useAuth() {
       router.push({ name: 'login' });
     } catch (err) {
       console.error('Logout failed:', err);
-      authError.value = 'Logout failed. Please try again.'; // Use renamed error ref
+      authError.value = 'Logout failed. Please try again.';
       toast.error(authError.value);
     } finally {
       toggleLoading(false);
     }
   };
 
+  /**
+   * Sends a password reset email to the provided address
+   */
   const sendPasswordReset = async (values: ForgotPasswordForm) => {
     if (!checkNetwork()) {
       return;
@@ -308,7 +345,7 @@ export function useAuth() {
       );
     } catch (err) {
       console.error('Password reset error:', err);
-      authError.value = mapAuthError(err as AuthError); // Use renamed error ref
+      authError.value = mapAuthError(err as AuthError);
       toast.error(authError.value || 'Password reset failed.');
       toggleEmailSent(false);
     } finally {
@@ -316,14 +353,17 @@ export function useAuth() {
     }
   };
 
+  //------------------------------------------------------------
+  // Exported state and methods
+  //------------------------------------------------------------
   return {
     currentUser,
-    userProfile, // Return userProfile
-    isLoading: computed(() => isLoading.value || profileLoading.value), // Combine general loading with profile loading
-    authLoading: isLoading, // Keep original name if needed elsewhere
-    profileLoading, // Expose profile loading state specifically
-    error: authError, // Return renamed error ref
-    profileError, // Expose profile loading error specifically
+    userProfile,
+    isLoading: computed(() => isLoading.value || profileLoading.value),
+    authLoading: isLoading,
+    profileLoading,
+    error: authError,
+    profileError,
     emailSent,
     isOnline,
     loginWithEmail,
@@ -331,6 +371,5 @@ export function useAuth() {
     registerWithEmail,
     logout,
     sendPasswordReset,
-    // mapAuthError is exported separately now
   };
 }

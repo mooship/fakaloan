@@ -22,7 +22,7 @@ export default defineConfig({
     'alert-error':
       'p-3 mb-4 text-sm text-red-700 bg-red-100 rounded-md border border-red-300',
     'alert-success':
-      'p-3 mb-4 text-sm text-green-700 bg-green-100 rounded-md border border-green-300', // Added success alert
+      'p-3 mb-4 text-sm text-green-700 bg-green-100 rounded-md border border-green-300',
 
     // Auth Layout Shortcuts
     'auth-page-container':
@@ -31,7 +31,7 @@ export default defineConfig({
     'auth-title': 'text-2xl font-bold text-center',
   },
   presets: [
-    presetWind4(), // Using presetWind4 as requested
+    presetWind4(),
     presetIcons({
       collections: {
         heroicons: () =>

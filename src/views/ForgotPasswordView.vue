@@ -8,9 +8,11 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
+// Set the page title
 useTitle('Forgot Password | Fakaloan');
 
 const router = useRouter();
+// Get authentication methods and state
 const {
   sendPasswordReset,
   isLoading,
@@ -19,6 +21,7 @@ const {
   isOnline,
 } = useAuth();
 
+// Define form validation schema
 const schema = yup.object({
   email: yup
     .string()
@@ -28,10 +31,16 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
+/**
+ * Handle password reset request submission
+ */
 const handlePasswordReset = (values: GenericFormValues) => {
   sendPasswordReset(values as unknown as ForgotPasswordForm);
 };
 
+/**
+ * Navigate back to login page
+ */
 const goToLogin = () => {
   router.push({ name: 'login' });
 };
@@ -39,6 +48,7 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Reset Password">
+    <!-- Status and error notifications section -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -52,6 +62,7 @@ const goToLogin = () => {
       </div>
     </template>
 
+    <!-- Password Reset Form - Only shown if reset email not yet sent -->
     <Form
       v-if="!emailSent"
       :validation-schema="schema"
@@ -62,6 +73,8 @@ const goToLogin = () => {
         Enter the email address associated with your account, and we'll send you
         a link to reset your password.
       </p>
+
+      <!-- Email Field -->
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
@@ -85,6 +98,7 @@ const goToLogin = () => {
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
+      <!-- Submit Button -->
       <div>
         <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Sending...' : 'Send Reset Link' }}
@@ -92,6 +106,7 @@ const goToLogin = () => {
       </div>
     </Form>
 
+    <!-- Back to Login Link -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <button @click="goToLogin" class="btn-link">Back to Login</button>
