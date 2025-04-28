@@ -1,25 +1,13 @@
 <script setup lang="ts">
-import { auth } from '@/firebase';
-import { signOut } from 'firebase/auth';
-import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
-import { useCurrentUser } from 'vuefire';
+import { useAuth } from '@/composables/useAuth';
+import { useTitle } from '@vueuse/core';
 
-const currentUser = useCurrentUser();
-const router = useRouter();
-const toast = useToast();
+useTitle('Home | Fakaloan');
 
-const handleLogout = async () => {
-  try {
-    console.log('Attempting logout...');
-    await signOut(auth);
-    console.log('Logout successful.');
-    toast.success('You have been logged out.');
-    router.push({ name: 'login' });
-  } catch (error) {
-    console.error('Logout failed:', error);
-    toast.error('Logout failed. Please try again.');
-  }
+const { currentUser, logout, isLoading } = useAuth();
+
+const handleLogout = () => {
+  logout();
 };
 </script>
 
@@ -34,14 +22,26 @@ const handleLogout = async () => {
         <p class="text-gray-700">You are logged in as:</p>
         <p class="font-medium text-indigo-600">{{ currentUser.email }}</p>
       </div>
-      <div v-else>
+      <div v-else-if="isLoading && !currentUser">
         <p class="text-gray-500">Loading user information...</p>
+      </div>
+      <div v-else>
+        <p class="text-gray-500">Not logged in.</p>
       </div>
 
       <div>
-        <button @click="handleLogout" class="btn-secondary !w-auto">
-          Logout
+        <button
+          @click="handleLogout"
+          class="btn-secondary !w-auto"
+          :disabled="isLoading"
+        >
+          {{ isLoading ? 'Logging out...' : 'Logout' }}
         </button>
+      </div>
+
+      <div class="pt-4 border-t border-gray-200">
+        <router-link to="/profile" class="btn-link mr-4">Profile</router-link>
+        <router-link to="/about" class="btn-link">About</router-link>
       </div>
     </div>
   </div>
