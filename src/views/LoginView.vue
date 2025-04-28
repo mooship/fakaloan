@@ -1,30 +1,23 @@
 <script setup lang="ts">
-import { LanguageCode, Theme } from '@/enums/user.enums';
-import { auth, db } from '@/firebase';
+import { useAuth } from '@/composables/useAuth';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
-import {
-  GoogleAuthProvider,
-  signInWithEmailAndPassword,
-  signInWithPopup,
-  type AuthError,
-} from 'firebase/auth';
-import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+
 useTitle('Login | Fakaloan');
 
 const router = useRouter();
-const toast = useToast();
-const loginError = ref<string | null>(null);
-const googleLoginError = ref<string | null>(null);
-const processingEmail = ref(false);
-const processingGoogle = ref(false);
+const {
+  loginWithEmail,
+  loginWithGoogle,
+  isLoading,
+  error: authError,
+  isOnline,
+} = useAuth();
 
 const schema = yup.object({
   email: yup
@@ -36,135 +29,12 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-const loginWithEmail = async (values: AppGenericFormValues) => {
-  loginError.value = null;
-  googleLoginError.value = null;
-  processingEmail.value = true;
-
-  const formValues = values as LoginFormValues;
-
-  if (!formValues.email || !formValues.password) {
-    loginError.value = 'Email and password are required.';
-    toast.error('Email and password are required.');
-    processingEmail.value = false;
-    return;
-  }
-
-  try {
-    console.log('Attempting Firebase email login with:', formValues.email);
-    const userCredential = await signInWithEmailAndPassword(
-      auth,
-      formValues.email,
-      formValues.password
-    );
-    console.log('Successfully logged in:', userCredential.user);
-    toast.success('Login successful!');
-    router.push('/');
-  } catch (error) {
-    console.error('Firebase email login error:', error);
-    const authError = error as AuthError;
-    switch (authError.code) {
-      case 'auth/invalid-email':
-        loginError.value = 'Invalid email address format.';
-        break;
-      case 'auth/user-disabled':
-        loginError.value = 'This user account has been disabled.';
-        break;
-      case 'auth/user-not-found':
-      case 'auth/wrong-password':
-      case 'auth/invalid-credential':
-        loginError.value = 'Invalid email or password.';
-        break;
-      default:
-        loginError.value = 'An unexpected error occurred during login.';
-    }
-    toast.error(loginError.value || 'Login failed');
-  } finally {
-    processingEmail.value = false;
-  }
+const handleEmailLogin = (values: AppGenericFormValues) => {
+  loginWithEmail(values as LoginFormValues);
 };
 
-const loginWithGoogle = async () => {
-  loginError.value = null;
-  googleLoginError.value = null;
-  processingGoogle.value = true;
-  const provider = new GoogleAuthProvider();
-
-  try {
-    console.log('Attempting Firebase Google login...');
-    const result = await signInWithPopup(auth, provider);
-    const user = result.user;
-    console.log(
-      'Successfully logged in with Google:',
-      user.uid,
-      user.displayName
-    );
-
-    const userDocRef = doc(db, 'users', user.uid);
-    const userDocSnap = await getDoc(userDocRef);
-
-    if (!userDocSnap.exists()) {
-      console.log(
-        'First time Google login, creating Firestore document for:',
-        user.uid
-      );
-      try {
-        await setDoc(userDocRef, {
-          uid: user.uid,
-          name: user.displayName || 'Google User',
-          email: user.email,
-          createdAt: serverTimestamp(),
-          cellphone: null,
-          isPremium: false,
-          preferences: { theme: Theme.Light },
-          preferredLanguage: LanguageCode.English,
-          paystackCustomerId: null,
-          paystackSubscriptionId: null,
-          paystackPlanId: null,
-          subscriptionStatus: null,
-          subscriptionStartDate: null,
-          nextBillingDate: null,
-          lastPaymentDate: null,
-          lastPaymentAmount: null,
-          trialEndsAt: null,
-        });
-        console.log('Firestore document created for Google user.');
-      } catch (firestoreError) {
-        console.error(
-          'Error creating Firestore document for Google user:',
-          firestoreError
-        );
-        googleLoginError.value =
-          "Login successful, but couldn't save profile details.";
-        toast.success('Login successful!');
-        router.push('/');
-        processingGoogle.value = false;
-        return;
-      }
-    }
-
-    toast.success('Login successful!');
-    router.push('/');
-  } catch (error) {
-    console.error('Firebase Google login error:', error);
-    const authError = error as AuthError;
-    googleLoginError.value = 'Failed to sign in with Google. Please try again.';
-    switch (authError.code) {
-      case 'auth/popup-closed-by-user':
-        googleLoginError.value = 'Google sign-in cancelled.';
-        break;
-      case 'auth/account-exists-with-different-credential':
-        googleLoginError.value =
-          'An account already exists with this email using a different sign-in method.';
-        break;
-      default:
-        googleLoginError.value =
-          'An unexpected error occurred during Google sign-in.';
-    }
-    toast.error(googleLoginError.value || 'Google sign-in failed');
-  } finally {
-    processingGoogle.value = false;
-  }
+const handleGoogleLogin = () => {
+  loginWithGoogle();
 };
 
 const goToRegister = () => {
@@ -179,17 +49,17 @@ const goToForgotPassword = () => {
 <template>
   <AuthLayout title="Login to Fakaloan">
     <template #errors>
-      <div v-if="loginError" class="alert-error">
-        {{ loginError }}
+      <div v-if="!isOnline" class="alert-error">
+        No internet connection. Please check your network.
       </div>
-      <div v-if="googleLoginError" class="alert-error">
-        {{ googleLoginError }}
+      <div v-if="authError" class="alert-error">
+        {{ authError }}
       </div>
     </template>
 
     <Form
       :validation-schema="schema"
-      @submit="loginWithEmail"
+      @submit="handleEmailLogin"
       class="space-y-4"
     >
       <div>
@@ -251,8 +121,8 @@ const goToForgotPassword = () => {
       </div>
 
       <div>
-        <button type="submit" class="btn-primary" :disabled="processingEmail">
-          {{ processingEmail ? 'Signing in...' : 'Sign in' }}
+        <button type="submit" class="btn-primary" :disabled="isLoading">
+          {{ isLoading ? 'Signing in...' : 'Sign in' }}
         </button>
       </div>
     </Form>
@@ -269,12 +139,12 @@ const goToForgotPassword = () => {
 
       <div>
         <button
-          @click="loginWithGoogle"
+          @click="handleGoogleLogin"
           class="btn-secondary"
-          :disabled="processingGoogle"
+          :disabled="isLoading"
         >
           <i class="i-logos-google-icon w-5 h-5 mr-2"></i>
-          {{ processingGoogle ? 'Signing in...' : 'Sign in with Google' }}
+          {{ isLoading ? 'Signing in...' : 'Sign in with Google' }}
         </button>
       </div>
 
