@@ -1,23 +1,17 @@
 <script setup lang="ts">
-import { LanguageCode, Theme } from '@/enums/user.enums';
-import { auth, db } from '@/firebase';
+import { useAuth } from '@/composables/useAuth';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
-import { createUserWithEmailAndPassword, type AuthError } from 'firebase/auth';
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useTitle('Register | Fakaloan');
 
 const router = useRouter();
-const toast = useToast();
-const registrationError = ref<string | null>(null);
+const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 
 const schema = yup.object({
   name: yup.string().trim().required('Name is required'),
@@ -37,73 +31,8 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
-const registerUser = async (values: GenericFormValues) => {
-  registrationError.value = null;
-
-  const formValues = values as RegisterFormValues;
-
-  if (!formValues.email || !formValues.password || !formValues.name) {
-    registrationError.value = 'Please fill in all required fields.';
-    toast.error('Please fill in all required fields.');
-    return;
-  }
-
-  try {
-    console.log('Attempting Firebase registration for:', formValues.email);
-    const userCredential = await createUserWithEmailAndPassword(
-      auth,
-      formValues.email,
-      formValues.password
-    );
-    const user = userCredential.user;
-    console.log('Firebase Auth user created:', user.uid);
-
-    console.log('Creating Firestore document for user:', user.uid);
-    const userDocRef = doc(db, 'users', user.uid);
-    await setDoc(userDocRef, {
-      uid: user.uid,
-      name: user.displayName || 'Google User',
-      email: user.email,
-      createdAt: serverTimestamp(),
-      cellphone: null,
-      isPremium: false,
-      preferences: { theme: Theme.Light },
-      preferredLanguage: LanguageCode.English,
-      paystackCustomerId: null,
-      paystackSubscriptionId: null,
-      paystackPlanId: null,
-      subscriptionStatus: null,
-      subscriptionStartDate: null,
-      nextBillingDate: null,
-      lastPaymentDate: null,
-      lastPaymentAmount: null,
-      trialEndsAt: null,
-    });
-    console.log('Firestore document created successfully.');
-
-    toast.success('Registration successful! Please log in.');
-    router.push('/login');
-  } catch (error) {
-    console.error('Registration failed:', error);
-    const authError = error as AuthError;
-
-    switch (authError.code) {
-      case 'auth/email-already-in-use':
-        registrationError.value = 'This email address is already registered.';
-        break;
-      case 'auth/invalid-email':
-        registrationError.value = 'Please enter a valid email address.';
-        break;
-      case 'auth/weak-password':
-        registrationError.value =
-          'Password is too weak. It must be at least 8 characters long.';
-        break;
-      default:
-        registrationError.value =
-          'An unexpected error occurred during registration. Please try again.';
-    }
-    toast.error(registrationError.value || 'Registration failed.');
-  }
+const handleRegister = (values: GenericFormValues) => {
+  registerWithEmail(values as RegisterFormValues);
 };
 
 const goToLogin = () => {
@@ -114,12 +43,19 @@ const goToLogin = () => {
 <template>
   <AuthLayout title="Create Fakaloan Account">
     <template #errors>
-      <div v-if="registrationError" class="alert-error">
-        {{ registrationError }}
+      <div v-if="!isOnline" class="alert-error">
+        No internet connection. Please check your network.
+      </div>
+      <div v-if="authError" class="alert-error">
+        {{ authError }}
       </div>
     </template>
 
-    <Form :validation-schema="schema" @submit="registerUser" class="space-y-4">
+    <Form
+      :validation-schema="schema"
+      @submit="handleRegister"
+      class="space-y-4"
+    >
       <div>
         <label for="name" class="form-label">Full Name</label>
         <Field
@@ -220,8 +156,11 @@ const goToLogin = () => {
           class="form-error-text"
         />
       </div>
+
       <div>
-        <button type="submit" class="btn-primary">Create Account</button>
+        <button type="submit" class="btn-primary" :disabled="isLoading">
+          {{ isLoading ? 'Creating...' : 'Create Account' }}
+        </button>
       </div>
     </Form>
 
