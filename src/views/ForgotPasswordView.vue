@@ -1,23 +1,23 @@
 <script setup lang="ts">
-import { auth } from '@/firebase';
+import { useAuth } from '@/composables/useAuth';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
-import { sendPasswordResetEmail, type AuthError } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useTitle('Forgot Password | Fakaloan');
 
 const router = useRouter();
-const toast = useToast();
-const emailSent = ref(false);
-const resetError = ref<string | null>(null);
-const processing = ref(false);
+const {
+  sendPasswordReset,
+  isLoading,
+  error: authError,
+  emailSent,
+  isOnline,
+} = useAuth();
 
 const schema = yup.object({
   email: yup
@@ -28,43 +28,8 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
-const handlePasswordReset = async (values: GenericFormValues) => {
-  resetError.value = null;
-  processing.value = true;
-
-  const formValues = values as unknown as ForgotPasswordForm;
-
-  try {
-    console.log('Attempting password reset for:', formValues.email);
-    await sendPasswordResetEmail(auth, formValues.email);
-    console.log('Password reset email sent successfully.');
-
-    emailSent.value = true;
-    toast.success(
-      'Password reset email sent. Please check your inbox (and spam folder).'
-    );
-
-    setTimeout(() => {
-      router.push({ name: 'login' });
-    }, 3000);
-  } catch (error) {
-    console.error('Password reset error:', error);
-    const authError = error as AuthError;
-    emailSent.value = false;
-    switch (authError.code) {
-      case 'auth/user-not-found':
-        resetError.value = 'No account found with this email address.';
-        break;
-      case 'auth/invalid-email':
-        resetError.value = 'Please enter a valid email address.';
-        break;
-      default:
-        resetError.value = 'An unexpected error occurred. Please try again.';
-    }
-    toast.error(resetError.value || 'Password reset failed.');
-  } finally {
-    processing.value = false;
-  }
+const handlePasswordReset = (values: GenericFormValues) => {
+  sendPasswordReset(values as unknown as ForgotPasswordForm);
 };
 
 const goToLogin = () => {
@@ -75,12 +40,15 @@ const goToLogin = () => {
 <template>
   <AuthLayout title="Reset Password">
     <template #errors>
-      <div v-if="resetError && !emailSent" class="alert-error">
-        {{ resetError }}
+      <div v-if="!isOnline" class="alert-error">
+        No internet connection. Please check your network.
+      </div>
+      <div v-if="authError && !emailSent" class="alert-error">
+        {{ authError }}
       </div>
       <div v-if="emailSent" class="alert-success">
         Password reset email sent successfully to the provided address. Please
-        check your inbox and spam folder. You will be redirected shortly.
+        check your inbox and spam folder.
       </div>
     </template>
 
@@ -118,8 +86,8 @@ const goToLogin = () => {
       </div>
 
       <div>
-        <button type="submit" class="btn-primary" :disabled="processing">
-          {{ processing ? 'Sending...' : 'Send Reset Link' }}
+        <button type="submit" class="btn-primary" :disabled="isLoading">
+          {{ isLoading ? 'Sending...' : 'Send Reset Link' }}
         </button>
       </div>
     </Form>
