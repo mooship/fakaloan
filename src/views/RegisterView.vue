@@ -8,16 +8,12 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-//---------------------------------------------------------------------------------
 // Setup
-//---------------------------------------------------------------------------------
 useTitle('Register | Fakaloan');
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 
-//---------------------------------------------------------------------------------
 // Form Validation Schema
-//---------------------------------------------------------------------------------
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
   lastName: yup.string().trim().required('Last Name is required'),
@@ -37,9 +33,7 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
-//---------------------------------------------------------------------------------
 // Methods
-//---------------------------------------------------------------------------------
 /**
  * Handle registration form submission.
  */
@@ -57,9 +51,7 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Create Fakaloan Account">
-    <!-- ======================================================================= -->
-    <!-- Error Notifications                                                     -->
-    <!-- ======================================================================= -->
+    <!-- Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -69,9 +61,7 @@ const goToLogin = () => {
       </div>
     </template>
 
-    <!-- ======================================================================= -->
-    <!-- Registration Form                                                       -->
-    <!-- ======================================================================= -->
+    <!-- Registration Form -->
     <Form
       :validation-schema="schema"
       @submit="handleRegister"
@@ -221,9 +211,7 @@ const goToLogin = () => {
       </div>
     </Form>
 
-    <!-- ======================================================================= -->
-    <!-- Login Link                                                              -->
-    <!-- ======================================================================= -->
+    <!-- Login Link -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <span class="text-gray-600">Already have an account? </span>

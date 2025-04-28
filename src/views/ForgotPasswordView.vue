@@ -8,9 +8,7 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-//---------------------------------------------------------------------------------
 // Setup
-//---------------------------------------------------------------------------------
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
 const {
@@ -21,9 +19,7 @@ const {
   isOnline,
 } = useAuth();
 
-//---------------------------------------------------------------------------------
 // Form Validation Schema
-//---------------------------------------------------------------------------------
 const schema = yup.object({
   email: yup
     .string()
@@ -33,9 +29,7 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
-//---------------------------------------------------------------------------------
 // Methods
-//---------------------------------------------------------------------------------
 /**
  * Handle password reset request submission.
  */
@@ -53,9 +47,7 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Reset Password">
-    <!-- ======================================================================= -->
-    <!-- Status and Error Notifications                                          -->
-    <!-- ======================================================================= -->
+    <!-- Status and Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -69,9 +61,7 @@ const goToLogin = () => {
       </div>
     </template>
 
-    <!-- ======================================================================= -->
-    <!-- Password Reset Form                                                     -->
-    <!-- ======================================================================= -->
+    <!-- Password Reset Form -->
     <!-- Only shown if reset email not yet sent -->
     <Form
       v-if="!emailSent"
@@ -116,9 +106,7 @@ const goToLogin = () => {
       </div>
     </Form>
 
-    <!-- ======================================================================= -->
-    <!-- Back to Login Link                                                      -->
-    <!-- ======================================================================= -->
+    <!-- Back to Login Link -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <button @click="goToLogin" class="btn-link">Back to Login</button>

@@ -8,9 +8,7 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-//---------------------------------------------------------------------------------
 // Setup
-//---------------------------------------------------------------------------------
 useTitle('Login | Fakaloan');
 const router = useRouter();
 const {
@@ -21,9 +19,7 @@ const {
   isOnline,
 } = useAuth();
 
-//---------------------------------------------------------------------------------
 // Form Validation Schema
-//---------------------------------------------------------------------------------
 const schema = yup.object({
   email: yup
     .string()
@@ -34,9 +30,7 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-//---------------------------------------------------------------------------------
 // Methods
-//---------------------------------------------------------------------------------
 /**
  * Handle email/password login form submission.
  */
@@ -68,9 +62,7 @@ const goToForgotPassword = () => {
 
 <template>
   <AuthLayout title="Login to Fakaloan">
-    <!-- ======================================================================= -->
-    <!-- Error Notifications                                                     -->
-    <!-- ======================================================================= -->
+    <!-- Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -80,9 +72,7 @@ const goToForgotPassword = () => {
       </div>
     </template>
 
-    <!-- ======================================================================= -->
-    <!-- Login Form                                                              -->
-    <!-- ======================================================================= -->
+    <!-- Login Form -->
     <Form
       :validation-schema="schema"
       @submit="handleEmailLogin"
@@ -156,9 +146,7 @@ const goToForgotPassword = () => {
       </div>
     </Form>
 
-    <!-- ======================================================================= -->
-    <!-- Additional Actions (OAuth, Registration)                                -->
-    <!-- ======================================================================= -->
+    <!-- Additional Actions (OAuth, Registration) -->
     <template #actions>
       <!-- Divider -->
       <div class="relative my-4">

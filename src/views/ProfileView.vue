@@ -3,45 +3,41 @@ import { useAuth } from '@/composables/useAuth';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
-import { updateEmail } from 'firebase/auth'; // Remove updatePassword import
+import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-//---------------------------------------------------------------------------------
 // Setup & State
-//---------------------------------------------------------------------------------
 useTitle('Profile | Fakaloan');
 const {
   currentUser,
   userProfile,
   isLoading: authLoading,
-  updatePassword, // Import updatePassword from useAuth
-  error: authError, // Import authError for potential feedback
+  updatePassword,
+  error: authError,
 } = useAuth();
 const router = useRouter();
 const toast = useToast();
 
-// UI state for editing sections
+// UI state
 const isEditingContact = ref(false);
 const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
 const isUpdating = ref(false);
 
-// Input models for editing fields
+// Input models
 const cellphoneInput = ref(userProfile.value?.cellphone || '');
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
 
-// Confirmation dialog state
+// Confirmation dialog
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-//---------------------------------------------------------------------------------
 // Computed Properties
-//---------------------------------------------------------------------------------
 const isPremium = computed(() => userProfile.value?.isPremium || false);
 const subscriptionStatus = computed(
   () => userProfile.value?.subscriptionStatus || null
@@ -52,7 +48,6 @@ const hasActiveSubscription = computed(() =>
   )
 );
 
-// Computed property to display language name based on code
 const displayLanguage = computed(() => {
   const lang = userProfile.value?.preferences.preferredLanguage;
   switch (lang) {
@@ -67,9 +62,7 @@ const displayLanguage = computed(() => {
   }
 });
 
-//---------------------------------------------------------------------------------
 // Methods
-//---------------------------------------------------------------------------------
 /** Navigate back to the home page. */
 const goToHome = () => {
   router.push('/');
@@ -149,10 +142,8 @@ const handlePasswordUpdate = async () => {
     confirmPassword.value = '';
     isEditingPassword.value = false;
     toast.success('Password updated successfully');
-  } else {
-    // Error message is handled within useAuth via toast
-    // toast.error(authError.value || 'Failed to update password.'); // Already handled by useAuth
   }
+  // Error message is handled within useAuth via toast
 
   isUpdating.value = false;
 };
@@ -169,13 +160,13 @@ const handleCancelSubscription = () => {
 
 /**
  * Handle the confirmation result for subscription cancellation.
- * Placeholder for actual cancellation logic (e.g., API call to backend).
+ * Placeholder for actual cancellation logic.
  * @param choice - Boolean indicating if the user confirmed cancellation.
  */
 const confirmCancelSubscription = async (choice: boolean) => {
   if (!choice) return;
   try {
-    // implement cancellation logic (e.g., API call)
+    // TODO: Implement cancellation logic (e.g., API call)
     toast.success('Subscription cancellation request submitted');
   } catch (error) {
     console.error('Failed to cancel subscription:', error);
@@ -193,16 +184,12 @@ const confirmCancelSubscription = async (choice: boolean) => {
         Your Profile
       </h1>
 
-      <!-- ======================================================================= -->
-      <!-- Loading State                                                           -->
-      <!-- ======================================================================= -->
+      <!-- Loading State -->
       <div v-if="authLoading" class="text-center text-gray-500">
         Loading profile...
       </div>
 
-      <!-- ======================================================================= -->
-      <!-- Profile Content (Displayed when loaded and user exists)                 -->
-      <!-- ======================================================================= -->
+      <!-- Profile Content -->
       <div v-else-if="currentUser && userProfile" class="space-y-8">
         <!-- Premium Status Section -->
         <div
@@ -239,7 +226,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 }}</span>
               </p>
             </div>
-            <!-- Action Buttons based on status -->
+            <!-- Action Buttons -->
             <button
               v-if="!isPremium && !hasActiveSubscription"
               @click="goToPremiumPage"
@@ -264,7 +251,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
         </div>
 
-        <!-- Account Information Section (Editable Fields) -->
+        <!-- Account Information Section -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Account Information
@@ -440,7 +427,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
         </div>
 
-        <!-- Additional Information Section (Read-only) -->
+        <!-- Additional Information Section -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Additional Information
@@ -479,16 +466,12 @@ const confirmCancelSubscription = async (choice: boolean) => {
         </div>
       </div>
 
-      <!-- ======================================================================= -->
-      <!-- Error State (Failed to load profile)                                    -->
-      <!-- ======================================================================= -->
+      <!-- Error State -->
       <div v-else class="text-center text-red-500">
         Could not load user information. Please try logging in again.
       </div>
 
-      <!-- ======================================================================= -->
-      <!-- Back Button                                                             -->
-      <!-- ======================================================================= -->
+      <!-- Back Button -->
       <div class="text-center mt-8 pt-6 border-t border-gray-200">
         <button @click="goToHome" class="btn-secondary !w-auto">
           Back to Home
@@ -497,9 +480,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
     </div>
   </div>
 
-  <!-- ======================================================================= -->
-  <!-- Confirmation Dialog (Teleported to body)                                -->
-  <!-- ======================================================================= -->
+  <!-- Confirmation Dialog -->
   <Teleport to="body">
     <div
       v-if="isRevealed"
