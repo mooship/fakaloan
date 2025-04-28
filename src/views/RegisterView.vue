@@ -8,14 +8,16 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-// Set the page title
+//---------------------------------------------------------------------------------
+// Setup
+//---------------------------------------------------------------------------------
 useTitle('Register | Fakaloan');
-
 const router = useRouter();
-// Get authentication methods and state
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 
-// Define form validation schema with strong validation rules
+//---------------------------------------------------------------------------------
+// Form Validation Schema
+//---------------------------------------------------------------------------------
 const schema = yup.object({
   name: yup.string().trim().required('Name is required'),
   email: yup
@@ -34,15 +36,18 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
+//---------------------------------------------------------------------------------
+// Methods
+//---------------------------------------------------------------------------------
 /**
- * Handle registration form submission
+ * Handle registration form submission.
  */
 const handleRegister = (values: GenericFormValues) => {
   registerWithEmail(values as RegisterFormValues);
 };
 
 /**
- * Navigate to login page
+ * Navigate to login page.
  */
 const goToLogin = () => {
   router.push('/login');
@@ -51,7 +56,9 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Create Fakaloan Account">
-    <!-- Error notifications section -->
+    <!-- ======================================================================= -->
+    <!-- Error Notifications                                                     -->
+    <!-- ======================================================================= -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -61,7 +68,9 @@ const goToLogin = () => {
       </div>
     </template>
 
-    <!-- Registration Form -->
+    <!-- ======================================================================= -->
+    <!-- Registration Form                                                       -->
+    <!-- ======================================================================= -->
     <Form
       :validation-schema="schema"
       @submit="handleRegister"
@@ -183,7 +192,9 @@ const goToLogin = () => {
       </div>
     </Form>
 
-    <!-- Login Link -->
+    <!-- ======================================================================= -->
+    <!-- Login Link                                                              -->
+    <!-- ======================================================================= -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <span class="text-gray-600">Already have an account? </span>

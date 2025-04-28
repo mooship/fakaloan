@@ -9,23 +9,33 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
+//---------------------------------------------------------------------------------
+// Setup & State
+//---------------------------------------------------------------------------------
 useTitle('Profile | Fakaloan');
-
 const { currentUser, userProfile, isLoading: authLoading } = useAuth();
 const router = useRouter();
 const toast = useToast();
 
+// UI state for editing sections
 const isEditingContact = ref(false);
 const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
-const isUpdating = ref(false);
+const isUpdating = ref(false); // General loading state for update operations
 
+// Input models for editing fields
 const cellphoneInput = ref(userProfile.value?.cellphone || '');
-const currentPassword = ref('');
+const currentPassword = ref(''); // Needed for re-authentication potentially
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
 
+// Confirmation dialog state
+const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
+
+//---------------------------------------------------------------------------------
+// Computed Properties
+//---------------------------------------------------------------------------------
 const isPremium = computed(() => userProfile.value?.isPremium || false);
 const subscriptionStatus = computed(
   () => userProfile.value?.subscriptionStatus || null
@@ -36,6 +46,7 @@ const hasActiveSubscription = computed(() =>
   )
 );
 
+// Computed property to display language name based on code
 const displayLanguage = computed(() => {
   const lang = userProfile.value?.preferences.preferredLanguage;
   switch (lang) {
@@ -50,12 +61,15 @@ const displayLanguage = computed(() => {
   }
 });
 
-const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
-
+//---------------------------------------------------------------------------------
+// Methods
+//---------------------------------------------------------------------------------
+/** Navigate back to the home page. */
 const goToHome = () => {
   router.push('/');
 };
 
+/** Update user's cellphone number in Firestore. */
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) return;
 
@@ -75,6 +89,7 @@ const updateCellphone = async () => {
   }
 };
 
+/** Update user's email in Firebase Auth and Firestore. */
 const updateUserEmail = async () => {
   if (!currentUser.value) return;
 
@@ -95,6 +110,7 @@ const updateUserEmail = async () => {
   }
 };
 
+/** Update user's password in Firebase Auth. */
 const updateUserPassword = async () => {
   if (!currentUser.value) return;
   if (newPassword.value !== confirmPassword.value) {
@@ -120,14 +136,21 @@ const updateUserPassword = async () => {
   }
 };
 
+/** Navigate to the premium features/upgrade page. */
 const goToPremiumPage = () => {
   router.push('/premium');
 };
 
+/** Trigger the confirmation dialog for subscription cancellation. */
 const handleCancelSubscription = () => {
   reveal();
 };
 
+/**
+ * Handle the confirmation result for subscription cancellation.
+ * Placeholder for actual cancellation logic (e.g., API call to backend).
+ * @param choice - Boolean indicating if the user confirmed cancellation.
+ */
 const confirmCancelSubscription = async (choice: boolean) => {
   if (!choice) return;
   try {
@@ -149,14 +172,18 @@ const confirmCancelSubscription = async (choice: boolean) => {
         Your Profile
       </h1>
 
-      <!-- Loading State -->
+      <!-- ======================================================================= -->
+      <!-- Loading State                                                           -->
+      <!-- ======================================================================= -->
       <div v-if="authLoading" class="text-center text-gray-500">
         Loading profile...
       </div>
 
-      <!-- Profile Content -->
+      <!-- ======================================================================= -->
+      <!-- Profile Content (Displayed when loaded and user exists)                 -->
+      <!-- ======================================================================= -->
       <div v-else-if="currentUser && userProfile" class="space-y-8">
-        <!-- Premium Status -->
+        <!-- Premium Status Section -->
         <div
           class="border-2 rounded-lg p-5"
           :class="
@@ -173,49 +200,64 @@ const confirmCancelSubscription = async (choice: boolean) => {
               >
                 <span
                   v-if="isPremium"
-                  class="i-heroicons-star-solid mr-2 text-yellow-500 text-2xl"
+                  class="i-heroicons-star-solid mr-2 text-yellow-500 text-2xl align-middle"
                 ></span>
-                <span v-else class="i-heroicons-star mr-2 text-xl"></span>
+                <span
+                  v-else
+                  class="i-heroicons-star mr-2 text-xl align-middle"
+                ></span>
                 {{ isPremium ? 'Premium Account' : 'Free Account' }}
               </h2>
-              <p v-if="hasActiveSubscription" class="text-gray-600 mt-1">
-                Subscription: {{ subscriptionStatus }}
+              <p
+                v-if="hasActiveSubscription"
+                class="text-gray-600 mt-1 text-sm"
+              >
+                Subscription Status:
+                <span class="font-medium capitalize">{{
+                  subscriptionStatus
+                }}</span>
               </p>
+              <!-- TODO: Add more subscription details like next billing date -->
             </div>
+            <!-- Action Buttons based on status -->
             <button
-              v-if="!isPremium"
+              v-if="!isPremium && !hasActiveSubscription"
               @click="goToPremiumPage"
-              class="btn-premium"
+              class="btn-premium !w-auto"
             >
               <span class="btn-premium-text">Upgrade to Premium</span>
             </button>
             <button
               v-else-if="hasActiveSubscription"
               @click="handleCancelSubscription"
-              class="text-red-600 border-2 border-red-300 px-4 py-2 rounded-md hover:bg-red-50 font-bold"
+              class="text-red-600 border-2 border-red-300 px-4 py-2 rounded-md hover:bg-red-50 font-medium text-sm !w-auto"
             >
               Cancel Subscription
             </button>
-            <button v-else @click="goToPremiumPage" class="btn-renew-premium">
+            <button
+              v-else
+              @click="goToPremiumPage"
+              class="btn-renew-premium !w-auto"
+            >
               <span class="btn-premium-text">Renew Premium</span>
             </button>
           </div>
         </div>
 
-        <!-- Account Information -->
+        <!-- Account Information Section (Editable Fields) -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Account Information
           </h2>
 
-          <!-- Email -->
-          <div class="mb-4">
+          <!-- Email Display/Edit -->
+          <div class="mb-4 pb-4 border-b border-gray-200">
             <div
               v-if="!isEditingEmail"
               class="flex justify-between items-center"
             >
               <div>
-                <p class="text-gray-600 font-medium">Email:</p>
+                <p class="text-gray-600 font-medium text-sm">Email:</p>
                 <p class="text-gray-800">{{ userProfile.email }}</p>
               </div>
               <button
@@ -223,24 +265,26 @@ const confirmCancelSubscription = async (choice: boolean) => {
                   isEditingEmail = true;
                   newEmail = userProfile.email || '';
                 "
-                class="btn-link"
+                class="btn-link text-sm"
               >
-                <span class="i-heroicons-pencil mr-1"></span>
+                <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 Edit
               </button>
             </div>
+            <!-- Email Edit Form -->
             <div v-else class="space-y-3">
-              <label class="form-label">New Email</label>
+              <label class="form-label">New Email Address</label>
               <input
                 v-model="newEmail"
                 type="email"
                 class="form-input-base form-input-valid"
+                placeholder="Enter new email"
               />
               <div class="flex space-x-2 mt-2">
                 <button
                   @click="updateUserEmail"
                   :disabled="isUpdating"
-                  class="btn-primary !w-auto"
+                  class="btn-primary !w-auto text-sm"
                 >
                   <span v-if="isUpdating">Updating...</span>
                   <span v-else>Update Email</span>
@@ -248,7 +292,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 <button
                   @click="isEditingEmail = false"
                   :disabled="isUpdating"
-                  class="btn-secondary !w-auto"
+                  class="btn-secondary !w-auto text-sm"
                 >
                   Cancel
                 </button>
@@ -256,51 +300,54 @@ const confirmCancelSubscription = async (choice: boolean) => {
             </div>
           </div>
 
-          <!-- Password -->
-          <div class="mb-4">
+          <!-- Password Display/Edit -->
+          <div class="mb-4 pb-4 border-b border-gray-200">
             <div
               v-if="!isEditingPassword"
               class="flex justify-between items-center"
             >
               <div>
-                <p class="text-gray-600 font-medium">Password:</p>
+                <p class="text-gray-600 font-medium text-sm">Password:</p>
                 <p class="text-gray-800">•••••••••</p>
               </div>
-              <button @click="isEditingPassword = true" class="btn-link">
-                <span class="i-heroicons-pencil mr-1"></span>
+              <button
+                @click="isEditingPassword = true"
+                class="btn-link text-sm"
+              >
+                <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 Change
               </button>
             </div>
+            <!-- Password Change Form -->
             <div v-else class="space-y-3">
-              <div class="space-y-2">
-                <label class="form-label">Current Password</label>
-                <input
-                  v-model="currentPassword"
-                  type="password"
-                  class="form-input-base form-input-valid"
-                />
-              </div>
-              <div class="space-y-2">
-                <label class="form-label">New Password</label>
+              <!-- Current Password (May be needed depending on Firebase rules/re-auth needs) -->
+              <!-- <div class="space-y-1">
+                <label class="form-label text-sm">Current Password</label>
+                <input v-model="currentPassword" type="password" class="form-input-base form-input-valid" />
+              </div> -->
+              <div class="space-y-1">
+                <label class="form-label text-sm">New Password</label>
                 <input
                   v-model="newPassword"
                   type="password"
                   class="form-input-base form-input-valid"
+                  placeholder="Enter new password"
                 />
               </div>
-              <div class="space-y-2">
-                <label class="form-label">Confirm New Password</label>
+              <div class="space-y-1">
+                <label class="form-label text-sm">Confirm New Password</label>
                 <input
                   v-model="confirmPassword"
                   type="password"
                   class="form-input-base form-input-valid"
+                  placeholder="Confirm new password"
                 />
               </div>
               <div class="flex space-x-2 mt-2">
                 <button
                   @click="updateUserPassword"
                   :disabled="isUpdating"
-                  class="btn-primary !w-auto"
+                  class="btn-primary !w-auto text-sm"
                 >
                   <span v-if="isUpdating">Updating...</span>
                   <span v-else>Update Password</span>
@@ -308,7 +355,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 <button
                   @click="isEditingPassword = false"
                   :disabled="isUpdating"
-                  class="btn-secondary !w-auto"
+                  class="btn-secondary !w-auto text-sm"
                 >
                   Cancel
                 </button>
@@ -316,14 +363,14 @@ const confirmCancelSubscription = async (choice: boolean) => {
             </div>
           </div>
 
-          <!-- Phone -->
+          <!-- Phone Display/Edit -->
           <div>
             <div
               v-if="!isEditingContact"
               class="flex justify-between items-center"
             >
               <div>
-                <p class="text-gray-600 font-medium">Phone:</p>
+                <p class="text-gray-600 font-medium text-sm">Phone:</p>
                 <p class="text-gray-800">
                   {{ userProfile.cellphone || 'Not provided' }}
                 </p>
@@ -333,14 +380,15 @@ const confirmCancelSubscription = async (choice: boolean) => {
                   isEditingContact = true;
                   cellphoneInput = userProfile.cellphone || '';
                 "
-                class="btn-link"
+                class="btn-link text-sm"
               >
-                <span class="i-heroicons-pencil mr-1"></span>
+                <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 {{ userProfile.cellphone ? 'Edit' : 'Add' }}
               </button>
             </div>
+            <!-- Phone Edit Form -->
             <div v-else class="space-y-3">
-              <label class="form-label">Phone Number</label>
+              <label class="form-label text-sm">Phone Number</label>
               <input
                 v-model="cellphoneInput"
                 type="tel"
@@ -351,7 +399,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 <button
                   @click="updateCellphone"
                   :disabled="isUpdating"
-                  class="btn-primary !w-auto"
+                  class="btn-primary !w-auto text-sm"
                 >
                   <span v-if="isUpdating">Updating...</span>
                   <span v-else>Update Phone</span>
@@ -359,7 +407,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 <button
                   @click="isEditingContact = false"
                   :disabled="isUpdating"
-                  class="btn-secondary !w-auto"
+                  class="btn-secondary !w-auto text-sm"
                 >
                   Cancel
                 </button>
@@ -368,19 +416,21 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
         </div>
 
-        <!-- Additional Information -->
+        <!-- Additional Information Section (Read-only) -->
         <div class="border rounded-lg p-4">
           <h2 class="text-xl font-medium text-gray-700 mb-4">
             Additional Information
           </h2>
-          <div class="grid grid-cols-1 gap-3">
+          <div class="grid grid-cols-1 gap-3 text-sm">
             <div class="flex justify-between items-center">
               <span class="text-gray-600 font-medium">Name:</span>
               <span class="text-gray-800">{{ userProfile.name }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-gray-600 font-medium">User ID:</span>
-              <span class="text-gray-800 text-xs">{{ userProfile.uid }}</span>
+              <span class="text-gray-800 text-xs break-all">{{
+                userProfile.uid
+              }}</span>
             </div>
             <div class="flex justify-between items-center">
               <span class="text-gray-600 font-medium">Account Created:</span>
@@ -395,19 +445,25 @@ const confirmCancelSubscription = async (choice: boolean) => {
               >
               <span class="text-gray-800 capitalize">
                 {{ displayLanguage }}
+                <!-- TODO: Add edit button for language preference -->
               </span>
             </div>
+            <!-- TODO: Add Theme Preference display -->
           </div>
         </div>
       </div>
 
-      <!-- Error State -->
+      <!-- ======================================================================= -->
+      <!-- Error State (Failed to load profile)                                    -->
+      <!-- ======================================================================= -->
       <div v-else class="text-center text-red-500">
         Could not load user information. Please try logging in again.
       </div>
 
-      <!-- Back Button -->
-      <div class="text-center mt-8 t-6">
+      <!-- ======================================================================= -->
+      <!-- Back Button                                                             -->
+      <!-- ======================================================================= -->
+      <div class="text-center mt-8 pt-6 border-t border-gray-200">
         <button @click="goToHome" class="btn-secondary !w-auto">
           Back to Home
         </button>
@@ -415,20 +471,24 @@ const confirmCancelSubscription = async (choice: boolean) => {
     </div>
   </div>
 
-  <!-- Confirmation Dialog -->
+  <!-- ======================================================================= -->
+  <!-- Confirmation Dialog (Teleported to body)                                -->
+  <!-- ======================================================================= -->
   <Teleport to="body">
     <div
       v-if="isRevealed"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
+      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      @click.self="cancel()"
     >
       <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-        <h3 class="text-xl font-bold mb-4">Cancel Premium Subscription?</h3>
-        <p class="mb-6 text-gray-600">
+        <h3 class="text-lg font-bold mb-4">Cancel Premium Subscription?</h3>
+        <p class="mb-6 text-gray-600 text-sm">
           Are you sure you want to cancel your premium subscription? You'll lose
-          access to premium features when your current billing period ends.
+          access to premium features when your current billing period ends. This
+          action cannot be undone easily.
         </p>
         <div class="flex justify-end space-x-3">
-          <button @click="cancel()" class="btn-secondary !w-auto">
+          <button @click="cancel()" class="btn-secondary !w-auto text-sm">
             Keep Subscription
           </button>
           <button
@@ -436,9 +496,9 @@ const confirmCancelSubscription = async (choice: boolean) => {
               confirm(true);
               confirmCancelSubscription(true);
             "
-            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700"
+            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm font-medium"
           >
-            Cancel Subscription
+            Yes, Cancel Subscription
           </button>
         </div>
       </div>

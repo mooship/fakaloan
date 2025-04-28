@@ -8,11 +8,11 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-// Set the page title
+//---------------------------------------------------------------------------------
+// Setup
+//---------------------------------------------------------------------------------
 useTitle('Login | Fakaloan');
-
 const router = useRouter();
-// Get authentication methods and state
 const {
   loginWithEmail,
   loginWithGoogle,
@@ -21,7 +21,9 @@ const {
   isOnline,
 } = useAuth();
 
-// Define form validation schema
+//---------------------------------------------------------------------------------
+// Form Validation Schema
+//---------------------------------------------------------------------------------
 const schema = yup.object({
   email: yup
     .string()
@@ -32,29 +34,32 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
+//---------------------------------------------------------------------------------
+// Methods
+//---------------------------------------------------------------------------------
 /**
- * Handle email/password login form submission
+ * Handle email/password login form submission.
  */
 const handleEmailLogin = (values: AppGenericFormValues) => {
   loginWithEmail(values as LoginFormValues);
 };
 
 /**
- * Handle Google OAuth login
+ * Handle Google OAuth login.
  */
 const handleGoogleLogin = () => {
   loginWithGoogle();
 };
 
 /**
- * Navigate to registration page
+ * Navigate to registration page.
  */
 const goToRegister = () => {
   router.push({ name: 'register' });
 };
 
 /**
- * Navigate to forgot password page
+ * Navigate to forgot password page.
  */
 const goToForgotPassword = () => {
   router.push({ name: 'forgot-password' });
@@ -63,7 +68,9 @@ const goToForgotPassword = () => {
 
 <template>
   <AuthLayout title="Login to Fakaloan">
-    <!-- Error notifications section -->
+    <!-- ======================================================================= -->
+    <!-- Error Notifications                                                     -->
+    <!-- ======================================================================= -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -73,7 +80,9 @@ const goToForgotPassword = () => {
       </div>
     </template>
 
-    <!-- Login Form -->
+    <!-- ======================================================================= -->
+    <!-- Login Form                                                              -->
+    <!-- ======================================================================= -->
     <Form
       :validation-schema="schema"
       @submit="handleEmailLogin"
@@ -147,7 +156,9 @@ const goToForgotPassword = () => {
       </div>
     </Form>
 
-    <!-- Additional Actions (OAuth, Registration) -->
+    <!-- ======================================================================= -->
+    <!-- Additional Actions (OAuth, Registration)                                -->
+    <!-- ======================================================================= -->
     <template #actions>
       <!-- Divider -->
       <div class="relative my-4">

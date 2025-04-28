@@ -2,14 +2,17 @@
 import { useAuth } from '@/composables/useAuth';
 import { useTitle } from '@vueuse/core';
 
-// Set the page title
+//---------------------------------------------------------------------------------
+// Setup
+//---------------------------------------------------------------------------------
 useTitle('Home | Fakaloan');
-
-// Get authentication state and methods
 const { currentUser, logout, isLoading } = useAuth();
 
+//---------------------------------------------------------------------------------
+// Methods
+//---------------------------------------------------------------------------------
 /**
- * Handles user logout action
+ * Handles user logout action.
  */
 const handleLogout = () => {
   logout();
@@ -23,7 +26,9 @@ const handleLogout = () => {
     <div class="p-8 bg-white rounded shadow-md text-center space-y-4">
       <h1 class="text-2xl font-bold">Welcome to Fakaloan!</h1>
 
-      <!-- User information display section -->
+      <!-- ======================================================================= -->
+      <!-- User Information Display                                                -->
+      <!-- ======================================================================= -->
       <div v-if="currentUser">
         <p class="text-gray-700">You are logged in as:</p>
         <p class="font-medium text-indigo-600">{{ currentUser.email }}</p>
@@ -35,7 +40,9 @@ const handleLogout = () => {
         <p class="text-gray-500">Not logged in.</p>
       </div>
 
-      <!-- Logout button -->
+      <!-- ======================================================================= -->
+      <!-- Logout Button                                                           -->
+      <!-- ======================================================================= -->
       <div>
         <button
           @click="handleLogout"
@@ -46,7 +53,9 @@ const handleLogout = () => {
         </button>
       </div>
 
-      <!-- Navigation links -->
+      <!-- ======================================================================= -->
+      <!-- Navigation Links                                                        -->
+      <!-- ======================================================================= -->
       <div class="pt-4 border-t border-gray-200">
         <router-link to="/profile" class="btn-link mr-4">Profile</router-link>
         <router-link to="/about" class="btn-link">About</router-link>

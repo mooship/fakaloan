@@ -6,19 +6,19 @@ import type {
 import type { Timestamp } from 'firebase/firestore';
 
 /**
- * Represents a user's profile information stored in Firestore
- * Contains personal details, preferences, and subscription information
+ * Represents the structure of a user's profile document stored in Firestore.
+ * Contains personal details, application preferences, and subscription/payment information.
  */
 export interface UserProfile {
   // Basic user information
-  uid: string; // Firebase Authentication UID
-  name: string; // User's full name
-  email: string | null; // User's email address
-  createdAt: Timestamp; // When the user account was created
-  cellphone: string | null; // User's contact number
+  uid: string;
+  name: string;
+  email: string | null;
+  createdAt: Timestamp;
+  cellphone: string | null;
 
   // Premium status
-  isPremium: boolean; // Whether user has premium features
+  isPremium: boolean;
 
   // User preferences
   preferences: {
@@ -27,15 +27,15 @@ export interface UserProfile {
   };
 
   // Paystack payment integration details
-  paystackCustomerId: string | null; // ID in Paystack system
-  paystackSubscriptionId: string | null; // Subscription ID in Paystack
-  paystackPlanId: string | null; // Plan ID in Paystack
+  paystackCustomerCode: string | null;
+  paystackSubscriptionCode: string | null;
+  paystackPlanCode: string | null;
 
   // Subscription information
-  subscriptionStatus: SubscriptionStatus | null; // Current subscription status
-  subscriptionStartDate: Timestamp | null; // When subscription started
-  nextBillingDate: Timestamp | null; // Next payment due date
-  lastPaymentDate: Timestamp | null; // When last payment was made
-  lastPaymentAmount: number | null; // Amount of last payment
-  trialEndsAt: Timestamp | null; // When free trial ends
+  subscriptionStatus: SubscriptionStatus | null;
+  subscriptionStartDate: Timestamp | null;
+  nextBillingDate: Timestamp | null;
+  lastPaymentDate: Timestamp | null;
+  lastPaymentAmount: number | null;
+  trialEndsAt: Timestamp | null;
 }

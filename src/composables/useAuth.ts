@@ -22,10 +22,16 @@ import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import { useCurrentUser, useDocument } from 'vuefire';
 
+// Re-export db for potential use elsewhere if needed, though typically imported directly
 export { db };
 
+//--------------------------------------------------------------------------
+// Error Mapping
+//--------------------------------------------------------------------------
 /**
- * Maps Firebase authentication error codes to user-friendly messages
+ * Maps Firebase authentication error codes to user-friendly messages.
+ * @param authError - The Firebase AuthError object.
+ * @returns A user-friendly error message string.
  */
 export const mapAuthError = (authError: AuthError): string => {
   switch (authError.code) {
@@ -53,38 +59,46 @@ export const mapAuthError = (authError: AuthError): string => {
   }
 };
 
+//--------------------------------------------------------------------------
+// useAuth Composable
+//--------------------------------------------------------------------------
 /**
- * Composable that provides authentication functionality
- * Handles login, logout, registration, password reset, and user profile data
+ * Composable that provides authentication functionality.
+ * Handles login, logout, registration, password reset, and user profile data management.
  */
 export function useAuth() {
+  //------------------------------------------------------------
+  // Core Dependencies & State
+  //------------------------------------------------------------
   const router = useRouter();
   const toast = useToast();
-  const currentUser = useCurrentUser();
-  const { isOnline } = useNetwork();
+  const currentUser = useCurrentUser(); // Reactive Firebase Auth user state
+  const { isOnline } = useNetwork(); // Reactive network status
 
+  // Loading and error states for general auth operations
   const [isLoading, toggleLoading] = useToggle(false);
   const authError = ref<string | null>(null);
+
+  // State specific to password reset flow
   const [emailSent, toggleEmailSent] = useToggle(false);
 
   //------------------------------------------------------------
-  // User Profile Management
+  // User Profile Management (Firestore)
   //------------------------------------------------------------
 
-  // Create a ref for the user document path, dependent on currentUser
+  // Reactive Firestore document reference based on the current user's UID
   const userDocRef = computed(() =>
     currentUser.value ? doc(db, 'users', currentUser.value.uid) : null
   );
 
-  // Use useDocument to reactively fetch the user profile
-  // Pass undefined as initial data type, let vuefire infer from Firestore
+  // Reactive user profile data fetched from Firestore using vuefire
   const {
-    data: userProfile,
-    pending: profileLoading,
-    error: profileError,
+    data: userProfile, // Raw profile data from Firestore
+    pending: profileLoading, // Loading state specifically for the profile fetch
+    error: profileError, // Error state specifically for the profile fetch
   } = useDocument<UserProfile>(userDocRef);
 
-  // add a computed wrapper to supply default prefs when missing
+  // Computed property to provide default preferences if they are missing in the fetched profile
   const userProfileWithDefaults = computed<UserProfile | null>(() => {
     const profile = userProfile.value;
     if (!profile) return null;
@@ -98,7 +112,7 @@ export function useAuth() {
     };
   });
 
-  // Watch for profile loading errors
+  // Watcher to handle errors during profile fetching
   watch(profileError, (newError) => {
     if (newError) {
       console.error('Error loading user profile:', newError);
@@ -107,7 +121,11 @@ export function useAuth() {
   });
 
   /**
-   * Creates or updates a user profile in Firestore
+   * Creates a user profile document in Firestore if it doesn't exist.
+   * Called after successful registration or first Google login.
+   * @param userId - The Firebase Auth UID of the user.
+   * @param name - The user's display name.
+   * @param email - The user's email address.
    */
   const createUserProfile = async (
     userId: string,
@@ -159,8 +177,9 @@ export function useAuth() {
   //------------------------------------------------------------
 
   /**
-   * Checks if the device is online before proceeding with auth operations
-   * @returns boolean - true if online, false otherwise
+   * Checks if the device is online before proceeding with network-dependent auth operations.
+   * Displays a toast message and sets authError if offline.
+   * @returns boolean - true if online, false otherwise.
    */
   const checkNetwork = (): boolean => {
     if (!isOnline.value) {
@@ -179,7 +198,8 @@ export function useAuth() {
   //------------------------------------------------------------
 
   /**
-   * Handles email/password login
+   * Handles user login with email and password.
+   * @param values - Object containing email and password.
    */
   const loginWithEmail = async (values: LoginFormValues) => {
     if (!checkNetwork()) {
@@ -221,7 +241,8 @@ export function useAuth() {
   };
 
   /**
-   * Handles Google OAuth login
+   * Handles user login via Google OAuth popup.
+   * Creates a user profile if it's the first time logging in with Google.
    */
   const loginWithGoogle = async () => {
     if (!checkNetwork()) {
@@ -260,7 +281,9 @@ export function useAuth() {
   };
 
   /**
-   * Handles user registration with email and password
+   * Handles user registration with email, password, and name.
+   * Creates a user profile upon successful registration.
+   * @param values - Object containing name, email, and password.
    */
   const registerWithEmail = async (values: RegisterFormValues) => {
     if (!checkNetwork()) {
@@ -313,7 +336,8 @@ export function useAuth() {
   };
 
   /**
-   * Logs out the current user
+   * Logs out the currently authenticated user.
+   * Redirects to the login page upon successful logout.
    */
   const logout = async () => {
     toggleLoading(true);
@@ -334,7 +358,8 @@ export function useAuth() {
   };
 
   /**
-   * Sends a password reset email to the provided address
+   * Sends a password reset email to the provided email address.
+   * @param values - Object containing the user's email.
    */
   const sendPasswordReset = async (values: ForgotPasswordForm) => {
     if (!checkNetwork()) {
@@ -370,18 +395,21 @@ export function useAuth() {
   };
 
   //------------------------------------------------------------
-  // Exported state and methods
+  // Exported State and Methods
   //------------------------------------------------------------
   return {
-    currentUser,
-    userProfile: userProfileWithDefaults,
-    isLoading: computed(() => isLoading.value || profileLoading.value),
-    authLoading: isLoading,
-    profileLoading,
-    error: authError,
-    profileError,
-    emailSent,
-    isOnline,
+    // --- Reactive State ---
+    currentUser, // The authenticated Firebase user object (or null)
+    userProfile: userProfileWithDefaults, // User profile data from Firestore (with defaults)
+    isLoading: computed(() => isLoading.value || profileLoading.value), // Combined loading state
+    authLoading: isLoading, // Loading state for general auth operations
+    profileLoading, // Loading state specifically for profile fetching
+    error: authError, // Error message for general auth operations
+    profileError, // Error object specifically from profile fetching
+    emailSent, // Flag indicating if password reset email was sent
+    isOnline, // Network connection status
+
+    // --- Methods ---
     loginWithEmail,
     loginWithGoogle,
     registerWithEmail,

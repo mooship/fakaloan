@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
 
-// Set the page title
+//---------------------------------------------------------------------------------
+// Setup
+//---------------------------------------------------------------------------------
 useTitle('About | Fakaloan');
 </script>
 
@@ -10,12 +12,16 @@ useTitle('About | Fakaloan');
     class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
   >
     <div class="w-full max-w-2xl p-8 bg-white rounded shadow-md space-y-6">
-      <!-- Page Header -->
+      <!-- ======================================================================= -->
+      <!-- Page Header                                                             -->
+      <!-- ======================================================================= -->
       <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
         About Fakaloan
       </h1>
 
-      <!-- Introduction Section -->
+      <!-- ======================================================================= -->
+      <!-- Introduction Section                                                    -->
+      <!-- ======================================================================= -->
       <section>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">
           Welcome to Fakaloan!
@@ -32,7 +38,9 @@ useTitle('About | Fakaloan');
         </p>
       </section>
 
-      <!-- Features Section -->
+      <!-- ======================================================================= -->
+      <!-- Features Section                                                        -->
+      <!-- ======================================================================= -->
       <section>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">What We Offer</h2>
         <p class="text-gray-600 leading-relaxed">
@@ -50,7 +58,9 @@ useTitle('About | Fakaloan');
         </ul>
       </section>
 
-      <!-- Legal Disclaimer Section -->
+      <!-- ======================================================================= -->
+      <!-- Legal Disclaimer Section                                                -->
+      <!-- ======================================================================= -->
       <section>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">Disclaimer</h2>
         <p class="text-gray-600 leading-relaxed font-semibold">
@@ -63,7 +73,9 @@ useTitle('About | Fakaloan');
         </p>
       </section>
 
-      <!-- Language Support Section -->
+      <!-- ======================================================================= -->
+      <!-- Language Support Section                                                -->
+      <!-- ======================================================================= -->
       <section>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">
           Language Support
@@ -75,7 +87,9 @@ useTitle('About | Fakaloan');
         </p>
       </section>
 
-      <!-- Contact Information Section -->
+      <!-- ======================================================================= -->
+      <!-- Contact Information Section                                             -->
+      <!-- ======================================================================= -->
       <section>
         <h2 class="text-xl font-semibold text-gray-700 mb-2">Need Help?</h2>
         <p class="text-gray-600 leading-relaxed">
@@ -92,7 +106,9 @@ useTitle('About | Fakaloan');
         </p>
       </section>
 
-      <!-- Navigation Button -->
+      <!-- ======================================================================= -->
+      <!-- Navigation Button                                                       -->
+      <!-- ======================================================================= -->
       <div class="text-center mt-8">
         <router-link to="/" class="btn-secondary !w-auto"
           >Back to Home</router-link
@@ -100,7 +116,9 @@ useTitle('About | Fakaloan');
       </div>
     </div>
 
-    <!-- Footer -->
+    <!-- ======================================================================= -->
+    <!-- Footer                                                                  -->
+    <!-- ======================================================================= -->
     <footer class="w-full max-w-2xl text-center text-gray-500 text-sm mt-8">
       <p>
         &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
