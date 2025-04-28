@@ -5,6 +5,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
@@ -12,6 +13,8 @@ import * as yup from 'yup';
 useTitle('Register | Fakaloan');
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
+const recaptchaToken = ref<string | null>(null);
+const recaptchaSiteKey = '6LdDLScrAAAAAK26Mzy3AiDAoVGqP_VoitwLG7bA';
 
 // Form Validation Schema
 const schema = yup.object({
@@ -31,6 +34,7 @@ const schema = yup.object({
     .string()
     .required('Please confirm your password')
     .oneOf([yup.ref('password')], 'Passwords must match'),
+  recaptchaToken: yup.string().required('Please complete the reCAPTCHA'),
 });
 
 // Methods
@@ -38,7 +42,15 @@ const schema = yup.object({
  * Handle registration form submission.
  */
 const handleRegister = (values: GenericFormValues) => {
-  registerWithEmail(values as RegisterFormValues);
+  // Ensure recaptchaToken is included
+  const payload: RegisterFormValues & { recaptchaToken: string } = {
+    firstName: values.firstName as string,
+    lastName: values.lastName as string,
+    email: values.email as string,
+    password: values.password as string,
+    recaptchaToken: recaptchaToken.value ?? '',
+  };
+  registerWithEmail(payload);
 };
 
 /**
@@ -46,6 +58,16 @@ const handleRegister = (values: GenericFormValues) => {
  */
 const goToLogin = () => {
   router.push('/login');
+};
+
+// --- reCAPTCHA Logic ---
+
+// Callbacks managed within component scope (used by vue-recaptcha)
+const handleRecaptchaVerify = (response: string) => {
+  recaptchaToken.value = response;
+};
+const handleRecaptchaExpired = () => {
+  recaptchaToken.value = null;
 };
 </script>
 
@@ -199,6 +221,27 @@ const goToLogin = () => {
         <ErrorMessage
           name="passwordConfirmation"
           id="passwordConfirmation-error"
+          class="form-error-text"
+        />
+      </div>
+
+      <!-- reCAPTCHA Field -->
+      <div>
+        <Field
+          name="recaptchaToken"
+          v-model="recaptchaToken"
+          class="hidden"
+          :validate-on-input="true"
+        />
+        <!-- Re-added VueRecaptcha component -->
+        <vue-recaptcha
+          :sitekey="recaptchaSiteKey"
+          @verify="handleRecaptchaVerify"
+          @expired="handleRecaptchaExpired"
+        ></vue-recaptcha>
+        <ErrorMessage
+          name="recaptchaToken"
+          id="recaptcha-error"
           class="form-error-text"
         />
       </div>
