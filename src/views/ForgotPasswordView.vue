@@ -5,7 +5,6 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
@@ -19,8 +18,6 @@ const {
   emailSent,
   isOnline,
 } = useAuth();
-const recaptchaToken = ref<string | null>(null);
-const recaptchaSiteKey = '6LdDLScrAAAAAK26Mzy3AiDAoVGqP_VoitwLG7bA';
 
 // Form Validation Schema
 const schema = yup.object({
@@ -30,7 +27,6 @@ const schema = yup.object({
     .lowercase()
     .required('Email is required')
     .email('Please enter a valid email address'),
-  recaptchaToken: yup.string().required('Please complete the reCAPTCHA'),
 });
 
 // Methods
@@ -38,11 +34,7 @@ const schema = yup.object({
  * Handle password reset request submission.
  */
 const handlePasswordReset = (values: GenericFormValues) => {
-  const payload: ForgotPasswordForm & { recaptchaToken: string } = {
-    email: values.email as string,
-    recaptchaToken: recaptchaToken.value ?? '',
-  };
-  sendPasswordReset(payload);
+  sendPasswordReset(values as unknown as ForgotPasswordForm);
 };
 
 /**
@@ -50,16 +42,6 @@ const handlePasswordReset = (values: GenericFormValues) => {
  */
 const goToLogin = () => {
   router.push({ name: 'login' });
-};
-
-// --- reCAPTCHA Logic ---
-
-// Callbacks managed within component scope (used by vue-recaptcha)
-const handleRecaptchaVerify = (response: string) => {
-  recaptchaToken.value = response;
-};
-const handleRecaptchaExpired = () => {
-  recaptchaToken.value = null;
 };
 </script>
 
@@ -114,27 +96,6 @@ const handleRecaptchaExpired = () => {
           />
         </Field>
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
-      </div>
-
-      <!-- reCAPTCHA Field -->
-      <div>
-        <Field
-          name="recaptchaToken"
-          v-model="recaptchaToken"
-          class="hidden"
-          :validate-on-input="true"
-        />
-        <!-- Re-added VueRecaptcha component -->
-        <vue-recaptcha
-          :sitekey="recaptchaSiteKey"
-          @verify="handleRecaptchaVerify"
-          @expired="handleRecaptchaExpired"
-        ></vue-recaptcha>
-        <ErrorMessage
-          name="recaptchaToken"
-          id="recaptcha-error"
-          class="form-error-text"
-        />
       </div>
 
       <!-- Submit Button -->
