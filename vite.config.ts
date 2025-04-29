@@ -11,6 +11,7 @@ export default defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  cacheDir: 'node_modules/.vite_cache',
   build: {
     minify: 'terser',
     terserOptions: {
