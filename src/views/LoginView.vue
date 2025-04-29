@@ -8,7 +8,6 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-// Setup
 useTitle('Login | Fakaloan');
 const router = useRouter();
 const {
@@ -19,7 +18,6 @@ const {
   isOnline,
 } = useAuth();
 
-// Form Validation Schema
 const schema = yup.object({
   email: yup
     .string()
@@ -30,33 +28,24 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-// Methods
-/**
- * Handle email/password login form submission.
- */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
   const success = await loginWithEmail(values as LoginFormValues);
-  if (success) router.push({ name: 'home' });
+  if (success) {
+    router.push({ name: 'home' });
+  }
 };
 
-/**
- * Handle Google OAuth login.
- */
 const handleGoogleLogin = async () => {
   const success = await loginWithGoogle();
-  if (success) router.push({ name: 'home' });
+  if (success) {
+    router.push({ name: 'home' });
+  }
 };
 
-/**
- * Navigate to registration page.
- */
 const goToRegister = () => {
   router.push({ name: 'register' });
 };
 
-/**
- * Navigate to forgot password page.
- */
 const goToForgotPassword = () => {
   router.push({ name: 'forgot-password' });
 };
@@ -64,7 +53,6 @@ const goToForgotPassword = () => {
 
 <template>
   <AuthLayout title="Login to Fakaloan">
-    <!-- Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -74,13 +62,11 @@ const goToForgotPassword = () => {
       </div>
     </template>
 
-    <!-- Login Form -->
     <Form
       :validation-schema="schema"
       @submit="handleEmailLogin"
       class="space-y-4"
     >
-      <!-- Email Field -->
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
@@ -104,7 +90,6 @@ const goToForgotPassword = () => {
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
-      <!-- Password Field with Forgot Password Link -->
       <div>
         <div class="flex items-center justify-between">
           <label for="password" class="form-label">Password</label>
@@ -140,7 +125,6 @@ const goToForgotPassword = () => {
         />
       </div>
 
-      <!-- Submit Button -->
       <div>
         <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Signing in...' : 'Sign in' }}
@@ -148,9 +132,7 @@ const goToForgotPassword = () => {
       </div>
     </Form>
 
-    <!-- Additional Actions (OAuth, Registration) -->
     <template #actions>
-      <!-- Divider -->
       <div class="relative my-4">
         <div class="absolute inset-0 flex items-center">
           <div class="w-full border-t border-gray-300"></div>
@@ -160,7 +142,6 @@ const goToForgotPassword = () => {
         </div>
       </div>
 
-      <!-- Google OAuth Button -->
       <div>
         <button
           @click="handleGoogleLogin"
@@ -172,7 +153,6 @@ const goToForgotPassword = () => {
         </button>
       </div>
 
-      <!-- Registration Link -->
       <div class="text-sm text-center mt-4">
         <span class="text-gray-600">Don't have an account? </span>
         <button @click="goToRegister" class="btn-link">Create one</button>
