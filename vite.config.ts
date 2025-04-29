@@ -19,5 +19,22 @@ export default defineConfig({
         drop_console: true,
       },
     },
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vue: ['vue', 'vue-router', 'vue-i18n'],
+          pinia: ['pinia'],
+          firebase: [
+            'firebase/app',
+            'firebase/auth',
+            'firebase/firestore',
+            'vuefire',
+          ],
+          validation: ['vee-validate', 'yup'],
+          toast: ['vue-toastification'],
+          vueuse: ['@vueuse/core'],
+        },
+      },
+    },
   },
 });
