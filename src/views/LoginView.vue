@@ -33,7 +33,7 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
-  const success = await loginWithEmail(values as LoginFormValues);
+  const success = await loginWithEmail(values as unknown as LoginFormValues);
   if (success) {
     router.push({ name: 'home' });
   }

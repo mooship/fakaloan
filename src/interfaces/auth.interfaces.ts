@@ -2,19 +2,19 @@
  * Login form values for authentication.
  */
 export interface LoginFormValues {
-  email?: string | null;
-  password?: string | null;
+  email: string;
+  password: string;
 }
 
 /**
  * Registration form values for new user sign-up.
  */
 export interface RegisterFormValues {
-  firstName?: string | null;
-  lastName?: string | null;
-  email?: string | null;
-  password?: string | null;
-  passwordConfirmation?: string | null;
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  passwordConfirmation: string;
 }
 
 /**
