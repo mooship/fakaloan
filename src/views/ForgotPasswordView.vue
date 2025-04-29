@@ -5,7 +5,9 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
+import { watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 // Setup
@@ -18,6 +20,13 @@ const {
   emailSent,
   isOnline,
 } = useAuth();
+const toast = useToast();
+
+watch(emailSent, (sent) => {
+  if (sent) {
+    toast.success('Password reset email sent successfully!');
+  }
+});
 
 // Form Validation Schema
 const schema = yup.object({
