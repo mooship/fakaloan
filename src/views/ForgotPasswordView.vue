@@ -11,13 +11,7 @@ import * as yup from 'yup';
 // Setup
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
-const {
-  sendPasswordReset,
-  isLoading,
-  error: authError,
-  emailSent,
-  isOnline,
-} = useAuth();
+const { sendPasswordReset, isLoading, error: authError, isOnline } = useAuth();
 
 // Form Validation Schema
 const schema = yup.object({
@@ -33,8 +27,11 @@ const schema = yup.object({
 /**
  * Handle password reset request submission.
  */
-const handlePasswordReset = (values: GenericFormValues) => {
-  sendPasswordReset(values as unknown as ForgotPasswordForm);
+const handlePasswordReset = async (values: GenericFormValues) => {
+  const success = await sendPasswordReset(
+    values as unknown as ForgotPasswordForm
+  );
+  if (success) router.push({ name: 'login' });
 };
 
 /**
@@ -52,7 +49,7 @@ const goToLogin = () => {
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
       </div>
-      <div v-if="authError && !emailSent" class="alert-error">
+      <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
     </template>
@@ -60,7 +57,6 @@ const goToLogin = () => {
     <!-- Password Reset Form -->
     <!-- Only shown if reset email not yet sent -->
     <Form
-      v-if="!emailSent"
       :validation-schema="schema"
       @submit="handlePasswordReset"
       class="space-y-4"

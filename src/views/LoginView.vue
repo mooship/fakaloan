@@ -34,15 +34,17 @@ const schema = yup.object({
 /**
  * Handle email/password login form submission.
  */
-const handleEmailLogin = (values: AppGenericFormValues) => {
-  loginWithEmail(values as LoginFormValues);
+const handleEmailLogin = async (values: AppGenericFormValues) => {
+  const success = await loginWithEmail(values as LoginFormValues);
+  if (success) router.push({ name: 'home' });
 };
 
 /**
  * Handle Google OAuth login.
  */
-const handleGoogleLogin = () => {
-  loginWithGoogle();
+const handleGoogleLogin = async () => {
+  const success = await loginWithGoogle();
+  if (success) router.push({ name: 'home' });
 };
 
 /**

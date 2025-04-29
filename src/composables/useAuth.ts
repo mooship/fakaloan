@@ -1,3 +1,4 @@
+import { ToastMessages } from '@/constants/toastMessages';
 import { LanguageCode, Theme } from '@/enums/user.enums';
 import { auth, db } from '@/firebase';
 import type {
@@ -6,6 +7,7 @@ import type {
   RegisterFormValues,
 } from '@/interfaces/auth.interfaces';
 import type { UserProfile } from '@/interfaces/user.interfaces';
+import { ensureOnline, requireField } from '@/utilities/authUtils';
 import { useNetwork, useToggle } from '@vueuse/core';
 import {
   createUserWithEmailAndPassword,
@@ -169,57 +171,60 @@ export function useAuth() {
    * Checks network status before proceeding. Displays error if offline.
    * @returns True if online, false otherwise.
    */
-  const checkNetwork = (): boolean => {
-    if (!isOnline.value) {
-      const msg =
-        'No internet connection. Please connect to the internet and try again.';
-      authError.value = msg;
-      toast.error(msg);
-      return false;
-    }
-    authError.value = null;
-    return true;
-  };
+  const checkNetwork = () =>
+    ensureOnline(
+      isOnline.value,
+      (msg) => {
+        authError.value = msg;
+      },
+      toast
+    );
 
   // Authentication Methods
   /**
    * Logs in a user with email and password.
    * @param values - Login form values.
    */
-  const loginWithEmail = async (values: LoginFormValues) => {
-    if (!checkNetwork()) {
-      return;
-    }
-
-    if (!values.email) {
-      authError.value = 'Email is required.';
-      toast.error(authError.value);
-      return;
-    }
-
-    if (!values.password) {
-      authError.value = 'Password is required.';
-      toast.error(authError.value);
-      return;
-    }
-
+  const loginWithEmail = async (values: LoginFormValues): Promise<boolean> => {
+    if (!checkNetwork()) return false;
+    if (
+      !requireField(
+        values.email,
+        'Email is required.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
+    if (
+      !requireField(
+        values.password,
+        'Password is required.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
     toggleLoading(true);
     authError.value = null;
-
     try {
-      console.log('Attempting Firebase email login with:', values.email);
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        values.email,
-        values.password
-      );
-      console.log('Successfully logged in:', userCredential.user);
-      toast.success('Login successful!');
-      router.push('/');
+      if (!values.email || !values.password) {
+        throw new Error('Email and password are required.');
+      }
+
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      toast.success(ToastMessages.LoginSuccess);
+
+      return true;
     } catch (err) {
-      console.error('Firebase email login error:', err);
       authError.value = mapAuthError(err as AuthError);
-      toast.error(authError.value || 'Login failed');
+      toast.error(authError.value || ToastMessages.LoginFailed);
+
+      return false;
     } finally {
       toggleLoading(false);
     }
@@ -228,9 +233,9 @@ export function useAuth() {
   /**
    * Logs in a user using Google OAuth. Creates profile if needed.
    */
-  const loginWithGoogle = async () => {
+  const loginWithGoogle = async (): Promise<boolean> => {
     if (!checkNetwork()) {
-      return;
+      return false;
     }
 
     toggleLoading(true);
@@ -254,12 +259,14 @@ export function useAuth() {
         user.email
       );
 
-      toast.success('Login successful!');
-      router.push('/');
+      toast.success(ToastMessages.LoginSuccess);
+
+      return true;
     } catch (err) {
-      console.error('Firebase Google login error:', err);
       authError.value = mapAuthError(err as AuthError);
-      toast.error(authError.value || 'Google sign-in failed');
+      toast.error(authError.value || ToastMessages.LoginFailed);
+
+      return false;
     } finally {
       toggleLoading(false);
     }
@@ -269,44 +276,64 @@ export function useAuth() {
    * Registers a new user with email, password, and name. Creates profile.
    * @param values - Registration form values.
    */
-  const registerWithEmail = async (values: RegisterFormValues) => {
+  const registerWithEmail = async (
+    values: RegisterFormValues
+  ): Promise<boolean> => {
     if (!checkNetwork()) {
-      return;
+      return false;
     }
 
-    if (!values.email) {
-      authError.value = 'Email is required for registration.';
-      toast.error(authError.value);
-      return;
-    }
-
-    if (!values.password) {
-      authError.value = 'Password is required for registration.';
-      toast.error(authError.value);
-      return;
-    }
-
-    if (!values.firstName) {
-      authError.value = 'First name is required for registration.';
-      toast.error(authError.value);
-      return;
-    }
-
-    if (!values.lastName) {
-      authError.value = 'Last name is required for registration.';
-      toast.error(authError.value);
-      return;
-    }
-
+    if (
+      !requireField(
+        values.email,
+        'Email is required for registration.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
+    if (
+      !requireField(
+        values.password,
+        'Password is required for registration.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
+    if (
+      !requireField(
+        values.firstName,
+        'First name is required for registration.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
+    if (
+      !requireField(
+        values.lastName,
+        'Last name is required for registration.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
     toggleLoading(true);
     authError.value = null;
-
     try {
-      console.log('Attempting Firebase registration for:', values.email);
       const userCredential = await createUserWithEmailAndPassword(
         auth,
-        values.email,
-        values.password
+        values.email as string,
+        values.password as string
       );
 
       const user = userCredential.user;
@@ -314,17 +341,19 @@ export function useAuth() {
 
       await createUserProfile(
         user.uid,
-        values.firstName,
-        values.lastName,
+        values.firstName as string,
+        values.lastName as string,
         user.email
       );
 
-      toast.success('Registration successful! Please log in.');
-      router.push({ name: 'login' });
+      toast.success(ToastMessages.RegistrationSuccess);
+
+      return true;
     } catch (err) {
-      console.error('Registration failed:', err);
       authError.value = mapAuthError(err as AuthError);
-      toast.error(authError.value || 'Registration failed.');
+      toast.error(authError.value || ToastMessages.RegistrationFailed);
+
+      return false;
     } finally {
       toggleLoading(false);
     }
@@ -333,19 +362,17 @@ export function useAuth() {
   /**
    * Logs out the current user and redirects to login.
    */
-  const logout = async () => {
+  const logout = async (): Promise<boolean> => {
     toggleLoading(true);
     authError.value = null;
     try {
-      console.log('Attempting logout...');
       await signOut(auth);
-      console.log('Logout successful.');
-      toast.success('You have been logged out.');
-      router.push({ name: 'login' });
+      toast.success(ToastMessages.LogoutSuccess);
+      return true;
     } catch (err) {
-      console.error('Logout failed:', err);
-      authError.value = 'Logout failed. Please try again.';
+      authError.value = ToastMessages.LogoutFailed;
       toast.error(authError.value);
+      return false;
     } finally {
       toggleLoading(false);
     }
@@ -355,17 +382,21 @@ export function useAuth() {
    * Sends a password reset email.
    * @param values - Form values containing the email.
    */
-  const sendPasswordReset = async (values: ForgotPasswordForm) => {
-    if (!checkNetwork()) {
-      return;
-    }
-
-    if (!values.email) {
-      authError.value = 'Email is required to reset password.';
-      toast.error(authError.value);
-      return;
-    }
-
+  const sendPasswordReset = async (
+    values: ForgotPasswordForm
+  ): Promise<boolean> => {
+    if (!checkNetwork()) return false;
+    if (
+      !requireField(
+        values.email,
+        'Email is required to reset password.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    )
+      return false;
     toggleLoading(true);
     authError.value = null;
     toggleEmailSent(false);
@@ -375,14 +406,13 @@ export function useAuth() {
       await sendPasswordResetEmail(auth, values.email);
       console.log('Password reset email sent successfully.');
       toggleEmailSent(true);
-      toast.success(
-        'Password reset email sent. Please check your inbox (and spam folder).'
-      );
+      toast.success(ToastMessages.PasswordResetSent);
+      return true;
     } catch (err) {
-      console.error('Password reset error:', err);
       authError.value = mapAuthError(err as AuthError);
-      toast.error(authError.value || 'Password reset failed.');
+      toast.error(authError.value || ToastMessages.PasswordResetFailed);
       toggleEmailSent(false);
+      return false;
     } finally {
       toggleLoading(false);
     }
@@ -398,10 +428,38 @@ export function useAuth() {
     currentPassword: string,
     newPassword: string
   ): Promise<boolean> => {
-    if (!checkNetwork()) return false;
+    if (!checkNetwork()) {
+      return false;
+    }
+
     if (!currentUser.value || !currentUser.value.email) {
       authError.value = 'User not logged in or email missing.';
       toast.error(authError.value);
+      return false;
+    }
+
+    if (
+      !requireField(
+        currentPassword,
+        'Current password is required.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    ) {
+      return false;
+    }
+    if (
+      !requireField(
+        newPassword,
+        'New password is required.',
+        (msg) => {
+          authError.value = msg;
+        },
+        toast
+      )
+    ) {
       return false;
     }
 
@@ -424,20 +482,20 @@ export function useAuth() {
       console.log('Attempting password update...');
       await firebaseUpdatePassword(currentUser.value, newPassword);
       console.log('Password updated successfully in Firebase Auth.');
-      toggleLoading(false);
-      return true; // Indicate success
+      toast.success(ToastMessages.PasswordUpdateSuccess);
+      return true;
     } catch (err) {
       console.error('Password update failed:', err);
       authError.value = mapAuthError(err as AuthError);
-      toast.error(authError.value || 'Failed to update password.');
+      toast.error(authError.value || ToastMessages.PasswordUpdateFailed);
+      return false;
+    } finally {
       toggleLoading(false);
-      return false; // Indicate failure
     }
   };
 
   // Exported State and Methods
   return {
-    // State
     currentUser,
     userProfile: userProfileWithDefaults,
     isLoading: computed(() => isLoading.value || profileLoading.value),
@@ -447,8 +505,6 @@ export function useAuth() {
     profileError,
     emailSent,
     isOnline,
-
-    // Methods
     loginWithEmail,
     loginWithGoogle,
     registerWithEmail,

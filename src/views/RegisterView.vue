@@ -39,8 +39,9 @@ const schema = yup.object({
 /**
  * Handle registration form submission.
  */
-const handleRegister = (values: GenericFormValues) => {
-  registerWithEmail(values as RegisterFormValues);
+const handleRegister = async (values: GenericFormValues) => {
+  const success = await registerWithEmail(values as RegisterFormValues);
+  if (success) router.push({ name: 'login' });
 };
 
 /**

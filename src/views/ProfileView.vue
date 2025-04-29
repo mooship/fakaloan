@@ -70,7 +70,9 @@ const goToHome = () => {
 
 /** Update user's cellphone number in Firestore. */
 const updateCellphone = async () => {
-  if (!currentUser.value || !userProfile.value) return;
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
 
   const trimmedCellphone = cellphoneInput.value.replace(/\s+/g, '');
 
@@ -93,7 +95,9 @@ const updateCellphone = async () => {
 
 /** Update user's email in Firebase Auth and Firestore. */
 const updateUserEmail = async () => {
-  if (!currentUser.value) return;
+  if (!currentUser.value) {
+    return;
+  }
 
   try {
     isUpdating.value = true;
@@ -114,15 +118,20 @@ const updateUserEmail = async () => {
 
 /** Handle the password update process using the useAuth composable. */
 const handlePasswordUpdate = async () => {
-  if (!currentUser.value) return;
+  if (!currentUser.value) {
+    return;
+  }
+
   if (newPassword.value !== confirmPassword.value) {
     toast.error('New passwords do not match');
     return;
   }
+
   if (!currentPassword.value) {
     toast.error('Current password is required');
     return;
   }
+
   if (!newPassword.value) {
     toast.error('New password is required');
     return;
@@ -164,7 +173,9 @@ const handleCancelSubscription = () => {
  * @param choice - Boolean indicating if the user confirmed cancellation.
  */
 const confirmCancelSubscription = async (choice: boolean) => {
-  if (!choice) return;
+  if (!choice) {
+    return;
+  }
   try {
     // TODO: Implement cancellation logic (e.g., API call)
     toast.success('Subscription cancellation request submitted');
