@@ -12,6 +12,7 @@
     "lint:oxlint": "oxlint . --fix -D correctness --ignore-path .gitignore",
     "lint:eslint": "eslint . --fix",
     "lint": "run-s lint:*",
+    "fix": "eslint . --fix && prettier --write src/",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -39,7 +40,7 @@
     "@vue/tsconfig": "^0.7.0",
     "eslint": "^9.22.0",
     "eslint-plugin-oxlint": "^0.16.8",
-    "eslint-plugin-vue": "~10.0.0",
+    "eslint-plugin-vue": "^10.0.0",
     "jiti": "^2.4.2",
     "npm-run-all2": "^7.0.2",
     "oxlint": "^0.16.8",
@@ -48,7 +49,7 @@
     "prettier-plugin-packagejson": "^2.5.10",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "terser": "^5.39.0",
-    "typescript": "~5.8.0",
+    "typescript": "^5.8.0",
     "unocss": "^66.1.0-beta.12",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.6",
