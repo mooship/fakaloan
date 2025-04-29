@@ -10,6 +10,8 @@ import * as yup from 'yup';
 
 // Setup
 useTitle('Register | Fakaloan');
+// TODO: Implement analytics tracking for registration page views and form submissions.
+// TODO: Integrate CAPTCHA (e.g., reCAPTCHA) to prevent spam registrations.
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 
