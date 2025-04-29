@@ -3,17 +3,11 @@ import { useAuth } from '@/composables/useAuth';
 import { useTitle } from '@vueuse/core';
 import { ref } from 'vue';
 
-// Setup
 useTitle('Home | Fakaloan');
 const { currentUser, logout, isLoading } = useAuth();
-
-// State for FAB speed dial
 const showSpeedDial = ref(false);
 
-// Methods
-/**
- * Handles user logout action.
- */
+/** Logout current user */
 const handleLogout = () => {
   logout();
 };
@@ -23,14 +17,12 @@ const toggleSpeedDial = () => {
 };
 
 const addCustomer = () => {
-  console.log('Add Customer clicked');
-  // TODO: Implement add customer logic
+  // TODO: implement add customer functionality
   showSpeedDial.value = false;
 };
 
 const addTransaction = () => {
-  console.log('Add Transaction clicked');
-  // TODO: Implement add transaction logic
+  // TODO: implement add transaction functionality
   showSpeedDial.value = false;
 };
 </script>
