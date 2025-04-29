@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { useTitle } from '@vueuse/core';
-
-// Setup
 useTitle('About | Fakaloan');
 </script>
 
