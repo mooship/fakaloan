@@ -181,10 +181,10 @@ const confirmCancelSubscription = async (choice: boolean) => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-4"
+    class="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4"
   >
-    <div class="w-full max-w-2xl p-8 bg-white rounded shadow-md space-y-6">
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">
+    <div class="w-full max-w-2xl space-y-6 rounded bg-white p-8 shadow-md">
+      <h1 class="mb-6 text-center text-3xl font-bold text-gray-800">
         Your Profile
       </h1>
 
@@ -197,14 +197,14 @@ const confirmCancelSubscription = async (choice: boolean) => {
       <div v-else-if="currentUser && userProfile" class="space-y-8">
         <!-- Premium Status Section -->
         <div
-          class="border-2 rounded-lg p-5"
+          class="rounded-lg border-2 p-5"
           :class="
             isPremium
-              ? 'bg-indigo-50 border-indigo-300'
-              : 'bg-gray-50 border-gray-300'
+              ? 'border-indigo-300 bg-indigo-50'
+              : 'border-gray-300 bg-gray-50'
           "
         >
-          <div class="flex justify-between items-center">
+          <div class="flex items-center justify-between">
             <div>
               <h2
                 class="text-xl font-bold"
@@ -212,17 +212,17 @@ const confirmCancelSubscription = async (choice: boolean) => {
               >
                 <span
                   v-if="isPremium"
-                  class="i-heroicons-star-solid mr-2 text-yellow-500 text-2xl align-middle"
+                  class="i-heroicons-star-solid mr-2 align-middle text-2xl text-yellow-500"
                 ></span>
                 <span
                   v-else
-                  class="i-heroicons-star mr-2 text-xl align-middle"
+                  class="i-heroicons-star mr-2 align-middle text-xl"
                 ></span>
                 {{ isPremium ? 'Premium Account' : 'Free Account' }}
               </h2>
               <p
                 v-if="hasActiveSubscription"
-                class="text-gray-600 mt-1 text-sm"
+                class="mt-1 text-sm text-gray-600"
               >
                 Subscription Status:
                 <span class="font-medium capitalize">{{
@@ -241,7 +241,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
             <button
               v-else-if="hasActiveSubscription"
               @click="handleCancelSubscription"
-              class="text-red-600 border-2 border-red-300 px-4 py-2 rounded-md hover:bg-red-50 font-medium text-sm !w-auto"
+              class="!w-auto rounded-md border-2 border-red-300 px-4 py-2 text-sm font-medium text-red-600 hover:bg-red-50"
             >
               Cancel Subscription
             </button>
@@ -256,19 +256,19 @@ const confirmCancelSubscription = async (choice: boolean) => {
         </div>
 
         <!-- Account Information Section -->
-        <div class="border rounded-lg p-4">
-          <h2 class="text-xl font-medium text-gray-700 mb-4">
+        <div class="rounded-lg border p-4">
+          <h2 class="mb-4 text-xl font-medium text-gray-700">
             Account Information
           </h2>
 
           <!-- Email Display/Edit -->
-          <div class="mb-4 pb-4 border-b border-gray-200">
+          <div class="mb-4 border-b border-gray-200 pb-4">
             <div
               v-if="!isEditingEmail"
-              class="flex justify-between items-center"
+              class="flex items-center justify-between"
             >
               <div>
-                <p class="text-gray-600 font-medium text-sm">Email:</p>
+                <p class="text-sm font-medium text-gray-600">Email:</p>
                 <p class="text-gray-800">{{ userProfile.email }}</p>
               </div>
               <button
@@ -291,7 +291,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 class="form-input-base form-input-valid"
                 placeholder="Enter new email"
               />
-              <div class="flex space-x-2 mt-2">
+              <div class="mt-2 flex space-x-2">
                 <button
                   @click="updateUserEmail"
                   :disabled="isUpdating"
@@ -312,13 +312,13 @@ const confirmCancelSubscription = async (choice: boolean) => {
           </div>
 
           <!-- Password Display/Edit -->
-          <div class="mb-4 pb-4 border-b border-gray-200">
+          <div class="mb-4 border-b border-gray-200 pb-4">
             <div
               v-if="!isEditingPassword"
-              class="flex justify-between items-center"
+              class="flex items-center justify-between"
             >
               <div>
-                <p class="text-gray-600 font-medium text-sm">Password:</p>
+                <p class="text-sm font-medium text-gray-600">Password:</p>
                 <p class="text-gray-800">•••••••••</p>
               </div>
               <button
@@ -358,7 +358,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                   placeholder="Confirm new password"
                 />
               </div>
-              <div class="flex space-x-2 mt-2">
+              <div class="mt-2 flex space-x-2">
                 <button
                   @click="handlePasswordUpdate"
                   :disabled="isUpdating"
@@ -382,10 +382,10 @@ const confirmCancelSubscription = async (choice: boolean) => {
           <div>
             <div
               v-if="!isEditingContact"
-              class="flex justify-between items-center"
+              class="flex items-center justify-between"
             >
               <div>
-                <p class="text-gray-600 font-medium text-sm">Phone:</p>
+                <p class="text-sm font-medium text-gray-600">Phone:</p>
                 <p class="text-gray-800">
                   {{ userProfile.cellphone || 'Not provided' }}
                 </p>
@@ -410,7 +410,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
                 class="form-input-base form-input-valid"
                 placeholder="+27 12 345 6789"
               />
-              <div class="flex space-x-2 mt-2">
+              <div class="mt-2 flex space-x-2">
                 <button
                   @click="updateCellphone"
                   :disabled="isUpdating"
@@ -432,35 +432,35 @@ const confirmCancelSubscription = async (choice: boolean) => {
         </div>
 
         <!-- Additional Information Section -->
-        <div class="border rounded-lg p-4">
-          <h2 class="text-xl font-medium text-gray-700 mb-4">
+        <div class="rounded-lg border p-4">
+          <h2 class="mb-4 text-xl font-medium text-gray-700">
             Additional Information
           </h2>
           <div class="grid grid-cols-1 gap-3 text-sm">
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600 font-medium">Name:</span>
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-gray-600">Name:</span>
               <span class="text-gray-800">{{
                 `${userProfile.firstName} ${userProfile.lastName}`
               }}</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600 font-medium">User ID:</span>
-              <span class="text-gray-800 text-xs break-all">{{
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-gray-600">User ID:</span>
+              <span class="break-all text-xs text-gray-800">{{
                 userProfile.uid
               }}</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600 font-medium">Account Created:</span>
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-gray-600">Account Created:</span>
               <span class="text-gray-800">{{
                 userProfile.createdAt?.toDate().toLocaleDateString() ||
                 'Unknown'
               }}</span>
             </div>
-            <div class="flex justify-between items-center">
-              <span class="text-gray-600 font-medium"
+            <div class="flex items-center justify-between">
+              <span class="font-medium text-gray-600"
                 >Language Preference:</span
               >
-              <span class="text-gray-800 capitalize">
+              <span class="capitalize text-gray-800">
                 {{ displayLanguage }}
                 <!-- TODO: Add edit button for language preference -->
               </span>
@@ -476,7 +476,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
       </div>
 
       <!-- Back Button -->
-      <div class="text-center mt-8 pt-6 border-t border-gray-200">
+      <div class="mt-8 border-t border-gray-200 pt-6 text-center">
         <button @click="goToHome" class="btn-secondary !w-auto">
           Back to Home
         </button>
@@ -488,12 +488,12 @@ const confirmCancelSubscription = async (choice: boolean) => {
   <Teleport to="body">
     <div
       v-if="isRevealed"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
       @click.self="cancel()"
     >
-      <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full">
-        <h3 class="text-lg font-bold mb-4">Cancel Premium Subscription?</h3>
-        <p class="mb-6 text-gray-600 text-sm">
+      <div class="w-full max-w-md rounded-lg bg-white p-6 shadow-xl">
+        <h3 class="mb-4 text-lg font-bold">Cancel Premium Subscription?</h3>
+        <p class="mb-6 text-sm text-gray-600">
           Are you sure you want to cancel your premium subscription? You'll lose
           access to premium features when your current billing period ends. This
           action cannot be undone easily.
@@ -507,7 +507,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
               confirm(true);
               confirmCancelSubscription(true);
             "
-            class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 text-sm font-medium"
+            class="rounded bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700"
           >
             Yes, Cancel Subscription
           </button>

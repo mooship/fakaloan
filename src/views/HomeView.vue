@@ -38,9 +38,9 @@ const addTransaction = () => {
 
 <template>
   <div
-    class="flex flex-col items-center justify-center min-h-screen bg-gray-100 relative"
+    class="relative flex min-h-screen flex-col items-center justify-center bg-gray-100"
   >
-    <div class="p-8 bg-white rounded shadow-md text-center space-y-4">
+    <div class="space-y-4 rounded bg-white p-8 text-center shadow-md">
       <h1 class="text-2xl font-bold">Welcome to Fakaloan!</h1>
 
       <!-- User Information Display -->
@@ -67,7 +67,7 @@ const addTransaction = () => {
       </div>
 
       <!-- Navigation Links -->
-      <div class="pt-4 border-t border-gray-200">
+      <div class="border-t border-gray-200 pt-4">
         <router-link to="/profile" class="btn-link mr-4">Profile</router-link>
         <router-link to="/about" class="btn-link">About</router-link>
       </div>
@@ -88,10 +88,10 @@ const addTransaction = () => {
           <!-- Add Transaction Button -->
           <button
             @click="addTransaction"
-            class="bg-green-500 text-white p-3 rounded-full shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2 flex items-center space-x-2"
+            class="flex items-center space-x-2 rounded-full bg-green-500 p-3 text-white shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-offset-2"
             aria-label="Add Transaction"
           >
-            <span class="text-sm font-medium hidden sm:inline"
+            <span class="hidden text-sm font-medium sm:inline"
               >Transaction</span
             >
             <i class="i-heroicons-currency-dollar h-5 w-5"></i>
@@ -100,10 +100,10 @@ const addTransaction = () => {
           <!-- Add Customer Button -->
           <button
             @click="addCustomer"
-            class="bg-blue-500 text-white p-3 rounded-full shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2 flex items-center space-x-2"
+            class="flex items-center space-x-2 rounded-full bg-blue-500 p-3 text-white shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-offset-2"
             aria-label="Add Customer"
           >
-            <span class="text-sm font-medium hidden sm:inline">Customer</span>
+            <span class="hidden text-sm font-medium sm:inline">Customer</span>
             <i class="i-heroicons-user-plus h-5 w-5"></i>
           </button>
         </div>
@@ -112,7 +112,7 @@ const addTransaction = () => {
       <!-- Main Floating Action Button -->
       <button
         @click="toggleSpeedDial"
-        class="bg-indigo-600 text-white p-4 rounded-full shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        class="rounded-full bg-indigo-600 p-4 text-white shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         aria-label="Toggle Add Menu"
       >
         <!-- Change icon based on speed dial state -->

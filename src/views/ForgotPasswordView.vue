@@ -94,7 +94,7 @@ const goToLogin = () => {
     </Form>
 
     <template #actions>
-      <div class="text-sm text-center mt-4">
+      <div class="mt-4 text-center text-sm">
         <button @click="goToLogin" class="btn-link">Back to Login</button>
       </div>
     </template>

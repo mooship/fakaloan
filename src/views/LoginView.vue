@@ -151,7 +151,7 @@ const goToForgotPassword = () => {
           <div class="w-full border-t border-gray-300"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="px-2 text-gray-500 bg-white"> Or continue with </span>
+          <span class="bg-white px-2 text-gray-500"> Or continue with </span>
         </div>
       </div>
 
@@ -161,12 +161,12 @@ const goToForgotPassword = () => {
           class="btn-secondary"
           :disabled="isLoading"
         >
-          <i class="i-logos-google-icon w-5 h-5 mr-2"></i>
+          <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
           {{ isLoading ? 'Signing in...' : 'Sign in with Google' }}
         </button>
       </div>
 
-      <div class="text-sm text-center mt-4">
+      <div class="mt-4 text-center text-sm">
         <span class="text-gray-600">Don't have an account? </span>
         <button @click="goToRegister" class="btn-link">Create one</button>
       </div>

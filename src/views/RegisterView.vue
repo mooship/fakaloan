@@ -207,7 +207,7 @@ const goToLogin = () => {
     </Form>
 
     <template #actions>
-      <div class="text-sm text-center mt-4">
+      <div class="mt-4 text-center text-sm">
         <span class="text-gray-600">Already have an account? </span>
         <button @click="goToLogin" class="btn-link">Sign in</button>
       </div>
