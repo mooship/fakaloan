@@ -9,7 +9,6 @@ import { computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-// Setup & State
 useTitle('Profile | Fakaloan');
 const {
   currentUser,
@@ -21,23 +20,19 @@ const {
 const router = useRouter();
 const toast = useToast();
 
-// UI state
 const isEditingContact = ref(false);
 const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
 const isUpdating = ref(false);
 
-// Input models
 const cellphoneInput = ref(userProfile.value?.cellphone || '');
 const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
 
-// Confirmation dialog
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
-// Computed Properties
 const isPremium = computed(() => userProfile.value?.isPremium || false);
 const subscriptionStatus = computed(
   () => userProfile.value?.subscriptionStatus || null
@@ -62,13 +57,12 @@ const displayLanguage = computed(() => {
   }
 });
 
-// Methods
-/** Navigate back to the home page. */
+/** Navigate to home */
 const goToHome = () => {
   router.push('/');
 };
 
-/** Update user's cellphone number in Firestore. */
+/** Update phone number */
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) {
     return;
@@ -93,7 +87,7 @@ const updateCellphone = async () => {
   }
 };
 
-/** Update user's email in Firebase Auth and Firestore. */
+/** Update email address */
 const updateUserEmail = async () => {
   if (!currentUser.value) {
     return;
@@ -116,7 +110,7 @@ const updateUserEmail = async () => {
   }
 };
 
-/** Handle the password update process using the useAuth composable. */
+/** Change password */
 const handlePasswordUpdate = async () => {
   if (!currentUser.value) {
     return;
@@ -157,30 +151,25 @@ const handlePasswordUpdate = async () => {
   isUpdating.value = false;
 };
 
-/** Navigate to the premium features/upgrade page. */
+/** Go to premium page */
 const goToPremiumPage = () => {
   router.push('/premium');
 };
 
-/** Trigger the confirmation dialog for subscription cancellation. */
+/** Show cancellation dialog */
 const handleCancelSubscription = () => {
   reveal();
 };
 
-/**
- * Handle the confirmation result for subscription cancellation.
- * Placeholder for actual cancellation logic.
- * @param choice - Boolean indicating if the user confirmed cancellation.
- */
+/** Confirm cancellation */
 const confirmCancelSubscription = async (choice: boolean) => {
   if (!choice) {
     return;
   }
   try {
-    // TODO: Implement cancellation logic (e.g., API call)
+    // TODO: implement subscription cancellation API call
     toast.success('Subscription cancellation request submitted');
-  } catch (error) {
-    console.error('Failed to cancel subscription:', error);
+  } catch {
     toast.error('Failed to cancel subscription');
   }
 };
