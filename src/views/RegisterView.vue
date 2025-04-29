@@ -8,14 +8,10 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-// Setup
 useTitle('Register | Fakaloan');
-// TODO: Implement analytics tracking for registration page views and form submissions.
-// TODO: Integrate CAPTCHA (e.g., reCAPTCHA) to prevent spam registrations.
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 
-// Form Validation Schema
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
   lastName: yup.string().trim().required('Last Name is required'),
@@ -35,20 +31,15 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
-// Methods
-/**
- * Handle registration form submission.
- */
 const handleRegister = async (values: GenericFormValues) => {
   const success = await registerWithEmail(values as RegisterFormValues);
-  if (success) router.push({ name: 'login' });
+  if (success) {
+    router.push({ name: 'login' });
+  }
 };
 
-/**
- * Navigate to login page.
- */
 const goToLogin = () => {
-  router.push('/login');
+  router.push({ name: 'login' });
 };
 </script>
 
