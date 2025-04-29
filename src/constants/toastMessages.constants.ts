@@ -1,4 +1,6 @@
-// Centralized toast messages for authentication flows
+/**
+ * Toast messages for user notifications.
+ */
 export enum ToastMessages {
   LoginSuccess = 'Login successful!',
   LoginFailed = 'Login failed. Please try again.',

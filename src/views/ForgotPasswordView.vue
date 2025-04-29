@@ -8,12 +8,10 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-// Setup
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
 const { sendPasswordReset, isLoading, error: authError, isOnline } = useAuth();
 
-// Form Validation Schema
 const schema = yup.object({
   email: yup
     .string()
@@ -23,8 +21,10 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
-// Methods
-/** Request password reset */
+/**
+ * Handles password reset request.
+ * @param values - The form values from VeeValidate
+ */
 const handlePasswordReset = async (values: GenericFormValues) => {
   const success = await sendPasswordReset(
     values as unknown as ForgotPasswordForm
@@ -35,7 +35,7 @@ const handlePasswordReset = async (values: GenericFormValues) => {
 };
 
 /**
- * Navigate back to login page.
+ * Navigates back to the login page.
  */
 const goToLogin = () => {
   router.push({ name: 'login' });
@@ -63,7 +63,6 @@ const goToLogin = () => {
         a link to reset your password.
       </p>
 
-      <!-- Email Field -->
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
@@ -87,7 +86,6 @@ const goToLogin = () => {
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
-      <!-- Submit Button -->
       <div>
         <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Sending...' : 'Send Reset Link' }}

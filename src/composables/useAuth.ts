@@ -1,4 +1,4 @@
-import { ToastMessages } from '@/constants/toastMessages';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, Theme } from '@/enums/user.enums';
 import { auth, db } from '@/firebase';
 import type {
@@ -23,7 +23,6 @@ import {
 } from 'firebase/auth';
 import { doc, getDoc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { computed, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import { useCurrentUser, useDocument } from 'vuefire';
 
@@ -67,10 +66,9 @@ export const mapAuthError = (authError: AuthError): string => {
  */
 export function useAuth() {
   // Core Dependencies & State
-  const router = useRouter();
   const toast = useToast();
-  const currentUser = useCurrentUser(); // Reactive Firebase Auth user state
-  const { isOnline } = useNetwork(); // Reactive network status
+  const currentUser = useCurrentUser();
+  const { isOnline } = useNetwork();
 
   // Loading and error states
   const [isLoading, toggleLoading] = useToggle(false);
@@ -85,9 +83,9 @@ export function useAuth() {
   );
 
   const {
-    data: userProfile, // Raw profile data
-    pending: profileLoading, // Profile fetch loading state
-    error: profileError, // Profile fetch error state
+    data: userProfile,
+    pending: profileLoading,
+    error: profileError,
   } = useDocument<UserProfile>(userDocRef);
 
   // Profile data with defaults applied

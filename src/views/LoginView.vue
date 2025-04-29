@@ -28,6 +28,10 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
+/**
+ * Handles login with email and password.
+ * @param values - The form values from VeeValidate
+ */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
   const success = await loginWithEmail(values as LoginFormValues);
   if (success) {
@@ -35,6 +39,9 @@ const handleEmailLogin = async (values: AppGenericFormValues) => {
   }
 };
 
+/**
+ * Handles login with Google OAuth.
+ */
 const handleGoogleLogin = async () => {
   const success = await loginWithGoogle();
   if (success) {
@@ -42,10 +49,16 @@ const handleGoogleLogin = async () => {
   }
 };
 
+/**
+ * Navigates to the registration page.
+ */
 const goToRegister = () => {
   router.push({ name: 'register' });
 };
 
+/**
+ * Navigates to the forgot password page.
+ */
 const goToForgotPassword = () => {
   router.push({ name: 'forgot-password' });
 };

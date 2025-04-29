@@ -57,19 +57,21 @@ const displayLanguage = computed(() => {
   }
 });
 
-/** Navigate to home */
+/**
+ * Navigates to the home page.
+ */
 const goToHome = () => {
   router.push('/');
 };
 
-/** Update phone number */
+/**
+ * Updates the user's phone number in Firestore.
+ */
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) {
     return;
   }
-
   const trimmedCellphone = cellphoneInput.value.replace(/\s+/g, '');
-
   try {
     isUpdating.value = true;
     const userDocRef = doc(db, 'users', currentUser.value.uid);
@@ -87,12 +89,13 @@ const updateCellphone = async () => {
   }
 };
 
-/** Update email address */
+/**
+ * Updates the user's email address in Firebase Auth and Firestore.
+ */
 const updateUserEmail = async () => {
   if (!currentUser.value) {
     return;
   }
-
   try {
     isUpdating.value = true;
     await updateEmail(currentUser.value, newEmail.value);
@@ -110,35 +113,31 @@ const updateUserEmail = async () => {
   }
 };
 
-/** Change password */
+/**
+ * Handles password update for the user.
+ */
 const handlePasswordUpdate = async () => {
   if (!currentUser.value) {
     return;
   }
-
   if (newPassword.value !== confirmPassword.value) {
     toast.error('New passwords do not match');
     return;
   }
-
   if (!currentPassword.value) {
     toast.error('Current password is required');
     return;
   }
-
   if (!newPassword.value) {
     toast.error('New password is required');
     return;
   }
-
   isUpdating.value = true;
   authError.value = null;
-
   const success = await updatePassword(
     currentPassword.value,
     newPassword.value
   );
-
   if (success) {
     currentPassword.value = '';
     newPassword.value = '';
@@ -146,21 +145,27 @@ const handlePasswordUpdate = async () => {
     isEditingPassword.value = false;
     toast.success('Password updated successfully');
   }
-
   isUpdating.value = false;
 };
 
-/** Go to premium page */
+/**
+ * Navigates to the premium page.
+ */
 const goToPremiumPage = () => {
   router.push('/premium');
 };
 
-/** Show cancellation dialog */
+/**
+ * Shows the subscription cancellation dialog.
+ */
 const handleCancelSubscription = () => {
   reveal();
 };
 
-/** Confirm cancellation */
+/**
+ * Handles confirmation of subscription cancellation.
+ * @param choice - Whether the user confirmed cancellation
+ */
 const confirmCancelSubscription = async (choice: boolean) => {
   if (!choice) {
     return;

@@ -31,6 +31,10 @@ const schema = yup.object({
     .oneOf([yup.ref('password')], 'Passwords must match'),
 });
 
+/**
+ * Handles user registration with email and password.
+ * @param values - The form values from VeeValidate
+ */
 const handleRegister = async (values: GenericFormValues) => {
   const success = await registerWithEmail(values as RegisterFormValues);
   if (success) {
@@ -38,6 +42,9 @@ const handleRegister = async (values: GenericFormValues) => {
   }
 };
 
+/**
+ * Navigates to the login page.
+ */
 const goToLogin = () => {
   router.push({ name: 'login' });
 };
@@ -45,7 +52,6 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Create Fakaloan Account">
-    <!-- Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -55,13 +61,11 @@ const goToLogin = () => {
       </div>
     </template>
 
-    <!-- Registration Form -->
     <Form
       :validation-schema="schema"
       @submit="handleRegister"
       class="space-y-4"
     >
-      <!-- First Name Field -->
       <div>
         <label for="firstName" class="form-label">First Name</label>
         <Field
@@ -89,7 +93,6 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Last Name Field -->
       <div>
         <label for="lastName" class="form-label">Last Name</label>
         <Field
@@ -113,7 +116,6 @@ const goToLogin = () => {
         <ErrorMessage name="lastName" id="name-error" class="form-error-text" />
       </div>
 
-      <!-- Email Field -->
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
@@ -137,7 +139,6 @@ const goToLogin = () => {
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
-      <!-- Password Field -->
       <div>
         <label for="password" class="form-label">Password</label>
         <Field
@@ -166,7 +167,6 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Password Confirmation Field -->
       <div>
         <label for="passwordConfirmation" class="form-label"
           >Confirm Password</label
@@ -197,7 +197,6 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Submit Button -->
       <div>
         <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Creating...' : 'Create Account' }}
@@ -205,7 +204,6 @@ const goToLogin = () => {
       </div>
     </Form>
 
-    <!-- Login Link -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <span class="text-gray-600">Already have an account? </span>

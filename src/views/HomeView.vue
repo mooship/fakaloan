@@ -7,22 +7,31 @@ useTitle('Home | Fakaloan');
 const { currentUser, logout, isLoading } = useAuth();
 const showSpeedDial = ref(false);
 
-/** Logout current user */
+/**
+ * Logs out the current user.
+ */
 const handleLogout = () => {
   logout();
 };
 
+/**
+ * Toggles the floating action button speed dial.
+ */
 const toggleSpeedDial = () => {
   showSpeedDial.value = !showSpeedDial.value;
 };
 
+/**
+ * Placeholder for adding a customer (to be implemented).
+ */
 const addCustomer = () => {
-  // TODO: implement add customer functionality
   showSpeedDial.value = false;
 };
 
+/**
+ * Placeholder for adding a transaction (to be implemented).
+ */
 const addTransaction = () => {
-  // TODO: implement add transaction functionality
   showSpeedDial.value = false;
 };
 </script>

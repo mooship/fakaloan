@@ -1,5 +1,4 @@
-// Utilities for authentication guards to keep useAuth methods DRY
-import { ToastMessages } from '@/constants/toastMessages';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { useToast } from 'vue-toastification';
 
 /**

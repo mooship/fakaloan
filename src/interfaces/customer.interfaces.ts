@@ -1,4 +1,6 @@
-// Customer data model
+/**
+ * Customer information for credit management.
+ */
 export interface Customer {
   id: string;
   name: string;
