@@ -132,7 +132,7 @@ const handlePasswordUpdate = async () => {
   }
 
   isUpdating.value = true;
-  authError.value = null; // Clear previous auth errors
+  authError.value = null;
 
   const success = await updatePassword(
     currentPassword.value,
@@ -146,7 +146,6 @@ const handlePasswordUpdate = async () => {
     isEditingPassword.value = false;
     toast.success('Password updated successfully');
   }
-  // Error message is handled within useAuth via toast
 
   isUpdating.value = false;
 };

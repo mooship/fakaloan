@@ -24,14 +24,14 @@ const schema = yup.object({
 });
 
 // Methods
-/**
- * Handle password reset request submission.
- */
+/** Request password reset */
 const handlePasswordReset = async (values: GenericFormValues) => {
   const success = await sendPasswordReset(
     values as unknown as ForgotPasswordForm
   );
-  if (success) router.push({ name: 'login' });
+  if (success) {
+    router.push({ name: 'login' });
+  }
 };
 
 /**
@@ -44,7 +44,6 @@ const goToLogin = () => {
 
 <template>
   <AuthLayout title="Reset Password">
-    <!-- Status and Error Notifications -->
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
@@ -54,8 +53,6 @@ const goToLogin = () => {
       </div>
     </template>
 
-    <!-- Password Reset Form -->
-    <!-- Only shown if reset email not yet sent -->
     <Form
       :validation-schema="schema"
       @submit="handlePasswordReset"
@@ -98,7 +95,6 @@ const goToLogin = () => {
       </div>
     </Form>
 
-    <!-- Back to Login Link -->
     <template #actions>
       <div class="text-sm text-center mt-4">
         <button @click="goToLogin" class="btn-link">Back to Login</button>

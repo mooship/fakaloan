@@ -1,17 +1,9 @@
-/**
- * Represents form values for user login.
- * Used by the login form and authentication methods.
- */
+// form value interfaces for authentication flows
 export interface LoginFormValues {
   email?: string | null;
   password?: string | null;
 }
 
-/**
- * Represents form values for user registration.
- * Used by the registration form and authentication methods.
- * Includes password confirmation for validation.
- */
 export interface RegisterFormValues {
   firstName?: string | null;
   lastName?: string | null;
@@ -20,10 +12,6 @@ export interface RegisterFormValues {
   passwordConfirmation?: string | null;
 }
 
-/**
- * Represents form values for password reset request.
- * Used by the forgot password form and authentication methods.
- */
 export interface ForgotPasswordForm {
   email: string;
 }

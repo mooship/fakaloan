@@ -1,7 +1,4 @@
-/**
- * Represents the structure of a customer's profile document stored in Firestore.
- * Contains personal details and credit score.
- */
+// Customer data model
 export interface Customer {
   id: string;
   name: string;
