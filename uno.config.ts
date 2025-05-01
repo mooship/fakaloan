@@ -43,6 +43,8 @@ export default defineConfig({
     btn: 'px-4 py-2 rounded-md font-medium focus:outline-0 focus:ring-2 focus:ring-offset-2 focus:ring-primary',
     'btn-primary':
       'btn w-full text-on-primary bg-primary hover:bg-primary-variant',
+    'btn-primary-outline':
+      'btn w-full text-primary border border-primary bg-transparent hover:bg-primary/10',
     'btn-secondary':
       'btn w-full inline-flex items-center justify-center text-on-secondary bg-secondary hover:bg-secondary-variant border border-secondary shadow-sm',
     'btn-link':

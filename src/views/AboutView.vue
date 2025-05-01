@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
+import { useRouter } from 'vue-router';
 useTitle('About | Fakaloan');
+
+const router = useRouter();
 </script>
 
 <template>
@@ -90,10 +93,10 @@ useTitle('About | Fakaloan');
           </p>
         </section>
 
-        <div class="mt-8 text-center">
-          <router-link to="/" class="btn-secondary !w-auto"
-            >Back to Home</router-link
-          >
+        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+          <button @click="router.back()" class="btn-primary-outline !w-auto">
+            Back
+          </button>
         </div>
       </div>
 

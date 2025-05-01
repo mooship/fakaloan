@@ -61,13 +61,6 @@ const displayLanguage = computed(() => {
 });
 
 /**
- * Navigates to the home page.
- */
-const goToHome = () => {
-  router.push('/');
-};
-
-/**
  * Updates the user's phone number in Firestore.
  */
 const updateCellphone = async () => {
@@ -491,7 +484,7 @@ const handleAddTransaction = () => {
 
       <!-- Back Button -->
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button @click="router.back()" class="btn-secondary !w-auto">
+        <button @click="router.back()" class="btn-primary-outline !w-auto">
           Back
         </button>
       </div>
