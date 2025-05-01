@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
+import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
 import { useRouter } from 'vue-router';
 
@@ -18,9 +19,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <div
-    class="bg-background relative flex min-h-screen flex-col items-center justify-center"
-  >
+  <AppLayout>
     <div class="bg-surface space-y-4 rounded p-8 text-center shadow-md">
       <h1 class="text-primary text-2xl font-bold">Welcome to Fakaloan!</h1>
 
@@ -50,7 +49,6 @@ const handleLogout = async () => {
         <router-link to="/about" class="btn-link">About</router-link>
       </div>
     </div>
-
     <FabSpeedDial />
-  </div>
+  </AppLayout>
 </template>

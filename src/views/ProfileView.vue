@@ -3,6 +3,7 @@ import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
+import AppLayout from '@/layouts/AppLayout.vue';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
 import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -188,9 +189,7 @@ const handleAddTransaction = () => {
 </script>
 
 <template>
-  <div
-    class="bg-background flex min-h-screen flex-col items-center justify-center p-4"
-  >
+  <AppLayout>
     <div class="bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md">
       <h1 class="text-primary mb-6 text-center text-3xl font-bold">
         Your Profile
@@ -496,7 +495,7 @@ const handleAddTransaction = () => {
       @add-transaction="handleAddTransaction"
       @add-customer="handleAddCustomer"
     />
-  </div>
+  </AppLayout>
 
   <!-- Confirmation Dialog -->
   <Teleport to="body">
