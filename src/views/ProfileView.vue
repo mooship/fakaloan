@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
 import {
   DISPLAY_PHONE_NUMBER_REGEX,
@@ -42,6 +43,7 @@ const newEmail = ref(userProfile.value?.email || '');
 const themeInput = ref(Theme.Light);
 
 const { setTheme } = useTheme();
+const { setLoading } = useLoading();
 
 watch(
   () => userProfile.value?.preferences.theme,
@@ -104,6 +106,7 @@ const updateCellphone = async () => {
     toast.error('Enter a valid phone number');
     return;
   }
+  setLoading(true);
   try {
     isUpdating.value = true;
     const userDocRef = doc(db, 'users', currentUser.value.uid);
@@ -118,6 +121,7 @@ const updateCellphone = async () => {
     toast.error('Failed to update phone number');
   } finally {
     isUpdating.value = false;
+    setLoading(false);
   }
 };
 
@@ -129,6 +133,7 @@ const updateUserEmail = async () => {
   if (!currentUser.value) {
     return;
   }
+  setLoading(true);
   try {
     isUpdating.value = true;
     await updateEmail(currentUser.value, newEmail.value);
@@ -143,6 +148,7 @@ const updateUserEmail = async () => {
     toast.error('Failed to update email. You may need to log in again.');
   } finally {
     isUpdating.value = false;
+    setLoading(false);
   }
 };
 
@@ -166,6 +172,7 @@ const handlePasswordUpdate = async () => {
     toast.error('New password is required');
     return;
   }
+  setLoading(true);
   isUpdating.value = true;
   authError.value = null;
   const success = await updatePassword(
@@ -180,6 +187,7 @@ const handlePasswordUpdate = async () => {
     toast.success('Password updated successfully');
   }
   isUpdating.value = false;
+  setLoading(false);
 };
 
 /**
@@ -187,6 +195,7 @@ const handlePasswordUpdate = async () => {
  */
 const updateTheme = async () => {
   if (!currentUser.value || !userProfile.value) return;
+  setLoading(true);
   try {
     isUpdating.value = true;
     const userDocRef = doc(db, 'users', currentUser.value.uid);
@@ -200,6 +209,7 @@ const updateTheme = async () => {
     toast.error('Failed to update theme');
   } finally {
     isUpdating.value = false;
+    setLoading(false);
   }
 };
 

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
@@ -11,6 +12,7 @@ import * as yup from 'yup';
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
 const { sendPasswordReset, isLoading, error: authError, isOnline } = useAuth();
+const { setLoading } = useLoading();
 
 const schema = yup.object({
   email: yup
@@ -26,11 +28,16 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handlePasswordReset = async (values: GenericFormValues) => {
-  const success = await sendPasswordReset(
-    values as unknown as ForgotPasswordForm
-  );
-  if (success) {
-    router.push({ name: 'login' });
+  setLoading(true);
+  try {
+    const success = await sendPasswordReset(
+      values as unknown as ForgotPasswordForm
+    );
+    if (success) {
+      router.push({ name: 'login' });
+    }
+  } finally {
+    setLoading(false);
   }
 };
 

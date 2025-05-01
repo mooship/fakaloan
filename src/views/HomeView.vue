@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
 import { useRouter } from 'vue-router';
@@ -8,13 +9,19 @@ import { useRouter } from 'vue-router';
 useTitle('Home | Fakaloan');
 const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
+const { setLoading } = useLoading();
 
 /**
  * Logs out the current user and navigates to the login page.
  */
 const handleLogout = async () => {
-  await logout();
-  router.push({ name: 'login' });
+  setLoading(true);
+  try {
+    await logout();
+    router.push({ name: 'login' });
+  } finally {
+    setLoading(false);
+  }
 };
 </script>
 

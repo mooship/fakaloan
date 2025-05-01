@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
@@ -12,6 +13,7 @@ import * as yup from 'yup';
 useTitle('Register | Fakaloan');
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
+const { setLoading } = useLoading();
 
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
@@ -42,11 +44,16 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handleRegister = async (values: GenericFormValues) => {
-  const success = await registerWithEmail(
-    values as unknown as RegisterFormValues
-  );
-  if (success) {
-    router.push({ name: 'login' });
+  setLoading(true);
+  try {
+    const success = await registerWithEmail(
+      values as unknown as RegisterFormValues
+    );
+    if (success) {
+      router.push({ name: 'login' });
+    }
+  } finally {
+    setLoading(false);
   }
 };
 

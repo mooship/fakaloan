@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
@@ -20,6 +21,7 @@ const {
 } = useAuth();
 
 const googleLoading = ref(false);
+const { setLoading } = useLoading();
 
 const schema = yup.object({
   email: yup
@@ -36,10 +38,15 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
+  setLoading(true);
   googleLoading.value = false;
-  const success = await loginWithEmail(values as unknown as LoginFormValues);
-  if (success) {
-    router.push({ name: 'home' });
+  try {
+    const success = await loginWithEmail(values as unknown as LoginFormValues);
+    if (success) {
+      router.push({ name: 'home' });
+    }
+  } finally {
+    setLoading(false);
   }
 };
 
@@ -47,11 +54,16 @@ const handleEmailLogin = async (values: AppGenericFormValues) => {
  * Handles login with Google OAuth.
  */
 const handleGoogleLogin = async () => {
+  setLoading(true);
   googleLoading.value = true;
-  const success = await loginWithGoogle();
-  googleLoading.value = false;
-  if (success) {
-    router.push({ name: 'home' });
+  try {
+    const success = await loginWithGoogle();
+    if (success) {
+      router.push({ name: 'home' });
+    }
+  } finally {
+    googleLoading.value = false;
+    setLoading(false);
   }
 };
 

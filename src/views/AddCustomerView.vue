@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -17,6 +18,7 @@ import * as yup from 'yup';
 const { currentUser, isLoading } = useAuth();
 const router = useRouter();
 const toast = useToast();
+const { setLoading } = useLoading();
 
 const form = ref({
   name: '',
@@ -70,6 +72,7 @@ const handleSubmit = async () => {
     return;
   }
   if (!(await validate())) return;
+  setLoading(true);
   submitting.value = true;
   try {
     const docRef = await addDoc(collection(db, 'customers'), {
@@ -89,6 +92,7 @@ const handleSubmit = async () => {
     toast.error('Failed to add customer.');
   } finally {
     submitting.value = false;
+    setLoading(false);
   }
 };
 </script>
