@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useTheme } from '@/composables/useTheme';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
-import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
+import { LanguageCode, SubscriptionStatus, Theme } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
 import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
-import { computed, ref } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
@@ -33,6 +34,20 @@ const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
+const themeInput = ref(Theme.Light);
+
+const { setTheme } = useTheme();
+
+watch(
+  () => userProfile.value?.preferences.theme,
+  (newTheme) => {
+    if (newTheme) {
+      themeInput.value = newTheme;
+      setTheme(newTheme === Theme.Dark ? 'dark' : 'light');
+    }
+  },
+  { immediate: true }
+);
 
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
@@ -146,6 +161,27 @@ const handlePasswordUpdate = async () => {
     toast.success('Password updated successfully');
   }
   isUpdating.value = false;
+};
+
+/**
+ * Updates the user's theme preference in Firestore.
+ */
+const updateTheme = async () => {
+  if (!currentUser.value || !userProfile.value) return;
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      'preferences.theme': themeInput.value,
+    });
+    setTheme(themeInput.value === Theme.Dark ? 'dark' : 'light');
+    toast.success('Theme updated successfully');
+  } catch (error) {
+    console.error('Failed to update theme:', error);
+    toast.error('Failed to update theme');
+  } finally {
+    isUpdating.value = false;
+  }
 };
 
 /**
@@ -472,7 +508,40 @@ const handleAddTransaction = () => {
                 <!-- TODO: Add edit button for language preference -->
               </span>
             </div>
-            <!-- TODO: Add Theme Preference display -->
+            <div class="flex items-center justify-between">
+              <span class="text-on-surface/80 font-medium">Theme:</span>
+              <span class="flex items-center gap-2">
+                <button
+                  @click="
+                    () => {
+                      themeInput =
+                        themeInput === Theme.Light ? Theme.Dark : Theme.Light;
+                      updateTheme();
+                    }
+                  "
+                  :aria-label="
+                    themeInput === Theme.Light
+                      ? 'Switch to dark mode'
+                      : 'Switch to light mode'
+                  "
+                  class="btn-primary-outline flex !w-auto items-center gap-1"
+                  :disabled="isUpdating"
+                  type="button"
+                >
+                  <i
+                    :class="
+                      themeInput === Theme.Light
+                        ? 'i-heroicons-sun'
+                        : 'i-heroicons-moon'
+                    "
+                    class="h-5 w-5"
+                  ></i>
+                  <span>{{
+                    themeInput === Theme.Light ? 'Light' : 'Dark'
+                  }}</span>
+                </button>
+              </span>
+            </div>
           </div>
         </div>
       </div>

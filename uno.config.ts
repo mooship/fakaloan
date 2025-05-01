@@ -5,32 +5,51 @@ import { defineConfig, presetIcons, presetWind4 } from 'unocss';
  * UnoCSS configuration for utility classes and icon presets.
  */
 export default defineConfig({
+  preflights: [
+    {
+      getCSS: () => `
+        :root {
+          --color-primary: #2979FF;
+          --color-secondary: #FF1744;
+          --color-tertiary: #651FFF;
+          --color-error: #FF3D00;
+          --color-background: #FAFAFA;
+          --color-surface: #FFFFFF;
+          --color-on-primary: #FFFFFF;
+          --color-on-secondary: #FFFFFF;
+          --color-on-tertiary: #FFFFFF;
+          --color-on-background: #1C1B1F;
+          --color-on-surface: #1C1B1F;
+        }
+        .dark {
+          --color-primary: #82B1FF;
+          --color-secondary: #FF8A80;
+          --color-tertiary: #B388FF;
+          --color-error: #FF9E80;
+          --color-background: #121212;
+          --color-surface: #1E1E1E;
+          --color-on-primary: #000000;
+          --color-on-secondary: #000000;
+          --color-on-tertiary: #000000;
+          --color-on-background: #EDEDED;
+          --color-on-surface: #EDEDED;
+        }
+      `,
+    },
+  ],
   theme: {
     colors: {
-      // Light Theme
-      primary: '#2979FF', // Vibrant Blue
-      secondary: '#FF1744', // Vivid Red
-      tertiary: '#651FFF', // Electric Violet
-      error: '#FF3D00', // Bright Orange
-      background: '#FAFAFA', // Light Grey
-      surface: '#FFFFFF', // White
-      'on-primary': '#FFFFFF', // White
-      'on-secondary': '#FFFFFF', // White
-      'on-tertiary': '#FFFFFF', // White
-      'on-background': '#1C1B1F', // Dark Gray
-      'on-surface': '#1C1B1F', // Dark Gray
-      // Dark Theme
-      'primary-dark': '#82B1FF', // Lighter Blue
-      'secondary-dark': '#FF8A80', // Light Red
-      'tertiary-dark': '#B388FF', // Soft Violet
-      'error-dark': '#FF9E80', // Warm Orange
-      'background-dark': '#121212', // True Black
-      'surface-dark': '#1E1E1E', // Dark Surface
-      'on-primary-dark': '#000000', // Black
-      'on-secondary-dark': '#000000', // Black
-      'on-tertiary-dark': '#000000', // Black
-      'on-background-dark': '#EDEDED', // Light Gray
-      'on-surface-dark': '#EDEDED', // Light Gray
+      primary: 'var(--color-primary)',
+      secondary: 'var(--color-secondary)',
+      tertiary: 'var(--color-tertiary)',
+      error: 'var(--color-error)',
+      background: 'var(--color-background)',
+      surface: 'var(--color-surface)',
+      'on-primary': 'var(--color-on-primary)',
+      'on-secondary': 'var(--color-on-secondary)',
+      'on-tertiary': 'var(--color-on-tertiary)',
+      'on-background': 'var(--color-on-background)',
+      'on-surface': 'var(--color-on-surface)',
     },
   },
   shortcuts: {
