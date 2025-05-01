@@ -31,6 +31,13 @@ watchEffect(() => {
 });
 
 // Public API
+/**
+ * Composable for theme management (light/dark mode).
+ *
+ * Loads, applies, and persists theme preference using localStorage and system settings.
+ *
+ * @returns {Object} Theme state and methods.
+ */
 export function useTheme() {
   loadTheme();
   return {

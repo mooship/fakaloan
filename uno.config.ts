@@ -3,6 +3,8 @@ import { defineConfig, presetIcons, presetWind4 } from 'unocss';
 
 /**
  * UnoCSS configuration for utility classes and icon presets.
+ *
+ * Defines color variables, theme, shortcuts, and icon collections for the app.
  */
 export default defineConfig({
   preflights: [

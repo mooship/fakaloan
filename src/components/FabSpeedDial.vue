@@ -2,17 +2,34 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
+/**
+ * Floating Action Button (FAB) Speed Dial component.
+ *
+ * Provides quick access to add customer and add transaction actions.
+ * Emits events for parent components to handle actions.
+ */
 const showSpeedDial = ref(false);
 const router = useRouter();
 
+/**
+ * Toggles the visibility of the speed dial menu.
+ */
 const toggleSpeedDial = () => {
   showSpeedDial.value = !showSpeedDial.value;
 };
 
+/**
+ * Handles the add transaction action.
+ * Emits an event for parent components to handle.
+ */
 const handleAddTransaction = () => {
   // TODO: Implement add transaction logic (e.g., open a modal, call an API, etc.)
 };
 
+/**
+ * Handles the add customer action.
+ * Navigates to the add customer page.
+ */
 const handleAddCustomer = () => {
   router.push('/add-customer');
 };

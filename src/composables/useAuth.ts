@@ -63,6 +63,11 @@ export const mapAuthError = (authError: AuthError): string => {
 // useAuth Composable
 /**
  * Composable for authentication and user profile management.
+ *
+ * Provides methods for login, registration, logout, password reset, and user profile management.
+ * Uses Firebase Auth and Firestore for backend operations.
+ *
+ * @returns {Object} Authentication state and methods.
  */
 export function useAuth() {
   // Core Dependencies & State

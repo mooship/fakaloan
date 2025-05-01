@@ -1,6 +1,9 @@
 /**
  * Generic type for form values provided by VeeValidate's submit handler.
+ *
  * Serves as a base type for all form submissions before casting to specific interfaces.
+ *
+ * @typedef {Object.<string, unknown>} GenericFormValues
  *
  * @example
  * import type { GenericFormValues } from '@/types/forms.types';

@@ -93,6 +93,7 @@ function formatPhoneNumber(phone: string | null): string {
 
 /**
  * Updates the user's phone number in Firestore.
+ * Validates the phone number before updating.
  */
 const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) {
@@ -122,6 +123,7 @@ const updateCellphone = async () => {
 
 /**
  * Updates the user's email address in Firebase Auth and Firestore.
+ * Handles errors and notifies the user.
  */
 const updateUserEmail = async () => {
   if (!currentUser.value) {
@@ -146,6 +148,7 @@ const updateUserEmail = async () => {
 
 /**
  * Handles password update for the user.
+ * Validates input and updates password after re-authentication.
  */
 const handlePasswordUpdate = async () => {
   if (!currentUser.value) {
@@ -180,7 +183,7 @@ const handlePasswordUpdate = async () => {
 };
 
 /**
- * Updates the user's theme preference in Firestore.
+ * Updates the user's theme preference in Firestore and applies it.
  */
 const updateTheme = async () => {
   if (!currentUser.value || !userProfile.value) return;
@@ -230,9 +233,16 @@ const confirmCancelSubscription = async (choice: boolean) => {
   }
 };
 
+/**
+ * Handler for add customer action from FAB.
+ */
 const handleAddCustomer = () => {
   // TODO: Implement add customer logic for profile view
 };
+
+/**
+ * Handler for add transaction action from FAB.
+ */
 const handleAddTransaction = () => {
   // TODO: Implement add transaction logic for profile view
 };

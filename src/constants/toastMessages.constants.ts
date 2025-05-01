@@ -1,5 +1,7 @@
 /**
  * Toast messages for user notifications.
+ *
+ * @enum {string}
  */
 export enum ToastMessages {
   LoginSuccess = 'Login successful!',

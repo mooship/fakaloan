@@ -111,6 +111,12 @@ import { useAuth } from '@/composables/useAuth';
 import { ref } from 'vue';
 const { currentUser } = useAuth();
 const showMenu = ref(false);
+
+/**
+ * App layout component with responsive navigation bar and slot for main content.
+ *
+ * Shows navigation links based on authentication state.
+ */
 </script>
 
 <style scoped>

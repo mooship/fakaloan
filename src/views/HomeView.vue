@@ -10,7 +10,7 @@ const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 
 /**
- * Logs out the current user.
+ * Logs out the current user and navigates to the login page.
  */
 const handleLogout = async () => {
   await logout();
