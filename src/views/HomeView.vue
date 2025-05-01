@@ -42,8 +42,6 @@ const handleLogout = async () => {
           {{ isLoading ? 'Logging out...' : 'Logout' }}
         </button>
       </div>
-
-      <!-- Removed navigation footer, use app bar instead -->
     </div>
     <FabSpeedDial />
   </AppLayout>
