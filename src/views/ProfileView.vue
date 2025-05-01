@@ -2,7 +2,12 @@
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useTheme } from '@/composables/useTheme';
-import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import {
+  DISPLAY_PHONE_NUMBER_REGEX,
+  GROUP_3_4_REGEX,
+  PHONE_NUMBER_REGEX,
+  WHITESPACE_REGEX,
+} from '@/constants/regex.constants';
 import { LanguageCode, SubscriptionStatus, Theme } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -75,6 +80,17 @@ const displayLanguage = computed(() => {
   }
 });
 
+// Format phone number for display: +27 68 599 5633
+function formatPhoneNumber(phone: string | null): string {
+  if (!phone) return '';
+  const digits = phone.replace(WHITESPACE_REGEX, '');
+  const match = digits.match(DISPLAY_PHONE_NUMBER_REGEX);
+  if (match) {
+    return `${match[1]} ${match[2]} ${match[3]} ${match[4]}`.trim();
+  }
+  return digits.replace(GROUP_3_4_REGEX, '$1 ').trim();
+}
+
 /**
  * Updates the user's phone number in Firestore.
  */
@@ -82,7 +98,7 @@ const updateCellphone = async () => {
   if (!currentUser.value || !userProfile.value) {
     return;
   }
-  const trimmedCellphone = cellphoneInput.value.replace(/\s+/g, '');
+  const trimmedCellphone = cellphoneInput.value.replace(WHITESPACE_REGEX, '');
   if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
     toast.error('Enter a valid phone number');
     return;
@@ -428,7 +444,9 @@ const handleAddTransaction = () => {
               <div>
                 <p class="text-on-surface/80 text-sm font-medium">Phone:</p>
                 <p class="text-on-surface">
-                  {{ userProfile.cellphone || 'Not provided' }}
+                  {{
+                    formatPhoneNumber(userProfile.cellphone) || 'Not provided'
+                  }}
                 </p>
               </div>
               <button
