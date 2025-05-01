@@ -1,4 +1,4 @@
-import { ref, watchEffect } from 'vue';
+import { computed, ref, watchEffect } from 'vue';
 
 const THEME_KEY = 'fakaloan-theme';
 
@@ -40,8 +40,10 @@ watchEffect(() => {
  */
 export function useTheme() {
   loadTheme();
+  const isDark = computed(() => theme.value === 'dark');
   return {
     theme,
+    isDark,
     setTheme: (mode: ThemeMode) => {
       theme.value = mode;
     },

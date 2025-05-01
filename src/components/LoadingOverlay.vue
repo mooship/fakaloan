@@ -39,14 +39,11 @@
 
 <script setup lang="ts">
 import { useLoading } from '@/composables/useLoading';
+import { useTheme } from '@/composables/useTheme';
 import { computed } from 'vue';
 const { isLoading } = useLoading();
+const { isDark } = useTheme();
 const visible = computed(() => isLoading.value);
-
-// Detect dark mode
-const isDark = computed(() =>
-  document.documentElement.classList.contains('dark')
-);
 </script>
 
 <style scoped>
