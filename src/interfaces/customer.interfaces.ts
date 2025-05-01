@@ -11,5 +11,5 @@ export interface Customer {
   address: string | null;
   createdAt: Timestamp;
   updatedAt: Timestamp | null;
-  creditScore: number;
+  creditScore: number | null;
 }

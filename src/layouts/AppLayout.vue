@@ -9,12 +9,29 @@
       </div>
       <!-- Desktop Nav -->
       <nav class="hidden items-center space-x-4 md:flex">
-        <router-link to="/" class="btn-link text-on-primary">Home</router-link>
-        <router-link to="/profile" class="btn-link text-on-primary"
+        <router-link v-if="currentUser" to="/" class="btn-link text-on-primary"
+          >Home</router-link
+        >
+        <router-link
+          v-if="currentUser"
+          to="/profile"
+          class="btn-link text-on-primary"
           >Profile</router-link
         >
         <router-link to="/about" class="btn-link text-on-primary"
           >About</router-link
+        >
+        <router-link
+          v-if="!currentUser"
+          to="/login"
+          class="btn-link text-on-primary"
+          >Login</router-link
+        >
+        <router-link
+          v-if="!currentUser"
+          to="/register"
+          class="btn-link text-on-primary"
+          >Register</router-link
         >
       </nav>
       <!-- Hamburger (Mobile) -->
@@ -44,12 +61,14 @@
           class="bg-surface border-primary-variant animate-fade-in absolute right-4 top-14 z-50 flex w-40 flex-col rounded border shadow-lg md:hidden"
         >
           <router-link
+            v-if="currentUser"
             to="/"
             class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
             >Home</router-link
           >
           <router-link
+            v-if="currentUser"
             to="/profile"
             class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
@@ -57,9 +76,23 @@
           >
           <router-link
             to="/about"
-            class="btn-link text-on-surface px-4 py-3"
+            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
             >About</router-link
+          >
+          <router-link
+            v-if="!currentUser"
+            to="/login"
+            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            @click="showMenu = false"
+            >Login</router-link
+          >
+          <router-link
+            v-if="!currentUser"
+            to="/register"
+            class="btn-link text-on-surface px-4 py-3"
+            @click="showMenu = false"
+            >Register</router-link
           >
         </div>
       </transition>
@@ -74,7 +107,9 @@
 </template>
 
 <script setup lang="ts">
+import { useAuth } from '@/composables/useAuth';
 import { ref } from 'vue';
+const { currentUser } = useAuth();
 const showMenu = ref(false);
 </script>
 

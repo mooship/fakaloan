@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
@@ -29,6 +30,11 @@ const schema = yup.object({
     .string()
     .required('Please confirm your password')
     .oneOf([yup.ref('password')], 'Passwords must match'),
+  cellphone: yup
+    .string()
+    .trim()
+    .matches(PHONE_NUMBER_REGEX, 'Enter a valid phone number')
+    .notRequired(),
 });
 
 /**

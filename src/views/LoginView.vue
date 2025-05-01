@@ -5,6 +5,7 @@ import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
@@ -17,6 +18,8 @@ const {
   error: authError,
   isOnline,
 } = useAuth();
+
+const googleLoading = ref(false);
 
 const schema = yup.object({
   email: yup
@@ -33,6 +36,7 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
+  googleLoading.value = false;
   const success = await loginWithEmail(values as unknown as LoginFormValues);
   if (success) {
     router.push({ name: 'home' });
@@ -43,7 +47,9 @@ const handleEmailLogin = async (values: AppGenericFormValues) => {
  * Handles login with Google OAuth.
  */
 const handleGoogleLogin = async () => {
+  googleLoading.value = true;
   const success = await loginWithGoogle();
+  googleLoading.value = false;
   if (success) {
     router.push({ name: 'home' });
   }
@@ -160,11 +166,11 @@ const goToForgotPassword = () => {
       <div>
         <button
           @click="handleGoogleLogin"
-          class="bg-surface text-on-surface border-secondary-variant hover:bg-secondary-variant/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2"
-          :disabled="isLoading"
+          class="bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2"
+          :disabled="isLoading || googleLoading"
         >
           <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
-          {{ isLoading ? 'Signing in...' : 'Sign in with Google' }}
+          {{ googleLoading ? 'Signing in...' : 'Sign in with Google' }}
         </button>
       </div>
 

@@ -43,11 +43,7 @@ const handleLogout = async () => {
         </button>
       </div>
 
-      <!-- Navigation Links -->
-      <div class="border-secondary-variant border-t pt-4">
-        <router-link to="/profile" class="btn-link mr-4">Profile</router-link>
-        <router-link to="/about" class="btn-link">About</router-link>
-      </div>
+      <!-- Removed navigation footer, use app bar instead -->
     </div>
     <FabSpeedDial />
   </AppLayout>

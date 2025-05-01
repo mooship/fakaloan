@@ -7,19 +7,30 @@ import { defineConfig, presetIcons, presetWind4 } from 'unocss';
 export default defineConfig({
   theme: {
     colors: {
-      primary: '#2979FF', // Electric Blue
-      'primary-variant': '#00B0FF', // Neon Blue
+      // Light Theme
+      primary: '#2979FF', // Vibrant Blue
       secondary: '#FF1744', // Vivid Red
-      'secondary-variant': '#F50057', // Hot Pink
-      tertiary: '#651FFF', // Bright Violet
-      accent: '#00E676', // Lime Green
-      background: '#FAFAFA', // Off-White
-      surface: '#FFFFFF', // White
+      tertiary: '#651FFF', // Electric Violet
       error: '#FF3D00', // Bright Orange
+      background: '#FAFAFA', // Light Grey
+      surface: '#FFFFFF', // White
       'on-primary': '#FFFFFF', // White
       'on-secondary': '#FFFFFF', // White
-      'on-background': '#212121', // Deep Grey
-      'on-surface': '#212121', // Deep Grey
+      'on-tertiary': '#FFFFFF', // White
+      'on-background': '#1C1B1F', // Dark Gray
+      'on-surface': '#1C1B1F', // Dark Gray
+      // Dark Theme
+      'primary-dark': '#82B1FF', // Lighter Blue
+      'secondary-dark': '#FF8A80', // Light Red
+      'tertiary-dark': '#B388FF', // Soft Violet
+      'error-dark': '#FF9E80', // Warm Orange
+      'background-dark': '#121212', // True Black
+      'surface-dark': '#1E1E1E', // Dark Surface
+      'on-primary-dark': '#000000', // Black
+      'on-secondary-dark': '#000000', // Black
+      'on-tertiary-dark': '#000000', // Black
+      'on-background-dark': '#EDEDED', // Light Gray
+      'on-surface-dark': '#EDEDED', // Light Gray
     },
   },
   shortcuts: {

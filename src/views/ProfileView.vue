@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
+import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -74,6 +75,10 @@ const updateCellphone = async () => {
     return;
   }
   const trimmedCellphone = cellphoneInput.value.replace(/\s+/g, '');
+  if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
+    toast.error('Enter a valid phone number');
+    return;
+  }
   try {
     isUpdating.value = true;
     const userDocRef = doc(db, 'users', currentUser.value.uid);
@@ -415,7 +420,7 @@ const handleAddTransaction = () => {
                 v-model="cellphoneInput"
                 type="tel"
                 class="form-input-base form-input-valid bg-surface text-on-surface"
-                placeholder="+27 12 345 6789"
+                placeholder="+27 12 3456 789"
               />
               <div class="mt-2 flex space-x-2">
                 <button
