@@ -5,23 +5,23 @@ useTitle('About | Fakaloan');
 
 <template>
   <div
-    class="flex min-h-screen flex-col items-center justify-center bg-gray-100 p-4"
+    class="bg-background flex min-h-screen flex-col items-center justify-center p-4"
   >
-    <div class="w-full max-w-2xl space-y-6 rounded bg-white p-8 shadow-md">
-      <h1 class="mb-6 text-center text-3xl font-bold text-gray-800">
+    <div class="bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md">
+      <h1 class="text-primary mb-6 text-center text-3xl font-bold">
         About Fakaloan
       </h1>
 
       <section>
-        <h2 class="mb-2 text-xl font-semibold text-gray-700">
+        <h2 class="text-on-surface mb-2 text-xl font-semibold">
           Welcome to Fakaloan!
         </h2>
-        <p class="leading-relaxed text-gray-600">
+        <p class="text-on-surface/80 leading-relaxed">
           Fakaloan is a software tool designed to help businesses manage credit
           and collections effectively. We are proudly South African, building
           solutions tailored for our local market.
         </p>
-        <p class="mt-2 font-medium leading-relaxed text-gray-600">
+        <p class="text-on-surface/80 mt-2 font-medium leading-relaxed">
           Please note: Fakaloan is a platform for tracking and managing credit
           you extend to your customers. We do not provide loans, credit, or
           financial services ourselves.
@@ -29,12 +29,16 @@ useTitle('About | Fakaloan');
       </section>
 
       <section>
-        <h2 class="mb-2 text-xl font-semibold text-gray-700">What We Offer</h2>
-        <p class="leading-relaxed text-gray-600">
+        <h2 class="text-on-surface mb-2 text-xl font-semibold">
+          What We Offer
+        </h2>
+        <p class="text-on-surface/80 leading-relaxed">
           Our platform provides tools to help you streamline your financial
           processes by enabling you to:
         </p>
-        <ul class="mt-2 list-inside list-disc space-y-1 pl-4 text-gray-600">
+        <ul
+          class="text-on-surface/80 mt-2 list-inside list-disc space-y-1 pl-4"
+        >
           <li>Track credit you have extended to your clients.</li>
           <li>Manage and simplify your collections process.</li>
           <li>Gain insights into your cash flow through analytics.</li>
@@ -46,8 +50,8 @@ useTitle('About | Fakaloan');
       </section>
 
       <section>
-        <h2 class="mb-2 text-xl font-semibold text-gray-700">Disclaimer</h2>
-        <p class="font-semibold leading-relaxed text-gray-600">
+        <h2 class="text-on-surface mb-2 text-xl font-semibold">Disclaimer</h2>
+        <p class="text-on-surface/80 font-semibold leading-relaxed">
           Fakaloan is a software-as-a-service (SaaS) platform. We are not a
           registered credit provider, financial advisor, or debt collector. The
           tools and information provided are for management and tracking
@@ -58,10 +62,10 @@ useTitle('About | Fakaloan');
       </section>
 
       <section>
-        <h2 class="mb-2 text-xl font-semibold text-gray-700">
+        <h2 class="text-on-surface mb-2 text-xl font-semibold">
           Language Support
         </h2>
-        <p class="leading-relaxed text-gray-600">
+        <p class="text-on-surface/80 leading-relaxed">
           Currently, Fakaloan primarily supports English. However, as a proudly
           South African company, we are committed to inclusivity and plan to
           support all official South African languages in the future.
@@ -69,16 +73,16 @@ useTitle('About | Fakaloan');
       </section>
 
       <section>
-        <h2 class="mb-2 text-xl font-semibold text-gray-700">Need Help?</h2>
-        <p class="leading-relaxed text-gray-600">
+        <h2 class="text-on-surface mb-2 text-xl font-semibold">Need Help?</h2>
+        <p class="text-on-surface/80 leading-relaxed">
           If you have any questions, encounter issues, or need assistance,
           please don't hesitate to reach out to our support team.
         </p>
-        <p class="mt-2 text-gray-600">
+        <p class="text-on-surface/80 mt-2">
           Email us at:
           <a
             href="mailto:admin@fakaloan.co.za"
-            class="text-indigo-600 underline hover:text-indigo-800"
+            class="text-primary hover:text-primary-variant underline"
             >admin@fakaloan.co.za</a
           >
         </p>
@@ -91,7 +95,9 @@ useTitle('About | Fakaloan');
       </div>
     </div>
 
-    <footer class="mt-8 w-full max-w-2xl text-center text-sm text-gray-500">
+    <footer
+      class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
+    >
       <p>
         &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
         reserved.

@@ -58,7 +58,7 @@ const goToLogin = () => {
       @submit="handlePasswordReset"
       class="space-y-4"
     >
-      <p class="text-sm text-gray-600">
+      <p class="text-on-surface/80 text-sm">
         Enter the email address associated with your account, and we'll send you
         a link to reset your password.
       </p>
@@ -78,6 +78,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="you@example.com"
             aria-describedby="email-error"

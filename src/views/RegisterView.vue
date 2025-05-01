@@ -83,6 +83,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="Thabo"
             aria-describedby="name-error"
@@ -110,6 +111,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="Mokoena"
             aria-describedby="name-error"
@@ -133,6 +135,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="you@example.com"
             aria-describedby="email-error"
@@ -157,6 +160,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="Minimum 8 characters"
             aria-describedby="password-error"
@@ -187,6 +191,7 @@ const goToLogin = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="Confirm your password"
             aria-describedby="passwordConfirmation-error"
@@ -208,7 +213,7 @@ const goToLogin = () => {
 
     <template #actions>
       <div class="mt-4 text-center text-sm">
-        <span class="text-gray-600">Already have an account? </span>
+        <span class="text-on-background">Already have an account? </span>
         <button @click="goToLogin" class="btn-link">Sign in</button>
       </div>
     </template>

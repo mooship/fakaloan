@@ -95,6 +95,7 @@ const goToForgotPassword = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="you@example.com"
             aria-describedby="email-error"
@@ -126,6 +127,7 @@ const goToForgotPassword = () => {
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
+              'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="Password"
             aria-describedby="password-error"
@@ -148,17 +150,17 @@ const goToForgotPassword = () => {
     <template #actions>
       <div class="relative my-4">
         <div class="absolute inset-0 flex items-center">
-          <div class="w-full border-t border-gray-300"></div>
+          <div class="border-secondary-variant w-full border-t"></div>
         </div>
         <div class="relative flex justify-center text-sm">
-          <span class="bg-white px-2 text-gray-500"> Or continue with </span>
+          <span class="bg-surface text-secondary px-2"> Or continue with </span>
         </div>
       </div>
 
       <div>
         <button
           @click="handleGoogleLogin"
-          class="btn-secondary"
+          class="bg-surface text-on-surface border-secondary-variant hover:bg-secondary-variant/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2"
           :disabled="isLoading"
         >
           <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
@@ -167,7 +169,7 @@ const goToForgotPassword = () => {
       </div>
 
       <div class="mt-4 text-center text-sm">
-        <span class="text-gray-600">Don't have an account? </span>
+        <span class="text-on-background">Don't have an account? </span>
         <button @click="goToRegister" class="btn-link">Create one</button>
       </div>
     </template>
