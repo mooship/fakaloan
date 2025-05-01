@@ -491,8 +491,8 @@ const handleAddTransaction = () => {
 
       <!-- Back Button -->
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button @click="goToHome" class="btn-secondary !w-auto">
-          Back to Home
+        <button @click="router.back()" class="btn-secondary !w-auto">
+          Back
         </button>
       </div>
     </div>

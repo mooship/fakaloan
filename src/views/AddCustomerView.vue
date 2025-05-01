@@ -147,6 +147,11 @@ const handleSubmit = async () => {
           </button>
         </div>
       </form>
+      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+        <button @click="router.back()" class="btn-secondary !w-auto">
+          Back
+        </button>
+      </div>
     </div>
   </AppLayout>
 </template>
