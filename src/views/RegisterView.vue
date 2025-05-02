@@ -1,3 +1,7 @@
+/** * RegisterView.vue * * Registration page for Fakaloan. * Allows users to
+create a new account with email, password, and optional cellphone. * Uses
+VeeValidate for form validation and Remote Config for feature toggling. * *
+@module views/RegisterView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -53,7 +57,8 @@ const schema = yup.object({
 
 /**
  * Handles the registration form submission.
- * @param values Form values from VeeValidate.
+ * @param {GenericFormValues} values - Form values from VeeValidate.
+ * @returns {Promise<void>}
  */
 const handleRegister = async (values: GenericFormValues) => {
   setLoading(true);
@@ -70,7 +75,10 @@ const handleRegister = async (values: GenericFormValues) => {
   }
 };
 
-/** Navigates the user to the login page. */
+/**
+ * Navigates the user to the login page.
+ * @returns {void}
+ */
 const goToLogin = () => {
   router.push({ name: 'login' });
 };

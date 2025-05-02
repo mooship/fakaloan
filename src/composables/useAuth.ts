@@ -1,3 +1,12 @@
+/**
+ * useAuth composable
+ *
+ * Provides authentication and user profile management for Fakaloan.
+ * Handles login, registration, logout, password reset, and user profile CRUD using Firebase Auth and Firestore.
+ *
+ * @module composables/useAuth
+ * @returns {Object} Authentication state and methods.
+ */
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, Theme } from '@/enums/user.enums';

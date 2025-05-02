@@ -1,3 +1,7 @@
+/** * AuthLayout.vue * * Authentication layout component for Fakaloan. *
+Provides a styled card with slots for title, errors, form, and actions. * *
+@module layouts/AuthLayout * @prop {string} title - The title to display at the
+top of the card. */
 <script setup lang="ts">
 defineProps<{ title: string }>();
 </script>

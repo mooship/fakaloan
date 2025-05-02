@@ -20,10 +20,10 @@ const toggleSpeedDial = () => {
 
 /**
  * Handles the add transaction action.
- * Emits an event for parent components to handle.
+ * Navigates to the add transaction page.
  */
 const handleAddTransaction = () => {
-  // TODO: Implement add transaction logic (e.g., open a modal, call an API, etc.)
+  router.push('/add-transaction');
 };
 
 /**

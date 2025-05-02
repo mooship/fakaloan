@@ -1,3 +1,6 @@
+/** * LoginView.vue * * Login page for Fakaloan. * Supports email/password and
+Google authentication. * Uses VeeValidate for form validation and Remote Config
+for feature toggling. * * @module views/LoginView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -43,7 +46,8 @@ const schema = yup.object({
 
 /**
  * Handles the email/password login form submission.
- * @param values Form values from VeeValidate.
+ * @param {AppGenericFormValues} values - Form values from VeeValidate.
+ * @returns {Promise<void>}
  */
 const handleEmailLogin = async (values: AppGenericFormValues) => {
   setLoading(true);
@@ -58,7 +62,10 @@ const handleEmailLogin = async (values: AppGenericFormValues) => {
   }
 };
 
-/** Handles the Google Sign-in button click. */
+/**
+ * Handles the Google Sign-in button click.
+ * @returns {Promise<void>}
+ */
 const handleGoogleLogin = async () => {
   setLoading(true);
   googleLoading.value = true;
@@ -73,12 +80,18 @@ const handleGoogleLogin = async () => {
   }
 };
 
-/** Navigates the user to the registration page. */
+/**
+ * Navigates the user to the registration page.
+ * @returns {void}
+ */
 const goToRegister = () => {
   router.push({ name: 'register' });
 };
 
-/** Navigates the user to the forgot password page. */
+/**
+ * Navigates the user to the forgot password page.
+ * @returns {void}
+ */
 const goToForgotPassword = () => {
   router.push({ name: 'forgot-password' });
 };

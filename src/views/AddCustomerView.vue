@@ -1,3 +1,6 @@
+/** * AddCustomerView.vue * * View for adding a new customer to Fakaloan. *
+Validates input and saves customer data to Firestore. * Uses VeeValidate for
+validation and UnoCSS for styling. * * @module views/AddCustomerView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -64,6 +67,7 @@ const validate = async () => {
 
 /**
  * Handles form submission to add a new customer to Firestore.
+ * @returns {Promise<void>}
  */
 const handleSubmit = async () => {
   if (!currentUser.value) {

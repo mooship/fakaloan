@@ -1,3 +1,12 @@
+/**
+ * useRemoteConfig composable
+ *
+ * Provides reactive access to Firebase Remote Config values for Fakaloan.
+ * Fetches and exposes feature flags such as account creation enablement.
+ *
+ * @module composables/useRemoteConfig
+ * @returns {Object} - { allowAccountCreation: Readonly<Ref<boolean>>, isLoading: Readonly<Ref<boolean>> }
+ */
 import { firebaseApp } from '@/firebase';
 import {
   fetchAndActivate,
@@ -35,6 +44,7 @@ export function useRemoteConfig(): {
 } {
   /**
    * Fetches remote configuration from Firebase, activates it, and updates reactive state.
+   * @private
    */
   const fetchRemoteConfig = async () => {
     isLoading.value = true;

@@ -1,3 +1,6 @@
+/** * AppLayout.vue * * Main application layout for Fakaloan. * Provides a
+responsive navigation bar and a slot for main content. * Navigation links are
+shown/hidden based on authentication state. * * @module layouts/AppLayout */
 <template>
   <div class="bg-background flex min-h-screen flex-col">
     <!-- App Bar -->

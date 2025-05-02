@@ -2,6 +2,7 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    // Users collection
     match /users/{userId} {
       function isOwner() {
         return request.auth != null && request.auth.uid == userId;
@@ -13,13 +14,36 @@ service cloud.firestore {
 
       allow read: if isOwner();
 
-      
       allow update: if isOwner()
                       && request.resource.data.uid == resource.data.uid
                       && request.resource.data.createdAt == resource.data.createdAt
                       && request.resource.data.isPremium == resource.data.isPremium;
 
       allow delete: if false;
+    }
+
+    // Customers collection
+    match /customers/{customerId} {
+      function isCustomerOwner() {
+        return request.auth != null && request.auth.uid == resource.data.ownerUid;
+      }
+      function isCreatingCustomer() {
+        return request.auth != null && request.auth.uid == request.resource.data.ownerUid;
+      }
+      allow read, update, delete: if isCustomerOwner();
+      allow create: if isCreatingCustomer();
+    }
+
+    // Transactions collection
+    match /transactions/{transactionId} {
+      function isTransactionOwner() {
+        return request.auth != null && request.auth.uid == resource.data.ownerUid;
+      }
+      function isCreatingTransaction() {
+        return request.auth != null && request.auth.uid == request.resource.data.ownerUid;
+      }
+      allow read, update, delete: if isTransactionOwner();
+      allow create: if isCreatingTransaction();
     }
   }
 }

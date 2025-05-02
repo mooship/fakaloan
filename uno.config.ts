@@ -1,3 +1,11 @@
+/**
+ * uno.config.ts
+ *
+ * UnoCSS configuration for Fakaloan.
+ * Defines color variables, theme, shortcuts, and icon collections for the app.
+ *
+ * @module uno.config
+ */
 import type { IconifyJSON } from '@iconify/types';
 import { defineConfig, presetIcons, presetWind4 } from 'unocss';
 

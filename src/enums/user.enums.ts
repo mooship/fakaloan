@@ -1,4 +1,14 @@
 /**
+ * user.enums.ts
+ *
+ * Enums for user preferences and subscription status in Fakaloan.
+ * Includes supported languages, subscription statuses, and UI themes.
+ *
+ * @module enums/user.enums
+ * @enum {string}
+ */
+
+/**
  * Supported languages for user preference (ISO 639-1 codes).
  */
 export enum LanguageCode {

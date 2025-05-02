@@ -1,3 +1,5 @@
+/** * AboutView.vue * * About page for Fakaloan. * Describes the platform,
+features, support, and legal disclaimers. * * @module views/AboutView */
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
