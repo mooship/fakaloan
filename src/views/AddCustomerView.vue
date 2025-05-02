@@ -46,7 +46,7 @@ const schema = yup.object({
  * Validates the add customer form using Yup schema.
  * @returns {Promise<boolean>} True if valid, false otherwise.
  */
-const validate = async () => {
+const validate = async (): Promise<boolean> => {
   try {
     await schema.validate(form.value, { abortEarly: false });
     errors.value = {};
@@ -69,7 +69,7 @@ const validate = async () => {
  * Handles form submission to add a new customer to Firestore.
  * @returns {Promise<void>}
  */
-const handleSubmit = async () => {
+const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
     toast.error('You must be logged in to add a customer.');
 

@@ -31,7 +31,9 @@ const schema = yup.object({
  * @param {GenericFormValues} values - The form values from VeeValidate
  * @returns {Promise<void>}
  */
-const handlePasswordReset = async (values: GenericFormValues) => {
+const handlePasswordReset = async (
+  values: GenericFormValues
+): Promise<void> => {
   setLoading(true);
   try {
     const success = await sendPasswordReset(
@@ -49,7 +51,7 @@ const handlePasswordReset = async (values: GenericFormValues) => {
  * Navigates back to the login page.
  * @returns {void}
  */
-const goToLogin = () => {
+const goToLogin = (): void => {
   router.push({ name: 'login' });
 };
 </script>

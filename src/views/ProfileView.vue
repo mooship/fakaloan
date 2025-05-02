@@ -91,12 +91,17 @@ const displayLanguage = computed(() => {
  * @returns {string} The formatted phone number.
  */
 function formatPhoneNumber(phone: string | null): string {
-  if (!phone) return '';
+  if (!phone) {
+    return '';
+  }
+
   const digits = phone.replace(WHITESPACE_REGEX, '');
   const match = digits.match(DISPLAY_PHONE_NUMBER_REGEX);
+
   if (match) {
     return `${match[1]} ${match[2]} ${match[3]} ${match[4]}`.trim();
   }
+
   return digits.replace(GROUP_3_4_REGEX, '$1 ').trim();
 }
 
@@ -105,15 +110,17 @@ function formatPhoneNumber(phone: string | null): string {
  * Validates the phone number before updating.
  * @returns {Promise<void>}
  */
-const updateCellphone = async () => {
+const updateCellphone = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
   }
+
   const trimmedCellphone = cellphoneInput.value.replace(WHITESPACE_REGEX, '');
   if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
     toast.error('Enter a valid phone number');
     return;
   }
+
   setLoading(true);
   try {
     isUpdating.value = true;
@@ -138,7 +145,7 @@ const updateCellphone = async () => {
  * Handles errors and notifies the user.
  * @returns {Promise<void>}
  */
-const updateUserEmail = async () => {
+const updateUserEmail = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
   }
@@ -166,22 +173,29 @@ const updateUserEmail = async () => {
  * Validates input and updates password after re-authentication.
  * @returns {Promise<void>}
  */
-const handlePasswordUpdate = async () => {
+const handlePasswordUpdate = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
   }
+
   if (newPassword.value !== confirmPassword.value) {
     toast.error('New passwords do not match');
+
     return;
   }
+
   if (!currentPassword.value) {
     toast.error('Current password is required');
+
     return;
   }
+
   if (!newPassword.value) {
     toast.error('New password is required');
+
     return;
   }
+
   setLoading(true);
   isUpdating.value = true;
   authError.value = null;
@@ -204,7 +218,7 @@ const handlePasswordUpdate = async () => {
  * Updates the user's theme preference in Firestore and applies it.
  * @returns {Promise<void>}
  */
-const updateTheme = async () => {
+const updateTheme = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) return;
   setLoading(true);
   try {
@@ -228,7 +242,7 @@ const updateTheme = async () => {
  * Navigates to the premium page.
  * @returns {void}
  */
-const goToPremiumPage = () => {
+const goToPremiumPage = (): void => {
   router.push('/premium');
 };
 
@@ -236,7 +250,7 @@ const goToPremiumPage = () => {
  * Shows the subscription cancellation dialog.
  * @returns {void}
  */
-const handleCancelSubscription = () => {
+const handleCancelSubscription = (): void => {
   reveal();
 };
 
@@ -245,7 +259,7 @@ const handleCancelSubscription = () => {
  * @param {boolean} choice - Whether the user confirmed cancellation
  * @returns {Promise<void>}
  */
-const confirmCancelSubscription = async (choice: boolean) => {
+const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   if (!choice) {
     return;
   }
@@ -261,7 +275,7 @@ const confirmCancelSubscription = async (choice: boolean) => {
  * Handler for add customer action from FAB.
  * @returns {void}
  */
-const handleAddCustomer = () => {
+const handleAddCustomer = (): void => {
   // TODO: Implement add customer logic for profile view
 };
 
@@ -269,7 +283,7 @@ const handleAddCustomer = () => {
  * Handler for add transaction action from FAB.
  * @returns {void}
  */
-const handleAddTransaction = () => {
+const handleAddTransaction = (): void => {
   // TODO: Implement add transaction logic for profile view
 };
 </script>

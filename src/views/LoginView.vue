@@ -49,7 +49,9 @@ const schema = yup.object({
  * @param {AppGenericFormValues} values - Form values from VeeValidate.
  * @returns {Promise<void>}
  */
-const handleEmailLogin = async (values: AppGenericFormValues) => {
+const handleEmailLogin = async (
+  values: AppGenericFormValues
+): Promise<void> => {
   setLoading(true);
   googleLoading.value = false; // Ensure Google loading is false
   try {
@@ -66,7 +68,7 @@ const handleEmailLogin = async (values: AppGenericFormValues) => {
  * Handles the Google Sign-in button click.
  * @returns {Promise<void>}
  */
-const handleGoogleLogin = async () => {
+const handleGoogleLogin = async (): Promise<void> => {
   setLoading(true);
   googleLoading.value = true;
   try {
@@ -84,7 +86,7 @@ const handleGoogleLogin = async () => {
  * Navigates the user to the registration page.
  * @returns {void}
  */
-const goToRegister = () => {
+const goToRegister = (): void => {
   router.push({ name: 'register' });
 };
 
@@ -92,7 +94,7 @@ const goToRegister = () => {
  * Navigates the user to the forgot password page.
  * @returns {void}
  */
-const goToForgotPassword = () => {
+const goToForgotPassword = (): void => {
   router.push({ name: 'forgot-password' });
 };
 </script>

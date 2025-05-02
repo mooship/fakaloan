@@ -60,14 +60,13 @@ const schema = yup.object({
  * @param {GenericFormValues} values - Form values from VeeValidate.
  * @returns {Promise<void>}
  */
-const handleRegister = async (values: GenericFormValues) => {
+const handleRegister = async (values: GenericFormValues): Promise<void> => {
   setLoading(true);
   try {
     const success = await registerWithEmail(
       values as unknown as RegisterFormValues
     );
     if (success) {
-      // Redirect to login page after successful registration
       router.push({ name: 'login' });
     }
   } finally {
@@ -79,7 +78,7 @@ const handleRegister = async (values: GenericFormValues) => {
  * Navigates the user to the login page.
  * @returns {void}
  */
-const goToLogin = () => {
+const goToLogin = (): void => {
   router.push({ name: 'login' });
 };
 </script>
