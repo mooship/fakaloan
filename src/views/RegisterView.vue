@@ -14,8 +14,6 @@ useTitle('Register | Fakaloan');
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 const { setLoading } = useLoading();
-const allowAccountCreation =
-  import.meta.env.VITE_ALLOW_ACCOUNT_CREATION !== 'false';
 
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
@@ -46,10 +44,6 @@ const schema = yup.object({
  * @param values - The form values from VeeValidate
  */
 const handleRegister = async (values: GenericFormValues) => {
-  if (!allowAccountCreation) {
-    return;
-  }
-
   setLoading(true);
   try {
     const success = await registerWithEmail(
@@ -79,9 +73,6 @@ const goToLogin = () => {
       </div>
       <div v-if="authError" class="alert-error">
         {{ authError }}
-      </div>
-      <div v-if="!allowAccountCreation" class="alert-error">
-        Account creation is currently disabled.
       </div>
     </template>
 
@@ -227,11 +218,7 @@ const goToLogin = () => {
       </div>
 
       <div>
-        <button
-          type="submit"
-          class="btn-primary"
-          :disabled="isLoading || !allowAccountCreation"
-        >
+        <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Creating...' : 'Create Account' }}
         </button>
       </div>

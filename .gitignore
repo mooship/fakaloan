@@ -25,9 +25,6 @@ coverage/
 *.local
 .env*
 
-# Firebase Hosting cache
-.firebase/hosting.*.cache
-
 # Cypress artifacts
 /cypress/videos/
 /cypress/screenshots/

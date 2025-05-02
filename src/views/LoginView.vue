@@ -33,9 +33,6 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-const allowAccountCreation =
-  import.meta.env.VITE_ALLOW_ACCOUNT_CREATION !== 'false';
-
 /**
  * Handles login with email and password.
  * @param values - The form values from VeeValidate
@@ -74,10 +71,6 @@ const handleGoogleLogin = async () => {
  * Navigates to the registration page.
  */
 const goToRegister = () => {
-  if (!allowAccountCreation) {
-    return;
-  }
-
   router.push({ name: 'register' });
 };
 
@@ -195,13 +188,7 @@ const goToForgotPassword = () => {
 
       <div class="mt-4 text-center text-sm">
         <span class="text-on-background">Don't have an account? </span>
-        <button
-          @click="goToRegister"
-          class="btn-link"
-          :disabled="!allowAccountCreation"
-        >
-          Create one
-        </button>
+        <button @click="goToRegister" class="btn-link">Create one</button>
       </div>
     </template>
   </AuthLayout>
