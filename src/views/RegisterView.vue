@@ -11,28 +11,22 @@ import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
 
-/**
- * Sets the document title for this view.
- */
 useTitle('Register | Fakaloan');
 
 const router = useRouter();
 const {
   registerWithEmail,
-  isLoading: isAuthLoading, // Renamed from useAuth's isLoading
+  isLoading: isAuthLoading,
   error: authError,
   isOnline,
 } = useAuth();
 
 const { setLoading } = useLoading();
 
-// Destructure and rename isLoading from useRemoteConfig to avoid conflict
 const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
   useRemoteConfig();
 
-/**
- * Yup validation schema for the registration form.
- */
+/** Validation schema for the registration form. */
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
   lastName: yup.string().trim().required('Last Name is required'),
@@ -59,7 +53,7 @@ const schema = yup.object({
 
 /**
  * Handles the registration form submission.
- * @param values - Form values from VeeValidate.
+ * @param values Form values from VeeValidate.
  */
 const handleRegister = async (values: GenericFormValues) => {
   setLoading(true);
@@ -69,7 +63,6 @@ const handleRegister = async (values: GenericFormValues) => {
     );
     if (success) {
       // Redirect to login page after successful registration
-      // Consider showing a success message first
       router.push({ name: 'login' });
     }
   } finally {
@@ -77,9 +70,7 @@ const handleRegister = async (values: GenericFormValues) => {
   }
 };
 
-/**
- * Navigates the user to the login page.
- */
+/** Navigates the user to the login page. */
 const goToLogin = () => {
   router.push({ name: 'login' });
 };
@@ -88,19 +79,15 @@ const goToLogin = () => {
 <template>
   <AuthLayout title="Create Fakaloan Account">
     <template #errors>
-      <!-- Display network error -->
       <div v-if="!isOnline" class="alert-error">
         No internet connection. Please check your network.
       </div>
-      <!-- Display authentication error -->
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
-      <!-- Display message while checking remote config -->
       <div v-if="isRemoteConfigLoading" class="alert-info">
         Checking account creation status...
       </div>
-      <!-- Display message if account creation is disabled via remote config -->
       <div
         v-if="!isRemoteConfigLoading && !allowAccountCreation"
         class="alert-error"
@@ -116,7 +103,6 @@ const goToLogin = () => {
       @submit="handleRegister"
       class="space-y-4"
     >
-      <!-- First Name Field -->
       <div>
         <label for="firstName" class="form-label">First Name</label>
         <Field
@@ -145,7 +131,6 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Last Name Field -->
       <div>
         <label for="lastName" class="form-label">Last Name</label>
         <Field
@@ -170,7 +155,6 @@ const goToLogin = () => {
         <ErrorMessage name="lastName" id="name-error" class="form-error-text" />
       </div>
 
-      <!-- Email Field -->
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
@@ -195,7 +179,6 @@ const goToLogin = () => {
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
-      <!-- Password Field -->
       <div>
         <label for="password" class="form-label">Password</label>
         <Field
@@ -225,7 +208,6 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Password Confirmation Field -->
       <div>
         <label for="passwordConfirmation" class="form-label"
           >Confirm Password</label
@@ -257,13 +239,11 @@ const goToLogin = () => {
         />
       </div>
 
-      <!-- Submit Button -->
       <div>
         <button
           type="submit"
           :class="[
             'btn-primary',
-            // Disable if auth is loading, remote config is loading, or account creation is disallowed
             {
               'btn-disabled':
                 isAuthLoading || isRemoteConfigLoading || !allowAccountCreation,
@@ -279,7 +259,6 @@ const goToLogin = () => {
     </Form>
 
     <template #actions>
-      <!-- Link to Login Page -->
       <div class="mt-4 text-center text-sm">
         <span class="text-on-background">Already have an account? </span>
         <button

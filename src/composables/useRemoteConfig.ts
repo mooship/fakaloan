@@ -7,11 +7,10 @@ import {
 import { onMounted, readonly, ref, type Ref } from 'vue';
 
 // Default value used before fetch or if fetch fails
-const DEFAULT_ALLOW_ACCOUNT_CREATION = false;
+const DEFAULT_ALLOW_ACCOUNT_CREATION = true;
 
 /**
  * Reactive flag indicating if account creation is allowed via Remote Config.
- * Initialized with the default value.
  */
 const allowAccountCreation = ref<boolean>(DEFAULT_ALLOW_ACCOUNT_CREATION);
 
@@ -21,14 +20,14 @@ const allowAccountCreation = ref<boolean>(DEFAULT_ALLOW_ACCOUNT_CREATION);
 const isLoading = ref<boolean>(true);
 
 /**
- * Composable hook for fetching and accessing Firebase Remote Config values.
+ * Composable for fetching and accessing Firebase Remote Config values.
  *
- * Provides reactive state for configuration parameters and loading status.
- * Currently fetches the `allow_account_creation` parameter.
+ * Provides reactive state for configuration parameters (`allow_account_creation`)
+ * and the loading status.
  *
  * @returns An object containing readonly reactive refs:
- *  - `allowAccountCreation`: Boolean flag indicating if account creation is enabled.
- *  - `isLoading`: Boolean flag indicating if the remote config is being fetched.
+ *  - `allowAccountCreation`: Whether account creation is enabled.
+ *  - `isLoading`: Whether the remote config is currently being fetched.
  */
 export function useRemoteConfig(): {
   allowAccountCreation: Readonly<Ref<boolean>>;
@@ -36,10 +35,9 @@ export function useRemoteConfig(): {
 } {
   /**
    * Fetches remote configuration from Firebase, activates it, and updates reactive state.
-   * Handles potential errors and ensures loading state is managed.
    */
   const fetchRemoteConfig = async () => {
-    isLoading.value = true; // Indicate loading start
+    isLoading.value = true;
     try {
       const remoteConfig = getRemoteConfig(firebaseApp);
 
@@ -48,11 +46,10 @@ export function useRemoteConfig(): {
         allow_account_creation: DEFAULT_ALLOW_ACCOUNT_CREATION,
       };
 
-      // Configure fetch settings
       // Use 0ms interval in development for immediate updates, longer in production
       remoteConfig.settings.minimumFetchIntervalMillis = import.meta.env.DEV
         ? 0
-        : 3600000; // 1 hour (3,600,000 ms)
+        : 3600000; // 1 hour
 
       // Fetch and activate the latest configuration from Firebase
       const fetched = await fetchAndActivate(remoteConfig);
@@ -66,7 +63,6 @@ export function useRemoteConfig(): {
       }
 
       // Update reactive state with the fetched (or default/cached) value
-      // Ensure the key 'allow_account_creation' matches the parameter key in Firebase Console
       allowAccountCreation.value = getBoolean(
         remoteConfig,
         'allow_account_creation'
@@ -76,7 +72,7 @@ export function useRemoteConfig(): {
       // Fallback to the hardcoded default value on error
       allowAccountCreation.value = DEFAULT_ALLOW_ACCOUNT_CREATION;
     } finally {
-      isLoading.value = false; // Indicate loading finished
+      isLoading.value = false;
     }
   };
 
