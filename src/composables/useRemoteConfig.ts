@@ -1,9 +1,16 @@
 import { onMounted, ref } from 'vue';
 
+/**
+ * Reactive flag indicating if account creation is allowed.
+ * Defaults to true for local development.
+ */
 const allowAccountCreation = ref(true);
 
+/**
+ * Determines if the app is running in a local development environment.
+ * @returns {boolean} True if running locally, false otherwise.
+ */
 function isLocal() {
-  // Check for localhost or VITE_USE_LOCAL_CONFIG (optional)
   return (
     window?.location?.hostname === 'localhost' ||
     window?.location?.hostname === '127.0.0.1' ||
@@ -11,16 +18,24 @@ function isLocal() {
   );
 }
 
+/**
+ * Composable for fetching and exposing remote configuration flags.
+ * Sets `allowAccountCreation` based on environment or remote config.
+ * @returns {{ allowAccountCreation: Ref<boolean> }} Reactive config state.
+ */
 export function useRemoteConfig() {
+  /**
+   * Fetches remote configuration and updates reactive state.
+   * In local mode, uses environment variable.
+   * In production, simulates a remote fetch and disables account creation.
+   */
   const fetchRemoteConfig = async () => {
     if (isLocal()) {
-      // Read from .env for local development
       allowAccountCreation.value =
         import.meta.env.VITE_ALLOW_ACCOUNT_CREATION !== 'false';
     } else {
-      // Fetch from remote config (simulate or replace with real fetch)
       await new Promise((resolve) => setTimeout(resolve, 200));
-      allowAccountCreation.value = false; // default for production/remote
+      allowAccountCreation.value = false;
     }
   };
 

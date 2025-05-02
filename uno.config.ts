@@ -42,7 +42,9 @@ export default defineConfig({
   theme: {
     colors: {
       primary: 'var(--color-primary)',
+      'primary-variant': '#1565C0',
       secondary: 'var(--color-secondary)',
+      'secondary-variant': '#C62828',
       tertiary: 'var(--color-tertiary)',
       error: 'var(--color-error)',
       background: 'var(--color-background)',
@@ -75,6 +77,7 @@ export default defineConfig({
     'btn-premium-text': 'drop-shadow-lg text-white',
     'btn-renew-premium':
       'bg-tertiary text-white font-extrabold px-6 py-3 rounded-md hover:bg-tertiary/80 shadow-xl transform hover:scale-105 transition-transform border-2 border-tertiary text-lg tracking-wide',
+    'btn-disabled': 'opacity-50! cursor-not-allowed! pointer-events-none! ',
     'alert-error':
       'p-3 mb-4 text-sm text-error bg-error/10 rounded-md border border-error',
     'alert-success':
@@ -101,5 +104,10 @@ export default defineConfig({
       },
     }),
   ],
-  safelist: ['btn‑premium', 'btn‑premium‑text', 'btn‑renew‑premium'],
+  safelist: [
+    'btn‑premium',
+    'btn‑premium‑text',
+    'btn‑renew‑premium',
+    'btn‑disabled',
+  ],
 });

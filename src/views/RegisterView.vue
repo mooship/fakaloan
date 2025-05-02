@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
+import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
@@ -14,6 +15,7 @@ useTitle('Register | Fakaloan');
 const router = useRouter();
 const { registerWithEmail, isLoading, error: authError, isOnline } = useAuth();
 const { setLoading } = useLoading();
+const { allowAccountCreation } = useRemoteConfig();
 
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
@@ -74,9 +76,13 @@ const goToLogin = () => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
+      <div v-if="!allowAccountCreation" class="alert-error">
+        Account creation is currently disabled.
+      </div>
     </template>
 
     <Form
+      v-if="allowAccountCreation"
       :validation-schema="schema"
       @submit="handleRegister"
       class="space-y-4"
@@ -218,7 +224,14 @@ const goToLogin = () => {
       </div>
 
       <div>
-        <button type="submit" class="btn-primary" :disabled="isLoading">
+        <button
+          type="submit"
+          :class="[
+            'btn-primary',
+            { 'btn-disabled': isLoading || !allowAccountCreation },
+          ]"
+          :disabled="isLoading || !allowAccountCreation"
+        >
           {{ isLoading ? 'Creating...' : 'Create Account' }}
         </button>
       </div>
@@ -227,7 +240,13 @@ const goToLogin = () => {
     <template #actions>
       <div class="mt-4 text-center text-sm">
         <span class="text-on-background">Already have an account? </span>
-        <button @click="goToLogin" class="btn-link">Sign in</button>
+        <button
+          @click="goToLogin"
+          :class="['btn-link', { 'btn-disabled': !allowAccountCreation }]"
+          :disabled="!allowAccountCreation"
+        >
+          Sign in
+        </button>
       </div>
     </template>
   </AuthLayout>

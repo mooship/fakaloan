@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
+import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
@@ -22,6 +23,7 @@ const {
 
 const googleLoading = ref(false);
 const { setLoading } = useLoading();
+const { allowAccountCreation } = useRemoteConfig();
 
 const schema = yup.object({
   email: yup
@@ -91,6 +93,9 @@ const goToForgotPassword = () => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
+      <div v-if="!allowAccountCreation" class="alert-error">
+        Login is currently disabled.
+      </div>
     </template>
 
     <Form
@@ -159,7 +164,14 @@ const goToForgotPassword = () => {
       </div>
 
       <div>
-        <button type="submit" class="btn-primary" :disabled="isLoading">
+        <button
+          type="submit"
+          :class="[
+            'btn-primary',
+            { 'btn-disabled': isLoading || !allowAccountCreation },
+          ]"
+          :disabled="isLoading || !allowAccountCreation"
+        >
           {{ isLoading ? 'Signing in...' : 'Sign in' }}
         </button>
       </div>
@@ -178,8 +190,13 @@ const goToForgotPassword = () => {
       <div>
         <button
           @click="handleGoogleLogin"
-          class="bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2"
-          :disabled="isLoading || googleLoading"
+          :class="[
+            'bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2',
+            isLoading || googleLoading || !allowAccountCreation
+              ? 'btn-disabled'
+              : '',
+          ]"
+          :disabled="isLoading || googleLoading || !allowAccountCreation"
         >
           <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
           {{ googleLoading ? 'Signing in...' : 'Sign in with Google' }}
@@ -188,7 +205,13 @@ const goToForgotPassword = () => {
 
       <div class="mt-4 text-center text-sm">
         <span class="text-on-background">Don't have an account? </span>
-        <button @click="goToRegister" class="btn-link">Create one</button>
+        <button
+          @click="goToRegister"
+          :class="!allowAccountCreation ? 'btn-disabled btn-link' : 'btn-link'"
+          :disabled="!allowAccountCreation"
+        >
+          Create one
+        </button>
       </div>
     </template>
   </AuthLayout>
