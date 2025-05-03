@@ -1,35 +1,28 @@
-import { useDark, useStorage } from '@vueuse/core';
-import { watch } from 'vue';
-
-export type ThemeMode = 'light' | 'dark';
-
-const THEME_KEY = 'fakaloan-theme';
-
-const theme = useStorage<ThemeMode>(THEME_KEY, 'light');
-
-const isDark = useDark({
-  selector: 'html',
-  valueDark: 'dark',
-  valueLight: 'light',
-  storageKey: THEME_KEY,
-});
-
-watch(theme, (mode) => {
-  isDark.value = mode === 'dark';
-});
-watch(isDark, (dark) => {
-  theme.value = dark ? 'dark' : 'light';
-});
+import type { Theme } from '@/enums/user.enums';
+import { useColorMode } from '@vueuse/core';
+import { computed } from 'vue';
 
 export function useTheme() {
+  const colorMode = useColorMode({
+    emitAuto: true,
+    modes: {
+      dark: 'dark',
+      light: 'light',
+      auto: 'auto',
+    },
+    storageKey: 'fakaloan-theme',
+    selector: 'html',
+    attribute: 'class',
+  });
+
   return {
-    theme,
-    isDark,
-    setTheme: (mode: ThemeMode) => {
-      theme.value = mode;
+    colorMode,
+    isDark: computed(() => colorMode.value === 'dark'),
+    setTheme: (mode: Theme) => {
+      colorMode.value = mode;
     },
     toggleTheme: () => {
-      theme.value = theme.value === 'light' ? 'dark' : 'light';
+      colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark';
     },
   };
 }

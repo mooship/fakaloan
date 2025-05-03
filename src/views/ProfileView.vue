@@ -10,7 +10,7 @@ import {
   WHITESPACE_REGEX,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
-import { LanguageCode, SubscriptionStatus, Theme } from '@/enums/user.enums';
+import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
@@ -41,21 +41,9 @@ const currentPassword = ref('');
 const newPassword = ref('');
 const confirmPassword = ref('');
 const newEmail = ref(userProfile.value?.email || '');
-const themeInput = ref(Theme.Light);
 
-const { setTheme } = useTheme();
+const { colorMode, isDark, toggleTheme } = useTheme();
 const { setLoading } = useLoading();
-
-watch(
-  () => userProfile.value?.preferences.theme,
-  (newTheme) => {
-    if (newTheme) {
-      themeInput.value = newTheme;
-      setTheme(newTheme === Theme.Dark ? 'dark' : 'light');
-    }
-  },
-  { immediate: true }
-);
 
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 
@@ -193,29 +181,6 @@ const handlePasswordUpdate = async (): Promise<void> => {
   setLoading(false);
 };
 
-const updateTheme = async (): Promise<void> => {
-  if (!currentUser.value || !userProfile.value) {
-    return;
-  }
-
-  setLoading(true);
-  try {
-    isUpdating.value = true;
-    const userDocRef = doc(db, 'users', currentUser.value.uid);
-    await updateDoc(userDocRef, {
-      'preferences.theme': themeInput.value,
-    });
-    setTheme(themeInput.value === Theme.Dark ? 'dark' : 'light');
-    toast.success(ToastMessages.ThemeUpdateSuccess);
-  } catch (error) {
-    console.error('Failed to update theme:', error);
-    toast.error(ToastMessages.ThemeUpdateFailed);
-  } finally {
-    isUpdating.value = false;
-    setLoading(false);
-  }
-};
-
 const goToPremiumPage = (): void => {
   router.push('/premium');
 };
@@ -236,13 +201,34 @@ const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   }
 };
 
-const handleAddCustomer = (): void => {
-  // TODO: Implement add customer logic for profile view
-};
-
-const handleAddTransaction = (): void => {
-  // TODO: Implement add transaction logic for profile view
-};
+// Sync colorMode changes to Firestore user profile
+watch(
+  () => colorMode.value,
+  async (newMode, oldMode) => {
+    if (!currentUser.value || !userProfile.value) return;
+    if (newMode === oldMode) return;
+    // Only sync 'light' or 'dark' to Firestore
+    const modeToSave =
+      newMode === 'auto'
+        ? window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light'
+        : newMode;
+    isUpdating.value = true;
+    try {
+      const userDocRef = doc(db, 'users', currentUser.value.uid);
+      await updateDoc(userDocRef, {
+        'preferences.theme': modeToSave,
+      });
+      toast.success(ToastMessages.ThemeUpdateSuccess);
+    } catch (error) {
+      console.error('Failed to update theme:', error);
+      toast.error(ToastMessages.ThemeUpdateFailed);
+    } finally {
+      isUpdating.value = false;
+    }
+  }
+);
 </script>
 
 <template>
@@ -543,38 +529,41 @@ const handleAddTransaction = (): void => {
               <span class="text-on-surface/80 font-medium">Theme:</span>
               <span class="flex items-center gap-2">
                 <button
-                  @click="
-                    () => {
-                      themeInput =
-                        themeInput === Theme.Light ? Theme.Dark : Theme.Light;
-                      updateTheme();
-                    }
-                  "
+                  @click="toggleTheme()"
                   :aria-label="
-                    themeInput === Theme.Light
-                      ? 'Switch to dark mode'
-                      : 'Switch to light mode'
+                    isDark
+                      ? 'Switch to light mode'
+                      : colorMode === 'auto'
+                        ? 'Switch to system mode'
+                        : 'Switch to dark mode'
                   "
                   class="btn-primary-outline flex !w-auto items-center gap-1"
                   :disabled="isUpdating"
                   type="button"
                 >
                   <i
-                    :class="
-                      themeInput === Theme.Light
-                        ? 'i-heroicons-sun'
-                        : 'i-heroicons-moon'
-                    "
-                    class="h-5 w-5"
+                    v-if="colorMode === 'auto'"
+                    class="i-heroicons-computer-desktop h-5 w-5"
                   ></i>
-                  <span>{{
-                    themeInput === Theme.Light ? 'Light' : 'Dark'
-                  }}</span>
+                  <i v-else-if="isDark" class="i-heroicons-moon h-5 w-5"></i>
+                  <i v-else class="i-heroicons-sun h-5 w-5"></i>
+                  <span>
+                    {{
+                      colorMode === 'auto' ? 'Auto' : isDark ? 'Dark' : 'Light'
+                    }}
+                  </span>
                 </button>
+                <select
+                  v-model="colorMode"
+                  class="ml-2 rounded border px-2 py-1 text-sm"
+                >
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                  <option value="auto">Auto</option>
+                </select>
                 <span v-if="isUpdating" class="text-on-surface/60 ml-2 text-xs"
                   >Saving...</span
                 >
-                <!-- TODO: Add feedback for theme change (e.g., toast or visual indicator) -->
               </span>
             </div>
           </div>
@@ -593,10 +582,7 @@ const handleAddTransaction = (): void => {
         </button>
       </div>
     </div>
-    <FabSpeedDial
-      @add-transaction="handleAddTransaction"
-      @add-customer="handleAddCustomer"
-    />
+    <FabSpeedDial />
   </AppLayout>
 
   <!-- Confirmation Dialog -->
