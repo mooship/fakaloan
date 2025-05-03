@@ -1,6 +1,3 @@
-/** * LoginView.vue * * Login page for Fakaloan. * Supports email/password and
-Google authentication. * Uses VeeValidate for form validation and Remote Config
-for feature toggling. * * @module views/LoginView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -27,7 +24,6 @@ const {
   isOnline,
 } = useAuth();
 
-/** Ref to track loading state specifically for Google Sign-in. */
 const googleLoading = ref(false);
 
 const { setLoading } = useLoading();
@@ -37,7 +33,6 @@ const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
 
 const toast = useToast();
 
-/** Validation schema for the login form. */
 const schema = yup.object({
   email: yup
     .string()
@@ -50,11 +45,6 @@ const schema = yup.object({
 
 const showPassword = ref(false);
 
-/**
- * Handles the email/password login form submission.
- * @param {AppGenericFormValues} values - Form values from VeeValidate.
- * @returns {Promise<void>}
- */
 const handleEmailLogin = async (
   values: AppGenericFormValues
 ): Promise<void> => {
@@ -71,10 +61,6 @@ const handleEmailLogin = async (
   }
 };
 
-/**
- * Handles the Google Sign-in button click.
- * @returns {Promise<void>}
- */
 const handleGoogleLogin = async (): Promise<void> => {
   setLoading(true);
   googleLoading.value = true;
@@ -89,18 +75,10 @@ const handleGoogleLogin = async (): Promise<void> => {
   }
 };
 
-/**
- * Navigates the user to the registration page.
- * @returns {void}
- */
 const goToRegister = (): void => {
   router.push({ name: 'register' });
 };
 
-/**
- * Navigates the user to the forgot password page.
- * @returns {void}
- */
 const goToForgotPassword = (): void => {
   router.push({ name: 'forgot-password' });
 };
@@ -126,7 +104,6 @@ const goToForgotPassword = (): void => {
       </div>
     </template>
 
-    <!-- Login form: Show only when remote config is loaded -->
     <Form
       v-if="!isRemoteConfigLoading"
       :validation-schema="schema"
@@ -218,7 +195,6 @@ const goToForgotPassword = (): void => {
           id="password-error"
           class="form-error-text"
         />
-        <!-- TODO: Add reCAPTCHA or similar for bot protection if needed -->
       </div>
 
       <div>
@@ -241,7 +217,6 @@ const goToForgotPassword = (): void => {
     </Form>
 
     <template #actions>
-      <!-- Actions section: Show only when remote config is loaded -->
       <div v-if="!isRemoteConfigLoading">
         <div class="relative my-4">
           <div class="absolute inset-0 flex items-center">

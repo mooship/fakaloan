@@ -1,11 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 
-/**
- * Vue Router instance for the application.
- *
- * Handles authentication and guest route guards using navigation guards.
- */
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -60,11 +55,6 @@ const router = createRouter({
   ],
 });
 
-/**
- * Global navigation guard for authentication and guest-only routes.
- * Redirects to login if authentication is required and user is not logged in.
- * Redirects to home if guest-only route is accessed by an authenticated user.
- */
 router.beforeEach(async (to, from, next) => {
   const currentUser = await getCurrentUser();
   if (to.meta.requiresAuth && !currentUser) {

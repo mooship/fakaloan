@@ -1,5 +1,3 @@
-/** * HomeView.vue * * Home page for authenticated users. * Displays a welcome
-message, user info, and logout button. * * @module views/HomeView */
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -16,10 +14,6 @@ const router = useRouter();
 const { setLoading } = useLoading();
 const toast = useToast();
 
-/**
- * Logs out the current user and navigates to the login page.
- * @returns {Promise<void>}
- */
 const handleLogout = async (): Promise<void> => {
   setLoading(true);
   try {

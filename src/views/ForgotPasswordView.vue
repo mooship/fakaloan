@@ -1,6 +1,3 @@
-/** * ForgotPasswordView.vue * * View for requesting a password reset email in
-Fakaloan. * Uses VeeValidate for validation and UnoCSS for styling. * * @module
-views/ForgotPasswordView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -29,11 +26,6 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
-/**
- * Handles password reset request.
- * @param {GenericFormValues} values - The form values from VeeValidate
- * @returns {Promise<void>}
- */
 const handlePasswordReset = async (
   values: GenericFormValues
 ): Promise<void> => {
@@ -53,10 +45,6 @@ const handlePasswordReset = async (
   }
 };
 
-/**
- * Navigates back to the login page.
- * @returns {void}
- */
 const goToLogin = (): void => {
   router.push({ name: 'login' });
 };
@@ -82,7 +70,6 @@ const goToLogin = (): void => {
         Enter the email address associated with your account, and we'll send you
         a link to reset your password.
       </p>
-      <!-- TODO: Add confirmation message after successful reset request -->
 
       <div>
         <label for="email" class="form-label">Email address</label>

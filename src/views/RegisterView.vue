@@ -1,7 +1,3 @@
-/** * RegisterView.vue * * Registration page for Fakaloan. * Allows users to
-create a new account with email, password, and optional cellphone. * Uses
-VeeValidate for form validation and Remote Config for feature toggling. * *
-@module views/RegisterView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -36,7 +32,6 @@ const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
 
 const toast = useToast();
 
-/** Validation schema for the registration form. */
 const schema = yup.object({
   firstName: yup.string().trim().required('First Name is required'),
   lastName: yup.string().trim().required('Last Name is required'),
@@ -67,11 +62,6 @@ const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
 const { label, color } = usePasswordStrength(password);
 
-/**
- * Handles the registration form submission.
- * @param {GenericFormValues} values - Form values from VeeValidate.
- * @returns {Promise<void>}
- */
 const handleRegister = async (values: GenericFormValues): Promise<void> => {
   setLoading(true);
   try {
@@ -89,10 +79,6 @@ const handleRegister = async (values: GenericFormValues): Promise<void> => {
   }
 };
 
-/**
- * Navigates the user to the login page.
- * @returns {void}
- */
 const goToLogin = (): void => {
   router.push({ name: 'login' });
 };
@@ -118,7 +104,6 @@ const goToLogin = (): void => {
       </div>
     </template>
 
-    <!-- Registration form: Show only when remote config is loaded and creation is allowed -->
     <Form
       v-if="!isRemoteConfigLoading && allowAccountCreation"
       :validation-schema="schema"
@@ -317,7 +302,6 @@ const goToLogin = (): void => {
           {{ isAuthLoading ? 'Creating...' : 'Create Account' }}
         </button>
       </div>
-      <!-- TODO: Add terms and conditions/privacy policy acceptance checkbox -->
     </Form>
 
     <template #actions>
@@ -325,11 +309,7 @@ const goToLogin = (): void => {
         <span class="text-on-background">Already have an account? </span>
         <button
           @click="goToLogin"
-          :class="[
-            'btn-link',
-            // Disable link only while checking remote config
-            { 'btn-disabled': isRemoteConfigLoading },
-          ]"
+          :class="['btn-link', { 'btn-disabled': isRemoteConfigLoading }]"
           :disabled="isRemoteConfigLoading"
         >
           Sign in

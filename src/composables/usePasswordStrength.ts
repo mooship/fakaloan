@@ -1,12 +1,5 @@
 import { computed, type Ref } from 'vue';
 
-/**
- * usePasswordStrength composable
- *
- * Returns a computed password strength score and label for a given password.
- * @param password - The password to evaluate
- * @returns { score: number, label: string, color: string }
- */
 export function usePasswordStrength(password: Ref<string>) {
   const score = computed(() => {
     let s = 0;

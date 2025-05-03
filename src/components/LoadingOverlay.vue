@@ -1,7 +1,3 @@
-/** * LoadingOverlay.vue * * Global loading overlay component for Fakaloan. *
-Displays a spinner and loading text when the app is busy. * Uses UnoCSS for
-styling and supports dark mode. * * @module components/LoadingOverlay */
-
 <template>
   <transition name="fade">
     <div

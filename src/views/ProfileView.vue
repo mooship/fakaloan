@@ -1,6 +1,3 @@
-/** * ProfileView.vue * * User profile page for Fakaloan. * Allows editing of
-user details, password, theme, and subscription management. * * @module
-views/ProfileView */
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -86,11 +83,6 @@ const displayLanguage = computed(() => {
   }
 });
 
-/**
- * Formats a phone number for display.
- * @param {string | null} phone - The phone number to format.
- * @returns {string} The formatted phone number.
- */
 function formatPhoneNumber(phone: string | null): string {
   if (!phone) {
     return '';
@@ -106,11 +98,6 @@ function formatPhoneNumber(phone: string | null): string {
   return digits.replace(GROUP_3_4_REGEX, '$1 ').trim();
 }
 
-/**
- * Updates the user's phone number in Firestore.
- * Validates the phone number before updating.
- * @returns {Promise<void>}
- */
 const updateCellphone = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
@@ -141,11 +128,6 @@ const updateCellphone = async (): Promise<void> => {
   }
 };
 
-/**
- * Updates the user's email address in Firebase Auth and Firestore.
- * Handles errors and notifies the user.
- * @returns {Promise<void>}
- */
 const updateUserEmail = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
@@ -169,11 +151,6 @@ const updateUserEmail = async (): Promise<void> => {
   }
 };
 
-/**
- * Handles password update for the user.
- * Validates input and updates password after re-authentication.
- * @returns {Promise<void>}
- */
 const handlePasswordUpdate = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
@@ -204,6 +181,7 @@ const handlePasswordUpdate = async (): Promise<void> => {
     currentPassword.value,
     newPassword.value
   );
+
   if (success) {
     currentPassword.value = '';
     newPassword.value = '';
@@ -215,10 +193,6 @@ const handlePasswordUpdate = async (): Promise<void> => {
   setLoading(false);
 };
 
-/**
- * Updates the user's theme preference in Firestore and applies it.
- * @returns {Promise<void>}
- */
 const updateTheme = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
@@ -242,27 +216,14 @@ const updateTheme = async (): Promise<void> => {
   }
 };
 
-/**
- * Navigates to the premium page.
- * @returns {void}
- */
 const goToPremiumPage = (): void => {
   router.push('/premium');
 };
 
-/**
- * Shows the subscription cancellation dialog.
- * @returns {void}
- */
 const handleCancelSubscription = (): void => {
   reveal();
 };
 
-/**
- * Handles confirmation of subscription cancellation.
- * @param {boolean} choice - Whether the user confirmed cancellation
- * @returns {Promise<void>}
- */
 const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   if (!choice) {
     return;
@@ -275,18 +236,10 @@ const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   }
 };
 
-/**
- * Handler for add customer action from FAB.
- * @returns {void}
- */
 const handleAddCustomer = (): void => {
   // TODO: Implement add customer logic for profile view
 };
 
-/**
- * Handler for add transaction action from FAB.
- * @returns {void}
- */
 const handleAddTransaction = (): void => {
   // TODO: Implement add transaction logic for profile view
 };

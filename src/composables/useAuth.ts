@@ -1,12 +1,3 @@
-/**
- * useAuth composable
- *
- * Provides authentication and user profile management for Fakaloan.
- * Handles login, registration, logout, password reset, and user profile CRUD using Firebase Auth and Firestore.
- *
- * @module composables/useAuth
- * @returns {Object} Authentication state and methods.
- */
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, Theme } from '@/enums/user.enums';
@@ -38,12 +29,6 @@ import { useCurrentUser, useDocument } from 'vuefire';
 
 export { db };
 
-// Error Mapping
-/**
- * Maps Firebase authentication error codes to user-friendly messages.
- * @param authError - The Firebase AuthError object.
- * @returns A user-friendly error message string.
- */
 export const mapAuthError = (authError: AuthError): string => {
   switch (authError.code) {
     case 'auth/invalid-email':
@@ -70,30 +55,17 @@ export const mapAuthError = (authError: AuthError): string => {
   }
 };
 
-// useAuth Composable
-/**
- * Composable for authentication and user profile management.
- *
- * Provides methods for login, registration, logout, password reset, and user profile management.
- * Uses Firebase Auth and Firestore for backend operations.
- *
- * @returns {Object} Authentication state and methods.
- */
 export function useAuth() {
-  // Core Dependencies & State
   const toast = useToast();
   const currentUser = useCurrentUser();
   const { isOnline } = useNetwork();
   const { allowAccountCreation } = useRemoteConfig();
 
-  // Loading and error states
   const [isLoading, toggleLoading] = useToggle(false);
   const authError = ref<string | null>(null);
 
-  // Password reset state
   const [emailSent, toggleEmailSent] = useToggle(false);
 
-  // User Profile Management (Firestore)
   const userDocRef = computed(() =>
     currentUser.value ? doc(db, 'users', currentUser.value.uid) : null
   );
@@ -104,7 +76,6 @@ export function useAuth() {
     error: profileError,
   } = useDocument<UserProfile>(userDocRef);
 
-  // Profile data with defaults applied
   const userProfileWithDefaults = computed<UserProfile | null>(() => {
     const profile = userProfile.value;
     if (!profile) {
@@ -121,7 +92,6 @@ export function useAuth() {
     };
   });
 
-  // Watch for profile fetch errors
   watch(profileError, (newError) => {
     if (newError) {
       console.error('Error loading user profile:', newError);
@@ -129,13 +99,6 @@ export function useAuth() {
     }
   });
 
-  /**
-   * Creates or ensures a user profile document exists in Firestore.
-   * @param userId - Firebase Auth UID.
-   * @param firstName - User's first name.
-   * @param lastName - User's last name.
-   * @param email - User's email.
-   */
   const createUserProfile = async (
     userId: string,
     firstName: string,
@@ -183,11 +146,6 @@ export function useAuth() {
     }
   };
 
-  // Helper Functions
-  /**
-   * Checks network status before proceeding. Displays error if offline.
-   * @returns True if online, false otherwise.
-   */
   const checkNetwork = () =>
     ensureOnline(
       isOnline.value,
@@ -197,11 +155,6 @@ export function useAuth() {
       toast
     );
 
-  // Authentication Methods
-  /**
-   * Logs in a user with email and password.
-   * @param values - Login form values.
-   */
   const loginWithEmail = async (values: LoginFormValues): Promise<boolean> => {
     if (!allowAccountCreation.value) {
       authError.value = 'Login is currently disabled.';
@@ -255,9 +208,6 @@ export function useAuth() {
     }
   };
 
-  /**
-   * Logs in a user using Google OAuth. Creates profile if needed.
-   */
   const loginWithGoogle = async (): Promise<boolean> => {
     if (!allowAccountCreation.value) {
       authError.value = 'Login is currently disabled.';
@@ -302,10 +252,6 @@ export function useAuth() {
     }
   };
 
-  /**
-   * Registers a new user with email, password, and name. Creates profile.
-   * @param values - Registration form values.
-   */
   const registerWithEmail = async (
     values: RegisterFormValues
   ): Promise<boolean> => {
@@ -394,9 +340,6 @@ export function useAuth() {
     }
   };
 
-  /**
-   * Logs out the current user and redirects to login.
-   */
   const logout = async (): Promise<boolean> => {
     toggleLoading(true);
     authError.value = null;
@@ -413,10 +356,6 @@ export function useAuth() {
     }
   };
 
-  /**
-   * Sends a password reset email.
-   * @param values - Form values containing the email.
-   */
   const sendPasswordReset = async (
     values: ForgotPasswordForm
   ): Promise<boolean> => {
@@ -456,12 +395,6 @@ export function useAuth() {
     }
   };
 
-  /**
-   * Updates the user's password after re-authentication.
-   * @param currentPassword - The current password.
-   * @param newPassword - The new password.
-   * @returns True on success, false on failure.
-   */
   const updatePassword = async (
     currentPassword: string,
     newPassword: string
@@ -505,18 +438,15 @@ export function useAuth() {
     authError.value = null;
 
     try {
-      // Create credential with current password
       const credential = EmailAuthProvider.credential(
         currentUser.value.email,
         currentPassword
       );
 
-      // Re-authenticate the user
       console.log('Attempting re-authentication for password change...');
       await reauthenticateWithCredential(currentUser.value, credential);
       console.log('Re-authentication successful.');
 
-      // Update the password
       console.log('Attempting password update...');
       await firebaseUpdatePassword(currentUser.value, newPassword);
       console.log('Password updated successfully in Firebase Auth.');
@@ -532,7 +462,6 @@ export function useAuth() {
     }
   };
 
-  // Exported State and Methods
   return {
     currentUser,
     userProfile: userProfileWithDefaults,

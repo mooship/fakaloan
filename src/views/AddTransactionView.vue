@@ -1,16 +1,4 @@
 <script setup lang="ts">
-/**
- * AddTransactionView
- *
- * View for adding a new transaction (credit or repayment) for a customer.
- * - Fetches customers from Firestore for the current user.
- * - Submits a new transaction to Firestore.
- * - Uses UnoCSS utility classes for styling.
- *
- * @file AddTransactionView.vue
- * @module views/AddTransactionView
- */
-
 import { useAuth } from '@/composables/useAuth';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { TransactionTypeEnum } from '@/enums/transaction.enums';

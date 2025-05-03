@@ -46,9 +46,6 @@ const schema = yup.object({
     .max(90, 'Maximum is 90 days'),
 });
 
-/**
- * Validates the add customer form using Yup schema.
- */
 const validate = async (): Promise<boolean> => {
   try {
     await schema.validate(form.value, { abortEarly: false });
@@ -66,9 +63,6 @@ const validate = async (): Promise<boolean> => {
   }
 };
 
-/**
- * Handles form submission to add a new customer to Firestore.
- */
 const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);

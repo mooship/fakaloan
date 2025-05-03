@@ -1,10 +1,6 @@
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { useToast } from 'vue-toastification';
 
-/**
- * Ensures network connectivity before proceeding.
- * @returns false if offline and displays toast, true otherwise.
- */
 export function ensureOnline(
   isOnline: boolean,
   setError: (msg: string | null) => void,
@@ -19,10 +15,6 @@ export function ensureOnline(
   return true;
 }
 
-/**
- * Ensures a required field is present.
- * @returns false if missing and displays toast, true otherwise.
- */
 export function requireField(
   value: unknown,
   errorMessage: string,
