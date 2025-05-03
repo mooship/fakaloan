@@ -34,7 +34,7 @@ styling and supports dark mode. * * @module components/LoadingOverlay */
           class="text-lg font-medium drop-shadow-lg"
           :class="isDark ? 'text-on-primary' : 'text-on-surface'"
         >
-          Loading...
+          {{ text }}
         </span>
       </div>
     </div>
@@ -48,6 +48,13 @@ import { computed } from 'vue';
 const { isLoading } = useLoading();
 const { isDark } = useTheme();
 const visible = computed(() => isLoading.value);
+
+defineProps({
+  text: {
+    type: String,
+    default: 'Loading...',
+  },
+});
 </script>
 
 <style scoped>
