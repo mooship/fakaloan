@@ -86,8 +86,10 @@ const handleSubmit = async (): Promise<void> => {
       balance: 0,
       createdAt: serverTimestamp(),
       updatedAt: null,
-      creditScore: 0,
-      ownerUid: currentUser.value.uid,
+      userId: currentUser.value.uid,
+      creditScore: null,
+      defaultCreditTermDays: null,
+      lastRepaymentAt: null,
     });
     await updateDoc(docRef, { id: docRef.id });
     toast.success('Customer added successfully!');
