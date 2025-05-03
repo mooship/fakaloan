@@ -101,6 +101,12 @@ const router = useRouter();
           </button>
           <!-- TODO: Fallback to home if history is empty -->
         </div>
+
+        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+          <button @click="router.push('/')" class="btn-primary-outline !w-auto">
+            Back to Home
+          </button>
+        </div>
       </div>
       <footer
         class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
