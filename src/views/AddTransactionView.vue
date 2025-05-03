@@ -29,13 +29,17 @@ import { useToast } from 'vue-toastification';
 
 const { currentUser } = useAuth();
 const customers = ref<Customer[]>([]);
+const toast = useToast();
+const router = useRouter();
 
 onMounted(() => {
   if (!currentUser.value) return;
+
   const q = query(
     collection(db, 'customers'),
-    where('ownerUid', '==', currentUser.value.uid)
+    where('userId', '==', currentUser.value.uid)
   );
+
   onSnapshot(q, (snapshot) => {
     customers.value = snapshot.docs.map(
       (doc) => ({ ...doc.data(), uid: doc.id }) as Customer
@@ -51,8 +55,6 @@ const form = ref({
 });
 
 const isSubmitting = ref(false);
-const router = useRouter();
-const toast = useToast();
 
 function resetForm() {
   form.value = {
@@ -64,7 +66,14 @@ function resetForm() {
 }
 
 async function handleSubmit() {
-  if (!form.value.customerId || !form.value.amount) {
+  if (!currentUser.value) {
+    toast.error('You must be logged in to add a transaction.');
+    return;
+  }
+
+  const parsedAmount = parseFloat(form.value.amount);
+  if (!form.value.customerId || isNaN(parsedAmount) || parsedAmount <= 0) {
+    toast.error('Please enter a valid amount and customer.');
     return;
   }
 
@@ -73,12 +82,13 @@ async function handleSubmit() {
     await addDoc(collection(db, 'transactions'), {
       customerId: form.value.customerId,
       type: form.value.type,
-      amount: Number(form.value.amount),
+      amount: parsedAmount,
       note: form.value.note || null,
       createdAt: serverTimestamp(),
       updatedAt: null,
-      ownerUid: currentUser.value?.uid || null,
+      userId: currentUser.value.uid,
     });
+
     toast.success('Transaction added successfully!');
     resetForm();
     router.push('/');
@@ -108,6 +118,7 @@ async function handleSubmit() {
           </option>
         </select>
       </div>
+
       <div>
         <label class="form-label" for="type">Type</label>
         <select v-model="form.type" id="type" required class="form-input-base">
@@ -115,6 +126,7 @@ async function handleSubmit() {
           <option :value="TransactionTypeEnum.Repayment">Repayment</option>
         </select>
       </div>
+
       <div>
         <label class="form-label" for="amount">Amount</label>
         <input
@@ -125,8 +137,10 @@ async function handleSubmit() {
           step="0.01"
           required
           class="form-input-base"
+          placeholder="e.g. 100.00"
         />
       </div>
+
       <div>
         <label class="form-label" for="note">Note (optional)</label>
         <input
@@ -134,8 +148,10 @@ async function handleSubmit() {
           id="note"
           type="text"
           class="form-input-base"
+          placeholder="Short description"
         />
       </div>
+
       <button type="submit" class="btn-primary" :disabled="isSubmitting">
         <span v-if="isSubmitting">Saving...</span>
         <span v-else>Add Transaction</span>
