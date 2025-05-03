@@ -5,15 +5,6 @@
  * Represents customer details for credit management, stored in Firestore.
  *
  * @module interfaces/customer.interfaces
- * @typedef {Object} Customer
- * @property {string} uid - Customer document ID
- * @property {string} name - Customer's name
- * @property {string} cellphoneNumber - Customer's cellphone number
- * @property {number} balance - Current balance
- * @property {string|null} address - Customer's address
- * @property {Timestamp} createdAt - Creation timestamp
- * @property {Timestamp|null} updatedAt - Last update timestamp
- * @property {number|null} creditScore - Customer's credit score
  */
 import type { Timestamp } from 'firebase/firestore';
 
@@ -24,11 +15,13 @@ import type { Timestamp } from 'firebase/firestore';
  * @property {string} uid - Customer document ID
  * @property {string} name - Customer's name
  * @property {string} cellphoneNumber - Customer's cellphone number
- * @property {number} balance - Current balance
+ * @property {number} balance - Current outstanding balance
  * @property {string|null} address - Customer's address
- * @property {Timestamp} createdAt - Creation timestamp
+ * @property {Timestamp} createdAt - Account creation timestamp
  * @property {Timestamp|null} updatedAt - Last update timestamp
- * @property {number|null} creditScore - Customer's credit score
+ * @property {number|null} creditScore - Calculated credit score (0–100), null if no history
+ * @property {number|null} defaultCreditTermDays - Default credit term in days (used if dueByDate is missing)
+ * @property {Timestamp|null} lastRepaymentAt - Timestamp of last repayment (if any)
  */
 export interface Customer {
   uid: string;
@@ -39,4 +32,6 @@ export interface Customer {
   createdAt: Timestamp;
   updatedAt: Timestamp | null;
   creditScore: number | null;
+  defaultCreditTermDays?: number | null;
+  lastRepaymentAt?: Timestamp | null;
 }
