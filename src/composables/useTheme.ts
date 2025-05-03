@@ -1,71 +1,65 @@
 /**
- * useTheme composable
- *
- * Provides theme management (light/dark mode) for Fakaloan.
- * Loads, applies, and persists theme preference using localStorage and system settings.
- *
  * @module composables/useTheme
  * @typedef {'light' | 'dark'} ThemeMode
- * @returns {Object} - { theme: Ref<ThemeMode>, isDark: ComputedRef<boolean>, setTheme: (mode: ThemeMode) => void, toggleTheme: () => void }
+ *
+ * Provides theme management (light/dark mode) for Fakaloan.
+ * - Persists user preference in localStorage
+ * - Defaults to system preference if unset
+ * - Applies appropriate class to <html> (`dark` or `light`)
  */
-import { computed, ref, watchEffect } from 'vue';
 
-const THEME_KEY = 'fakaloan-theme';
+import { computed, watch } from 'vue'
+import { useDark, useStorage } from '@vueuse/core'
 
-export type ThemeMode = 'light' | 'dark';
+export type ThemeMode = 'light' | 'dark'
 
-const theme = ref<ThemeMode>('light');
+const THEME_KEY = 'fakaloan-theme'
 
 /**
- * Loads the theme from localStorage or system preference.
- * @private
+ * Reactive theme mode, persisted in localStorage.
+ * Defaults to system preference using useDark.
  */
-function loadTheme() {
-  const saved = localStorage.getItem(THEME_KEY);
-  if (saved === 'light' || saved === 'dark') {
-    theme.value = saved;
-  } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    theme.value = 'dark';
-  } else {
-    theme.value = 'light';
-  }
-}
+const theme = useStorage<ThemeMode>(THEME_KEY, 'light')
 
 /**
- * Applies the theme to the <html> element.
- * @param {ThemeMode} mode - The theme mode to apply.
- * @private
+ * Reactive computed boolean for dark mode state.
+ * Applies appropriate class to `<html>` element.
  */
-function applyTheme(mode: ThemeMode) {
-  document.documentElement.classList.toggle('dark', mode === 'dark');
-  document.documentElement.classList.toggle('light', mode === 'light');
-}
+const isDark = useDark({
+  selector: 'html',
+  valueDark: 'dark',
+  valueLight: 'light',
+  storageKey: THEME_KEY,
+})
 
-// Watch and persist theme
-watchEffect(() => {
-  applyTheme(theme.value);
-  localStorage.setItem(THEME_KEY, theme.value);
-});
+/**
+ * Keep `theme` and `isDark` in sync reactively.
+ */
+watch(theme, (mode) => {
+  isDark.value = mode === 'dark'
+})
+watch(isDark, (dark) => {
+  theme.value = dark ? 'dark' : 'light'
+})
 
-// Public API
 /**
  * Composable for theme management (light/dark mode).
  *
- * Loads, applies, and persists theme preference using localStorage and system settings.
- *
  * @returns {Object} Theme state and methods.
+ * @property {Ref<ThemeMode>} theme - Reactive theme mode
+ * @property {ComputedRef<boolean>} isDark - Whether dark mode is active
+ * @property {(mode: ThemeMode) => void} setTheme - Set the theme explicitly
+ * @property {() => void} toggleTheme - Toggle between light and dark modes
  */
 export function useTheme() {
-  loadTheme();
-  const isDark = computed(() => theme.value === 'dark');
   return {
     theme,
     isDark,
     setTheme: (mode: ThemeMode) => {
-      theme.value = mode;
+      theme.value = mode
     },
     toggleTheme: () => {
-      theme.value = theme.value === 'light' ? 'dark' : 'light';
+      theme.value = theme.value === 'light' ? 'dark' : 'light'
     },
-  };
+  }
 }
