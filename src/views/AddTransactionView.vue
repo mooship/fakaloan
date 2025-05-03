@@ -26,6 +26,7 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 
 const { currentUser } = useAuth();
 const customers = ref<Customer[]>([]);
@@ -33,7 +34,9 @@ const toast = useToast();
 const router = useRouter();
 
 onMounted(() => {
-  if (!currentUser.value) return;
+  if (!currentUser.value) {
+    return;
+  }
 
   const q = query(
     collection(db, 'customers'),
@@ -67,13 +70,17 @@ function resetForm() {
 
 async function handleSubmit() {
   if (!currentUser.value) {
-    toast.error('You must be logged in to add a transaction.');
+    toast.error(ToastMessages.AuthRequired);
     return;
   }
 
-  const parsedAmount = parseFloat(form.value.amount);
-  if (!form.value.customerId || isNaN(parsedAmount) || parsedAmount <= 0) {
-    toast.error('Please enter a valid amount and customer.');
+  const parsedAmount = Number.parseFloat(form.value.amount);
+  if (
+    !form.value.customerId ||
+    Number.isNaN(parsedAmount) ||
+    parsedAmount <= 0
+  ) {
+    toast.error(ToastMessages.ValidationError);
     return;
   }
 
@@ -89,11 +96,11 @@ async function handleSubmit() {
       userId: currentUser.value.uid,
     });
 
-    toast.success('Transaction added successfully!');
+    toast.success(ToastMessages.TransactionAddSuccess);
     resetForm();
     router.push('/');
   } catch {
-    toast.error('Failed to add transaction.');
+    toast.error(ToastMessages.TransactionAddFailed);
   } finally {
     isSubmitting.value = false;
   }
@@ -139,6 +146,7 @@ async function handleSubmit() {
           class="form-input-base"
           placeholder="e.g. 100.00"
         />
+        <!-- TODO: Add validation for max value, decimal places -->
       </div>
 
       <div>
@@ -156,6 +164,8 @@ async function handleSubmit() {
         <span v-if="isSubmitting">Saving...</span>
         <span v-else>Add Transaction</span>
       </button>
+      <!-- TODO: Add support for editing or deleting transactions -->
+      <!-- TODO: Add category or type for transactions (beyond credit/repayment) -->
     </form>
   </div>
 </template>

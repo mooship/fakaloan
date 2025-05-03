@@ -7,12 +7,15 @@ import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
+import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useTitle('Register | Fakaloan');
@@ -29,6 +32,8 @@ const { setLoading } = useLoading();
 
 const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
   useRemoteConfig();
+
+const toast = useToast();
 
 /** Validation schema for the registration form. */
 const schema = yup.object({
@@ -55,6 +60,8 @@ const schema = yup.object({
     .notRequired(),
 });
 
+const showPassword = ref(false);
+
 /**
  * Handles the registration form submission.
  * @param {GenericFormValues} values - Form values from VeeValidate.
@@ -68,7 +75,10 @@ const handleRegister = async (values: GenericFormValues): Promise<void> => {
     );
     if (success) {
       router.push({ name: 'login' });
+      toast.success(ToastMessages.RegistrationSuccess);
     }
+  } catch {
+    toast.error(ToastMessages.RegistrationFailed);
   } finally {
     setLoading(false);
   }
@@ -196,23 +206,40 @@ const goToLogin = (): void => {
           v-slot="{ field, errors }"
           :validate-on-input="true"
         >
-          <input
-            v-bind="field"
-            type="password"
-            :class="[
-              'form-input-base',
-              errors.length ? 'form-input-invalid' : 'form-input-valid',
-              'bg-surface text-on-surface placeholder:text-on-surface/60',
-            ]"
-            placeholder="Minimum 8 characters"
-            aria-describedby="password-error"
-          />
+          <div class="relative">
+            <input
+              v-bind="field"
+              :type="showPassword ? 'text' : 'password'"
+              :class="[
+                'form-input-base',
+                errors.length ? 'form-input-invalid' : 'form-input-valid',
+                'bg-surface text-on-surface placeholder:text-on-surface/60',
+              ]"
+              placeholder="Minimum 8 characters"
+              aria-describedby="password-error"
+            />
+            <button
+              type="button"
+              class="text-on-surface/60 absolute right-2 top-1/2 -translate-y-1/2"
+              @click="showPassword = !showPassword"
+              tabindex="-1"
+              aria-label="Toggle password visibility"
+            >
+              <i
+                :class="
+                  showPassword ? 'i-heroicons-eye-off' : 'i-heroicons-eye'
+                "
+                class="h-5 w-5"
+              ></i>
+            </button>
+          </div>
         </Field>
         <ErrorMessage
           name="password"
           id="password-error"
           class="form-error-text"
         />
+        <!-- TODO: Add password strength indicator -->
       </div>
 
       <div>
@@ -229,7 +256,7 @@ const goToLogin = (): void => {
         >
           <input
             v-bind="field"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
@@ -263,6 +290,7 @@ const goToLogin = (): void => {
           {{ isAuthLoading ? 'Creating...' : 'Create Account' }}
         </button>
       </div>
+      <!-- TODO: Add terms and conditions/privacy policy acceptance checkbox -->
     </Form>
 
     <template #actions>

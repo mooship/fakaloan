@@ -11,11 +11,14 @@ import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
 import * as yup from 'yup';
+import { ToastMessages } from '@/constants/toastMessages.constants';
+import { useToast } from 'vue-toastification';
 
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
 const { sendPasswordReset, isLoading, error: authError, isOnline } = useAuth();
 const { setLoading } = useLoading();
+const toast = useToast();
 
 const schema = yup.object({
   email: yup
@@ -40,8 +43,11 @@ const handlePasswordReset = async (
       values as unknown as ForgotPasswordForm
     );
     if (success) {
+      toast.success(ToastMessages.PasswordResetSent);
       router.push({ name: 'login' });
     }
+  } catch {
+    toast.error(ToastMessages.PasswordResetFailed);
   } finally {
     setLoading(false);
   }
@@ -76,6 +82,7 @@ const goToLogin = (): void => {
         Enter the email address associated with your account, and we'll send you
         a link to reset your password.
       </p>
+      <!-- TODO: Add confirmation message after successful reset request -->
 
       <div>
         <label for="email" class="form-label">Email address</label>
@@ -107,6 +114,7 @@ const goToLogin = (): void => {
         </button>
       </div>
     </Form>
+    <!-- TODO: Add link to support if user can’t access email -->
 
     <template #actions>
       <div class="mt-4 text-center text-sm">

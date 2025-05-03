@@ -5,6 +5,7 @@ for feature toggling. * * @module views/LoginView */
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
@@ -12,6 +13,7 @@ import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useTitle('Login | Fakaloan');
@@ -33,6 +35,8 @@ const { setLoading } = useLoading();
 const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
   useRemoteConfig();
 
+const toast = useToast();
+
 /** Validation schema for the login form. */
 const schema = yup.object({
   email: yup
@@ -43,6 +47,8 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
   password: yup.string().required('Password is required'),
 });
+
+const showPassword = ref(false);
 
 /**
  * Handles the email/password login form submission.
@@ -55,10 +61,11 @@ const handleEmailLogin = async (
   setLoading(true);
   googleLoading.value = false; // Ensure Google loading is false
   try {
-    const success = await loginWithEmail(values as unknown as LoginFormValues);
-    if (success) {
-      router.push({ name: 'home' });
-    }
+    await loginWithEmail(values as unknown as LoginFormValues);
+    router.push({ name: 'home' });
+    toast.success(ToastMessages.LoginSuccess);
+  } catch {
+    toast.error(ToastMessages.LoginFailed);
   } finally {
     setLoading(false);
   }
@@ -178,23 +185,40 @@ const goToForgotPassword = (): void => {
           v-slot="{ field, errors }"
           :validate-on-input="true"
         >
-          <input
-            v-bind="field"
-            type="password"
-            :class="[
-              'form-input-base',
-              errors.length ? 'form-input-invalid' : 'form-input-valid',
-              'bg-surface text-on-surface placeholder:text-on-surface/60',
-            ]"
-            placeholder="Password"
-            aria-describedby="password-error"
-          />
+          <div class="relative">
+            <input
+              v-bind="field"
+              :type="showPassword ? 'text' : 'password'"
+              :class="[
+                'form-input-base',
+                errors.length ? 'form-input-invalid' : 'form-input-valid',
+                'bg-surface text-on-surface placeholder:text-on-surface/60',
+              ]"
+              placeholder="Password"
+              aria-describedby="password-error"
+            />
+            <button
+              type="button"
+              class="text-on-surface/60 absolute right-2 top-1/2 -translate-y-1/2"
+              @click="showPassword = !showPassword"
+              tabindex="-1"
+              aria-label="Toggle password visibility"
+            >
+              <i
+                :class="
+                  showPassword ? 'i-heroicons-eye-off' : 'i-heroicons-eye'
+                "
+                class="h-5 w-5"
+              ></i>
+            </button>
+          </div>
         </Field>
         <ErrorMessage
           name="password"
           id="password-error"
           class="form-error-text"
         />
+        <!-- TODO: Add reCAPTCHA or similar for bot protection if needed -->
       </div>
 
       <div>

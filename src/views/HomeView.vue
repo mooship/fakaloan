@@ -7,11 +7,14 @@ import { useLoading } from '@/composables/useLoading';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
 import { useRouter } from 'vue-router';
+import { ToastMessages } from '@/constants/toastMessages.constants';
+import { useToast } from 'vue-toastification';
 
 useTitle('Home | Fakaloan');
 const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 const { setLoading } = useLoading();
+const toast = useToast();
 
 /**
  * Logs out the current user and navigates to the login page.
@@ -22,6 +25,9 @@ const handleLogout = async (): Promise<void> => {
   try {
     await logout();
     router.push({ name: 'login' });
+    toast.success(ToastMessages.LogoutSuccess);
+  } catch {
+    toast.error(ToastMessages.LogoutFailed);
   } finally {
     setLoading(false);
   }
@@ -32,16 +38,15 @@ const handleLogout = async (): Promise<void> => {
   <AppLayout>
     <div class="bg-surface space-y-4 rounded p-8 text-center shadow-md">
       <h1 class="text-primary text-2xl font-bold">Welcome to Fakaloan!</h1>
-
-      <!-- User Information Display -->
+      <!-- TODO: Add personalized greeting with user's name if available -->
       <div v-if="currentUser">
         <p class="text-on-surface">You are logged in as:</p>
         <p class="text-primary font-medium">{{ currentUser.email }}</p>
+        <!-- TODO: Add quick links to main features (e.g., Add Customer, View Transactions) -->
       </div>
       <div v-else-if="isLoading && !currentUser">
         <p class="text-on-surface/60">Loading user information...</p>
       </div>
-
       <!-- Logout Button -->
       <div>
         <button

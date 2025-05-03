@@ -14,6 +14,7 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 
 const { currentUser, isLoading } = useAuth();
 const router = useRouter();
@@ -70,11 +71,13 @@ const validate = async (): Promise<boolean> => {
  */
 const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
-    toast.error('You must be logged in to add a customer.');
+    toast.error(ToastMessages.AuthRequired);
     return;
   }
 
-  if (!(await validate())) return;
+  if (!(await validate())) {
+    return;
+  }
 
   setLoading(true);
   submitting.value = true;
@@ -95,10 +98,10 @@ const handleSubmit = async (): Promise<void> => {
 
     await updateDoc(docRef, { id: docRef.id });
 
-    toast.success('Customer added successfully!');
+    toast.success(ToastMessages.CustomerAddSuccess);
     router.push('/');
   } catch {
-    toast.error('Failed to add customer.');
+    toast.error(ToastMessages.CustomerAddFailed);
   } finally {
     submitting.value = false;
     setLoading(false);
@@ -127,7 +130,7 @@ const handleSubmit = async (): Promise<void> => {
             {{ errors.name }}
           </div>
         </div>
-
+        <!-- TODO: Add duplicate customer check (by phone or name) -->
         <div>
           <label class="form-label" for="cellphone">Cellphone Number</label>
           <input
@@ -161,13 +164,19 @@ const handleSubmit = async (): Promise<void> => {
         </div>
 
         <div>
-          <label class="form-label" for="term">Default Credit Term (days)</label>
+          <label class="form-label" for="term"
+            >Default Credit Term (days)</label
+          >
           <input
             id="term"
             type="number"
             v-model.number="form.defaultCreditTermDays"
             class="form-input-base bg-surface text-on-surface"
-            :class="errors.defaultCreditTermDays ? 'form-input-invalid' : 'form-input-valid'"
+            :class="
+              errors.defaultCreditTermDays
+                ? 'form-input-invalid'
+                : 'form-input-valid'
+            "
             placeholder="e.g. 30"
             autocomplete="off"
             min="1"
@@ -187,6 +196,7 @@ const handleSubmit = async (): Promise<void> => {
             {{ submitting ? 'Adding...' : 'Add Customer' }}
           </button>
         </div>
+        <!-- TODO: Allow attaching notes or tags to customers -->
       </form>
 
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">

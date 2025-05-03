@@ -99,9 +99,9 @@ const router = useRouter();
           <button @click="router.back()" class="btn-primary-outline !w-auto">
             Back
           </button>
+          <!-- TODO: Fallback to home if history is empty -->
         </div>
       </div>
-
       <footer
         class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
       >
@@ -110,6 +110,7 @@ const router = useRouter();
           reserved.
         </p>
         <p class="mt-1">Proudly South African 🇿🇦</p>
+        <!-- TODO: Add links to privacy policy, terms, or FAQ if available -->
       </footer>
     </div>
   </AppLayout>

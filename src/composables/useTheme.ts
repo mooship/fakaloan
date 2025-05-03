@@ -8,18 +8,18 @@
  * - Applies appropriate class to <html> (`dark` or `light`)
  */
 
-import { computed, watch } from 'vue'
-import { useDark, useStorage } from '@vueuse/core'
+import { useDark, useStorage } from '@vueuse/core';
+import { watch } from 'vue';
 
-export type ThemeMode = 'light' | 'dark'
+export type ThemeMode = 'light' | 'dark';
 
-const THEME_KEY = 'fakaloan-theme'
+const THEME_KEY = 'fakaloan-theme';
 
 /**
  * Reactive theme mode, persisted in localStorage.
  * Defaults to system preference using useDark.
  */
-const theme = useStorage<ThemeMode>(THEME_KEY, 'light')
+const theme = useStorage<ThemeMode>(THEME_KEY, 'light');
 
 /**
  * Reactive computed boolean for dark mode state.
@@ -30,17 +30,17 @@ const isDark = useDark({
   valueDark: 'dark',
   valueLight: 'light',
   storageKey: THEME_KEY,
-})
+});
 
 /**
  * Keep `theme` and `isDark` in sync reactively.
  */
 watch(theme, (mode) => {
-  isDark.value = mode === 'dark'
-})
+  isDark.value = mode === 'dark';
+});
 watch(isDark, (dark) => {
-  theme.value = dark ? 'dark' : 'light'
-})
+  theme.value = dark ? 'dark' : 'light';
+});
 
 /**
  * Composable for theme management (light/dark mode).
@@ -56,10 +56,10 @@ export function useTheme() {
     theme,
     isDark,
     setTheme: (mode: ThemeMode) => {
-      theme.value = mode
+      theme.value = mode;
     },
     toggleTheme: () => {
-      theme.value = theme.value === 'light' ? 'dark' : 'light'
+      theme.value = theme.value === 'light' ? 'dark' : 'light';
     },
-  }
+  };
 }

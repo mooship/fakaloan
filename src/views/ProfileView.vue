@@ -12,6 +12,7 @@ import {
   PHONE_NUMBER_REGEX,
   WHITESPACE_REGEX,
 } from '@/constants/regex.constants';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus, Theme } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -117,7 +118,7 @@ const updateCellphone = async (): Promise<void> => {
 
   const trimmedCellphone = cellphoneInput.value.replace(WHITESPACE_REGEX, '');
   if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
-    toast.error('Enter a valid phone number');
+    toast.error(ToastMessages.ValidationError);
     return;
   }
 
@@ -130,10 +131,10 @@ const updateCellphone = async (): Promise<void> => {
     });
     cellphoneInput.value = trimmedCellphone;
     isEditingContact.value = false;
-    toast.success('Phone number updated successfully');
+    toast.success(ToastMessages.ProfileUpdateSuccess);
   } catch (error) {
     console.error('Failed to update phone number:', error);
-    toast.error('Failed to update phone number');
+    toast.error(ToastMessages.ProfileUpdateFailed);
   } finally {
     isUpdating.value = false;
     setLoading(false);
@@ -158,10 +159,10 @@ const updateUserEmail = async (): Promise<void> => {
       email: newEmail.value,
     });
     isEditingEmail.value = false;
-    toast.success('Email updated successfully');
+    toast.success(ToastMessages.ProfileUpdateSuccess);
   } catch (error) {
     console.error('Failed to update email:', error);
-    toast.error('Failed to update email. You may need to log in again.');
+    toast.error(ToastMessages.ProfileUpdateFailed);
   } finally {
     isUpdating.value = false;
     setLoading(false);
@@ -179,19 +180,19 @@ const handlePasswordUpdate = async (): Promise<void> => {
   }
 
   if (newPassword.value !== confirmPassword.value) {
-    toast.error('New passwords do not match');
+    toast.error(ToastMessages.ValidationError);
 
     return;
   }
 
   if (!currentPassword.value) {
-    toast.error('Current password is required');
+    toast.error(ToastMessages.ValidationError);
 
     return;
   }
 
   if (!newPassword.value) {
-    toast.error('New password is required');
+    toast.error(ToastMessages.ValidationError);
 
     return;
   }
@@ -208,7 +209,7 @@ const handlePasswordUpdate = async (): Promise<void> => {
     newPassword.value = '';
     confirmPassword.value = '';
     isEditingPassword.value = false;
-    toast.success('Password updated successfully');
+    toast.success(ToastMessages.PasswordUpdateSuccess);
   }
   isUpdating.value = false;
   setLoading(false);
@@ -219,7 +220,10 @@ const handlePasswordUpdate = async (): Promise<void> => {
  * @returns {Promise<void>}
  */
 const updateTheme = async (): Promise<void> => {
-  if (!currentUser.value || !userProfile.value) return;
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
+
   setLoading(true);
   try {
     isUpdating.value = true;
@@ -228,10 +232,10 @@ const updateTheme = async (): Promise<void> => {
       'preferences.theme': themeInput.value,
     });
     setTheme(themeInput.value === Theme.Dark ? 'dark' : 'light');
-    toast.success('Theme updated successfully');
+    toast.success(ToastMessages.ThemeUpdateSuccess);
   } catch (error) {
     console.error('Failed to update theme:', error);
-    toast.error('Failed to update theme');
+    toast.error(ToastMessages.ThemeUpdateFailed);
   } finally {
     isUpdating.value = false;
     setLoading(false);
@@ -265,9 +269,9 @@ const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   }
   try {
     // TODO: implement subscription cancellation API call
-    toast.success('Subscription cancellation request submitted');
+    toast.success(ToastMessages.SubscriptionCancelSuccess);
   } catch {
-    toast.error('Failed to cancel subscription');
+    toast.error(ToastMessages.SubscriptionCancelFailed);
   }
 };
 
@@ -398,10 +402,16 @@ const handleAddTransaction = (): void => {
                 class="form-input-base form-input-valid bg-surface text-on-surface"
                 placeholder="Enter new email"
               />
+              <div
+                v-if="!/^\S+@\S+\.\S+$/.test(newEmail)"
+                class="form-error-text"
+              >
+                Please enter a valid email address
+              </div>
               <div class="mt-2 flex space-x-2">
                 <button
                   @click="updateUserEmail"
-                  :disabled="isUpdating"
+                  :disabled="isUpdating || !/^\S+@\S+\.\S+$/.test(newEmail)"
                   class="btn-primary !w-auto text-sm"
                 >
                   <span v-if="isUpdating">Updating...</span>
@@ -608,6 +618,10 @@ const handleAddTransaction = (): void => {
                     themeInput === Theme.Light ? 'Light' : 'Dark'
                   }}</span>
                 </button>
+                <span v-if="isUpdating" class="text-on-surface/60 ml-2 text-xs"
+                  >Saving...</span
+                >
+                <!-- TODO: Add feedback for theme change (e.g., toast or visual indicator) -->
               </span>
             </div>
           </div>

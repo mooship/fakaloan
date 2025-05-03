@@ -107,7 +107,10 @@ export function useAuth() {
   // Profile data with defaults applied
   const userProfileWithDefaults = computed<UserProfile | null>(() => {
     const profile = userProfile.value;
-    if (!profile) return null;
+    if (!profile) {
+      return null;
+    }
+
     return {
       ...profile,
       preferences: {
@@ -122,7 +125,7 @@ export function useAuth() {
   watch(profileError, (newError) => {
     if (newError) {
       console.error('Error loading user profile:', newError);
-      toast.error('Could not load user profile details.');
+      toast.error(ToastMessages.ProfileUpdateFailed);
     }
   });
 
@@ -205,7 +208,10 @@ export function useAuth() {
       toast.error(authError.value);
       return false;
     }
-    if (!checkNetwork()) return false;
+    if (!checkNetwork()) {
+      return false;
+    }
+
     if (
       !requireField(
         values.email,
@@ -398,7 +404,7 @@ export function useAuth() {
       await signOut(auth);
       toast.success(ToastMessages.LogoutSuccess);
       return true;
-    } catch (err) {
+    } catch {
       authError.value = ToastMessages.LogoutFailed;
       toast.error(authError.value);
       return false;
@@ -414,7 +420,10 @@ export function useAuth() {
   const sendPasswordReset = async (
     values: ForgotPasswordForm
   ): Promise<boolean> => {
-    if (!checkNetwork()) return false;
+    if (!checkNetwork()) {
+      return false;
+    }
+
     if (
       !requireField(
         values.email,
