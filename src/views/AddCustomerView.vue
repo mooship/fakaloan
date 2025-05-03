@@ -1,6 +1,3 @@
-/** * AddCustomerView.vue * * View for adding a new customer to Fakaloan. *
-Validates input and saves customer data to Firestore. * Uses VeeValidate for
-validation and UnoCSS for styling. * * @module views/AddCustomerView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -27,6 +24,7 @@ const form = ref({
   name: '',
   cellphoneNumber: '',
   address: '',
+  defaultCreditTermDays: null as number | null,
 });
 
 const errors = ref<{ [key: string]: string }>({});
@@ -40,17 +38,20 @@ const schema = yup.object({
     .required('Cellphone number is required')
     .matches(PHONE_NUMBER_REGEX, 'Enter a valid phone number'),
   address: yup.string().trim().nullable(),
+  defaultCreditTermDays: yup
+    .number()
+    .nullable()
+    .min(1, 'Minimum is 1 day')
+    .max(90, 'Maximum is 90 days'),
 });
 
 /**
  * Validates the add customer form using Yup schema.
- * @returns {Promise<boolean>} True if valid, false otherwise.
  */
 const validate = async (): Promise<boolean> => {
   try {
     await schema.validate(form.value, { abortEarly: false });
     errors.value = {};
-
     return true;
   } catch (err: unknown) {
     const errObj: { [key: string]: string } = {};
@@ -60,24 +61,24 @@ const validate = async (): Promise<boolean> => {
       }
     }
     errors.value = errObj;
-
     return false;
   }
 };
 
 /**
  * Handles form submission to add a new customer to Firestore.
- * @returns {Promise<void>}
  */
 const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
     toast.error('You must be logged in to add a customer.');
-
     return;
   }
+
   if (!(await validate())) return;
+
   setLoading(true);
   submitting.value = true;
+
   try {
     const docRef = await addDoc(collection(db, 'customers'), {
       name: form.value.name,
@@ -88,10 +89,12 @@ const handleSubmit = async (): Promise<void> => {
       updatedAt: null,
       userId: currentUser.value.uid,
       creditScore: null,
-      defaultCreditTermDays: null,
+      defaultCreditTermDays: form.value.defaultCreditTermDays,
       lastRepaymentAt: null,
     });
+
     await updateDoc(docRef, { id: docRef.id });
+
     toast.success('Customer added successfully!');
     router.push('/');
   } catch {
@@ -124,6 +127,7 @@ const handleSubmit = async (): Promise<void> => {
             {{ errors.name }}
           </div>
         </div>
+
         <div>
           <label class="form-label" for="cellphone">Cellphone Number</label>
           <input
@@ -140,6 +144,7 @@ const handleSubmit = async (): Promise<void> => {
             {{ errors.cellphoneNumber }}
           </div>
         </div>
+
         <div>
           <label class="form-label" for="address">Address (optional)</label>
           <input
@@ -154,6 +159,25 @@ const handleSubmit = async (): Promise<void> => {
             {{ errors.address }}
           </div>
         </div>
+
+        <div>
+          <label class="form-label" for="term">Default Credit Term (days)</label>
+          <input
+            id="term"
+            type="number"
+            v-model.number="form.defaultCreditTermDays"
+            class="form-input-base bg-surface text-on-surface"
+            :class="errors.defaultCreditTermDays ? 'form-input-invalid' : 'form-input-valid'"
+            placeholder="e.g. 30"
+            autocomplete="off"
+            min="1"
+            max="90"
+          />
+          <div v-if="errors.defaultCreditTermDays" class="form-error-text">
+            {{ errors.defaultCreditTermDays }}
+          </div>
+        </div>
+
         <div>
           <button
             type="submit"
@@ -164,6 +188,7 @@ const handleSubmit = async (): Promise<void> => {
           </button>
         </div>
       </form>
+
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
         <button @click="router.back()" class="btn-primary-outline !w-auto">
           Back
