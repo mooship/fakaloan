@@ -4,10 +4,10 @@ message, user info, and logout button. * * @module views/HomeView */
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
 import { useRouter } from 'vue-router';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 import { useToast } from 'vue-toastification';
 
 useTitle('Home | Fakaloan');
