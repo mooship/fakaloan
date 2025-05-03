@@ -4,15 +4,15 @@ views/ForgotPasswordView */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
 import { useTitle } from '@vueuse/core';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { useRouter } from 'vue-router';
-import * as yup from 'yup';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 import { useToast } from 'vue-toastification';
+import * as yup from 'yup';
 
 useTitle('Forgot Password | Fakaloan');
 const router = useRouter();
@@ -119,6 +119,9 @@ const goToLogin = (): void => {
     <template #actions>
       <div class="mt-4 text-center text-sm">
         <button @click="goToLogin" class="btn-link">Back to Login</button>
+        <button @click="router.push('/')" class="btn-link ml-4">
+          Back to Home
+        </button>
       </div>
     </template>
   </AuthLayout>
