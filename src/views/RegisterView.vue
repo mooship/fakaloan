@@ -5,6 +5,7 @@ VeeValidate for form validation and Remote Config for feature toggling. * *
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
+import { usePasswordStrength } from '@/composables/usePasswordStrength';
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
@@ -60,7 +61,11 @@ const schema = yup.object({
     .notRequired(),
 });
 
+const password = ref('');
+const passwordConfirmation = ref('');
 const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
+const { label, color } = usePasswordStrength(password);
 
 /**
  * Handles the registration form submission.
@@ -209,6 +214,7 @@ const goToLogin = (): void => {
           <div class="relative">
             <input
               v-bind="field"
+              v-model="password"
               :type="showPassword ? 'text' : 'password'"
               :class="[
                 'form-input-base',
@@ -239,7 +245,9 @@ const goToLogin = (): void => {
           id="password-error"
           class="form-error-text"
         />
-        <!-- TODO: Add password strength indicator -->
+        <div v-if="label" :class="['mt-1 text-sm font-medium', color]">
+          Password strength: {{ label }}
+        </div>
       </div>
 
       <div>
@@ -254,17 +262,36 @@ const goToLogin = (): void => {
           v-slot="{ field, errors }"
           :validate-on-input="true"
         >
-          <input
-            v-bind="field"
-            :type="showPassword ? 'text' : 'password'"
-            :class="[
-              'form-input-base',
-              errors.length ? 'form-input-invalid' : 'form-input-valid',
-              'bg-surface text-on-surface placeholder:text-on-surface/60',
-            ]"
-            placeholder="Confirm your password"
-            aria-describedby="passwordConfirmation-error"
-          />
+          <div class="relative">
+            <input
+              v-bind="field"
+              v-model="passwordConfirmation"
+              :type="showPasswordConfirmation ? 'text' : 'password'"
+              :class="[
+                'form-input-base',
+                errors.length ? 'form-input-invalid' : 'form-input-valid',
+                'bg-surface text-on-surface placeholder:text-on-surface/60',
+              ]"
+              placeholder="Confirm your password"
+              aria-describedby="passwordConfirmation-error"
+            />
+            <button
+              type="button"
+              class="text-on-surface/60 absolute right-2 top-1/2 -translate-y-1/2"
+              @click="showPasswordConfirmation = !showPasswordConfirmation"
+              tabindex="-1"
+              aria-label="Toggle password confirmation visibility"
+            >
+              <i
+                :class="
+                  showPasswordConfirmation
+                    ? 'i-heroicons-eye-off'
+                    : 'i-heroicons-eye'
+                "
+                class="h-5 w-5"
+              ></i>
+            </button>
+          </div>
         </Field>
         <ErrorMessage
           name="passwordConfirmation"
