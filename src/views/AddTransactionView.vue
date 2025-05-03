@@ -12,6 +12,7 @@
  */
 
 import { useAuth } from '@/composables/useAuth';
+import { ToastMessages } from '@/constants/toastMessages.constants';
 import { TransactionTypeEnum } from '@/enums/transaction.enums';
 import { db } from '@/firebase';
 import type { Customer } from '@/interfaces/customer.interfaces';
@@ -26,7 +27,6 @@ import {
 import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 
 const { currentUser } = useAuth();
 const customers = ref<Customer[]>([]);
