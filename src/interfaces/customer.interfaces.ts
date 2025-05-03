@@ -13,6 +13,7 @@ import type { Timestamp } from 'firebase/firestore';
  *
  * @typedef {Object} Customer
  * @property {string} uid - Customer document ID
+ * @property {string} userId - Owning user's document ID (e.g. the shop owner)
  * @property {string} name - Customer's name
  * @property {string} cellphoneNumber - Customer's cellphone number
  * @property {number} balance - Current outstanding balance
@@ -25,6 +26,7 @@ import type { Timestamp } from 'firebase/firestore';
  */
 export interface Customer {
   uid: string;
+  userId: string;
   name: string;
   cellphoneNumber: string;
   balance: number;
