@@ -1,4 +1,9 @@
+import {
+  AUTH_ERROR_MESSAGES,
+  DEFAULT_AUTH_ERROR_MESSAGE,
+} from '@/constants/authErrors.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
+import type { AuthErrorCode } from '@/enums/authErrors.enums';
 import { LanguageCode, Theme } from '@/enums/user.enums';
 import { auth, db } from '@/firebase';
 import type {
@@ -29,29 +34,11 @@ import { useCurrentUser, useDocument } from 'vuefire';
 export { db };
 
 export const mapAuthError = (authError: AuthError): string => {
-  switch (authError.code) {
-    case 'auth/invalid-email':
-      return 'Invalid email address format.';
-    case 'auth/user-disabled':
-      return 'This user account has been disabled.';
-    case 'auth/user-not-found':
-    case 'auth/wrong-password':
-    case 'auth/invalid-credential':
-      return 'Invalid email or password.';
-    case 'auth/email-already-in-use':
-      return 'This email address is already registered.';
-    case 'auth/weak-password':
-      return 'Password is too weak. It must be at least 8 characters long.';
-    case 'auth/popup-closed-by-user':
-      return 'Sign-in cancelled.';
-    case 'auth/account-exists-with-different-credential':
-      return 'An account already exists with this email using a different sign-in method.';
-    case 'auth/requires-recent-login':
-      return 'This operation is sensitive and requires recent authentication. Please log in again.';
-    default:
-      console.error('Unhandled Auth Error:', authError);
-      return 'An unexpected error occurred. Please try again.';
+  if (authError.code in AUTH_ERROR_MESSAGES) {
+    return AUTH_ERROR_MESSAGES[authError.code as AuthErrorCode];
   }
+  console.error('Unhandled Auth Error:', authError);
+  return DEFAULT_AUTH_ERROR_MESSAGE;
 };
 
 export function useAuth() {
@@ -220,12 +207,15 @@ export function useAuth() {
         user.displayName
       );
 
-      await createUserProfile(
-        user.uid,
-        user.displayName?.split(' ')[0] || 'Google',
-        user.displayName?.split(' ')[1] || 'User',
-        user.email
-      );
+      let firstName = 'Google';
+      let lastName = '';
+      if (user.displayName) {
+        const nameParts = user.displayName.trim().split(' ');
+        firstName = nameParts[0];
+        lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+      }
+
+      await createUserProfile(user.uid, firstName, lastName, user.email);
 
       toast.success(ToastMessages.LoginSuccess);
 
