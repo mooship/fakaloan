@@ -429,9 +429,23 @@ onMounted(() => {
 
 <style scoped>
 .input {
-  @apply bg-surface text-on-surface w-full rounded border px-3 py-2;
+  background-color: var(--color-surface, #fff);
+  color: var(--color-on-surface, #222);
+  width: 100%;
+  border-radius: 0.375rem;
+  border: 1px solid #d1d5db;
+  padding: 0.5rem 0.75rem;
 }
 .btn {
-  @apply bg-primary text-on-primary hover:bg-primary-dark rounded px-4 py-2 transition;
+  background-color: var(--color-primary, #2563eb);
+  color: var(--color-on-primary, #fff);
+  border-radius: 0.375rem;
+  padding: 0.5rem 1rem;
+  transition: background 0.2s;
+  border: none;
+  cursor: pointer;
+}
+.btn:hover {
+  background-color: var(--color-primary-dark, #1d4ed8);
 }
 </style>
