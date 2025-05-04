@@ -32,8 +32,12 @@ const handleLogout = async (): Promise<void> => {
   <AppLayout>
     <div class="bg-surface space-y-4 rounded p-8 text-center shadow-md">
       <h1 class="text-primary text-2xl font-bold">Welcome to Fakaloan!</h1>
-      <!-- TODO: Add personalized greeting with user's name if available -->
       <div v-if="currentUser">
+        <p class="text-on-surface mb-2">
+          Welcome{{
+            currentUser.displayName ? `, ${currentUser.displayName}` : ''
+          }}!
+        </p>
         <p class="text-on-surface">You are logged in as:</p>
         <p class="text-primary font-medium">{{ currentUser.email }}</p>
         <!-- TODO: Add quick links to main features (e.g., Add Customer, View Transactions) -->
