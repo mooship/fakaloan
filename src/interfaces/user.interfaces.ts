@@ -3,7 +3,7 @@ import type {
   SubscriptionStatus,
   Theme,
 } from '@/enums/user.enums';
-import type { Timestamp } from 'firebase/firestore';
+import type { FieldValue, Timestamp } from 'firebase/firestore';
 
 /**
  * User profile as stored in Firestore.
@@ -13,7 +13,7 @@ export interface UserProfile {
   firstName: string;
   lastName: string;
   email: string | null;
-  createdAt: Timestamp;
+  createdAt: Timestamp | FieldValue;
   cellphone: string | null;
   isPremium: boolean;
   preferences: { theme: Theme; preferredLanguage: LanguageCode };
