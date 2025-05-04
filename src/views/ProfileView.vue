@@ -678,7 +678,7 @@ const updateLanguage = async (): Promise<void> => {
               }}</span>
             </div>
             <!-- Language Preference Display/Edit -->
-            <div class="mb-4 border-b border-gray-200 pb-4">
+            <div>
               <div
                 v-if="!isEditingLanguage"
                 class="flex items-center justify-between"
