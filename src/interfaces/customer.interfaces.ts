@@ -12,5 +12,5 @@ export interface Customer {
   creditScore: number | null;
   defaultCreditTermDays?: number | null;
   lastRepaymentAt?: Timestamp | null;
-  deletedAt?: Timestamp | null;
+  isDeleted: boolean;
 }

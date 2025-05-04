@@ -95,18 +95,41 @@ async function fetchCustomers() {
     return;
   }
   setLoading(true);
+  console.log('Current user UID:', currentUser.value?.uid);
   try {
     const q = query(
       collection(db, 'customers'),
       where('userId', '==', currentUser.value.uid),
-      where('deletedAt', '==', null)
+      where('isDeleted', '==', false)
     );
-    const querySnapshot = await getDocs(q);
-    customers.value = querySnapshot.docs.map((doc) => ({
-      uid: doc.id,
+    const allCustomersSnapshot = await getDocs(q);
+    if (allCustomersSnapshot.empty) {
+      console.log('No customers found for this user in Firestore.');
+    }
+    const rawCustomers = allCustomersSnapshot.docs.map((doc) => ({
+      id: doc.id,
       ...doc.data(),
-    })) as Customer[];
-  } catch {
+    }));
+    console.log('Fetched customers from Firestore:', rawCustomers);
+    customers.value = allCustomersSnapshot.docs.map((doc) => {
+      const data = doc.data();
+      return {
+        uid: doc.id,
+        userId: data.userId,
+        name: data.name,
+        cellphoneNumber: data.cellphoneNumber,
+        balance: data.balance,
+        address: data.address ?? null,
+        createdAt: data.createdAt,
+        updatedAt: data.updatedAt ?? null,
+        creditScore: data.creditScore ?? null,
+        defaultCreditTermDays: data.defaultCreditTermDays ?? null,
+        lastRepaymentAt: data.lastRepaymentAt ?? null,
+        isDeleted: data.isDeleted ?? false,
+      };
+    });
+  } catch (err) {
+    console.error('Error fetching customers:', err);
     customers.value = [];
   } finally {
     setLoading(false);

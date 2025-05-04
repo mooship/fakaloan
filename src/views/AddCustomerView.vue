@@ -86,6 +86,7 @@ const handleSubmit = async (): Promise<void> => {
       defaultCreditTermDays: form.value.defaultCreditTermDays,
       lastRepaymentAt: null,
       deletedAt: null,
+      isDeleted: false,
     });
 
     toast.success(ToastMessages.CustomerAddSuccess);
