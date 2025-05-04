@@ -111,6 +111,7 @@ const updateUserEmail = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
   }
+
   setLoading(true);
   try {
     isUpdating.value = true;
