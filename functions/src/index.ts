@@ -24,9 +24,9 @@ export const updateCustomerBalanceOnTransaction = onDocumentWritten(
     let balance = 0;
     for (const doc of txSnapshot.docs) {
       const tx = doc.data();
-      if (tx.type === 'Credit') {
+      if (tx.type === 'credit') {
         balance += Number(tx.amount);
-      } else if (tx.type === 'Repayment') {
+      } else if (tx.type === 'repayment') {
         balance -= Number(tx.amount);
       }
     }
