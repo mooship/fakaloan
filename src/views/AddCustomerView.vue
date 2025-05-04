@@ -2,7 +2,10 @@
 import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
-import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import {
+  normalizePhoneNumber,
+  PHONE_NUMBER_REGEX,
+} from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -34,7 +37,7 @@ const schema = yup.object({
     .string()
     .trim()
     .required('Cellphone number is required')
-    .matches(PHONE_NUMBER_REGEX, 'Enter a valid phone number'),
+    .matches(PHONE_NUMBER_REGEX, 'Enter a valid South African phone number'),
   address: yup.string().trim().nullable(),
   defaultCreditTermDays: yup
     .number()
@@ -69,6 +72,9 @@ const handleSubmit = async (): Promise<void> => {
   if (!(await validate())) {
     return;
   }
+
+  // Normalize cellphone before saving
+  form.value.cellphoneNumber = normalizePhoneNumber(form.value.cellphoneNumber);
 
   setLoading(true);
   submitting.value = true;

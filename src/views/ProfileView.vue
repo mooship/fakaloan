@@ -10,6 +10,7 @@ import {
   PHONE_NUMBER_REGEX,
   SIMPLE_EMAIL_REGEX,
   WHITESPACE_REGEX,
+  normalizePhoneNumber,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
@@ -82,7 +83,8 @@ const updateCellphone = async (): Promise<void> => {
     return;
   }
 
-  const trimmedCellphone = cellphoneInput.value.replace(WHITESPACE_REGEX, '');
+  // Normalize input before validation and saving
+  const trimmedCellphone = normalizePhoneNumber(cellphoneInput.value);
   if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
     toast.error(ToastMessages.ValidationError);
     return;
@@ -217,7 +219,8 @@ watch(newEmail, (val) => {
 });
 
 watch(cellphoneInput, (val) => {
-  checkPhoneValid(val);
+  // Always normalize for validation
+  checkPhoneValid(normalizePhoneNumber(val));
 });
 
 watch(

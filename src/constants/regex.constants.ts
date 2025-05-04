@@ -1,7 +1,31 @@
 /**
- * Regex for validating international phone numbers (10-15 digits, optional +).
+ * Regex for validating South African phone numbers: +27XXXXXXXXX or 0XXXXXXXXX (10 digits after prefix).
  */
-export const PHONE_NUMBER_REGEX = /^\+?\d{10,15}$/;
+export const PHONE_NUMBER_REGEX = /^(\+27|0)\d{9}$/;
+/**
+ * Utility to normalize SA numbers to +27XXXXXXXXX
+ */
+export function normalizePhoneNumber(input: string): string {
+  if (!input) {
+    return '';
+  }
+
+  const digits = input.replace(/\D/g, '');
+
+  if (digits.startsWith('27') && digits.length === 11) {
+    return `+${digits}`;
+  }
+
+  if (digits.startsWith('0') && digits.length === 10) {
+    return `+27${digits.slice(1)}`;
+  }
+
+  if (digits.startsWith('27') && digits.length === 9) {
+    return `+27${digits}`;
+  }
+
+  return input.startsWith('+') ? input : `+${digits}`;
+}
 /**
  * Regex for formatting phone numbers for display (e.g., +27 68 599 5633).
  */
