@@ -5,6 +5,7 @@ import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { goBackOrHome } from '@/utilities/navigationUtils';
 import {
   addDoc,
   collection,
@@ -194,7 +195,10 @@ const handleSubmit = async (): Promise<void> => {
       </form>
 
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button @click="router.back()" class="btn-primary-outline !w-auto">
+        <button
+          @click="goBackOrHome(router)"
+          class="btn-primary-outline !w-auto"
+        >
           Back
         </button>
       </div>

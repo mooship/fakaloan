@@ -13,6 +13,7 @@ import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useConfirmDialog, useTitle } from '@vueuse/core';
 import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
@@ -581,7 +582,10 @@ watch(
 
       <!-- Back Button -->
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button @click="router.back()" class="btn-primary-outline !w-auto">
+        <button
+          @click="goBackOrHome(router)"
+          class="btn-primary-outline !w-auto"
+        >
           Back
         </button>
       </div>

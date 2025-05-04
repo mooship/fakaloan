@@ -12,6 +12,7 @@ export function ensureOnline(
     return false;
   }
   setError(null);
+
   return true;
 }
 
