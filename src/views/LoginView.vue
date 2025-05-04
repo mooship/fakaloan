@@ -2,7 +2,6 @@
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { EMAIL_REGEX } from '@/constants/regex.constants';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
@@ -11,7 +10,6 @@ import { useHead } from '@vueuse/head';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useHead({
@@ -38,8 +36,6 @@ const {
 const googleLoading = ref(false);
 
 const { setLoading } = useLoading();
-
-const toast = useToast();
 
 const schema = yup.object({
   email: yup
@@ -75,9 +71,6 @@ const handleEmailLogin = async (
   try {
     await loginWithEmail(values as unknown as LoginFormValues);
     router.push({ name: 'home' });
-    toast.success(ToastMessages.LoginSuccess);
-  } catch {
-    toast.error(ToastMessages.LoginFailed);
   } finally {
     setLoading(false);
   }
@@ -90,6 +83,7 @@ const handleGoogleLogin = async (): Promise<void> => {
     const success = await loginWithGoogle();
     if (success) {
       router.push({ name: 'home' });
+      // Removed duplicate toast.success
     }
   } finally {
     googleLoading.value = false;

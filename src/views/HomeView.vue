@@ -2,11 +2,9 @@
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useHead } from '@vueuse/head';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 
 useHead({
   title: 'Home | Fakaloan',
@@ -28,16 +26,12 @@ useHead({
 const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 const { setLoading } = useLoading();
-const toast = useToast();
 
 const handleLogout = async (): Promise<void> => {
   setLoading(true);
   try {
     await logout();
     router.push({ name: 'login' });
-    toast.success(ToastMessages.LogoutSuccess);
-  } catch {
-    toast.error(ToastMessages.LogoutFailed);
   } finally {
     setLoading(false);
   }

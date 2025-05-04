@@ -2,7 +2,6 @@
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { EMAIL_REGEX } from '@/constants/regex.constants';
-import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { ForgotPasswordForm } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
@@ -11,7 +10,6 @@ import { useHead } from '@vueuse/head';
 import { ErrorMessage, Field, Form } from 'vee-validate';
 import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
-import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
 useHead({
@@ -31,7 +29,6 @@ useHead({
 const router = useRouter();
 const { sendPasswordReset, isLoading, error: authError, isOnline } = useAuth();
 const { setLoading } = useLoading();
-const toast = useToast();
 
 const schema = yup.object({
   email: yup
@@ -51,11 +48,8 @@ const handlePasswordReset = async (
       values as unknown as ForgotPasswordForm
     );
     if (success) {
-      toast.success(ToastMessages.PasswordResetSent);
       router.push({ name: 'login' });
     }
-  } catch {
-    toast.error(ToastMessages.PasswordResetFailed);
   } finally {
     setLoading(false);
   }
@@ -131,7 +125,6 @@ watch(email, (val) => {
         </button>
       </div>
     </Form>
-    <!-- TODO: Add link to support if user can’t access email -->
 
     <template #actions>
       <div class="mt-4 text-center text-sm">
