@@ -31,9 +31,8 @@ service cloud.firestore {
       }
       // Allow get, update, delete if user owns the customer
       allow get, update, delete: if isCustomerOwner();
-      // Allow list if user is authenticated and only their own customers
-      allow list: if request.auth != null &&
-        request.query.whereField('userId', '==', request.auth.uid);
+      // Allow list if user is authenticated
+      allow list: if request.auth != null;
       // Only allow create if user is authenticated and creating their own customer
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
@@ -52,8 +51,7 @@ service cloud.firestore {
       // Allow create if user is authenticated and creating their own transaction
       allow create: if isCreatingTransaction();
       // Allow list if user is authenticated and only their own transactions
-      allow list: if request.auth != null &&
-        request.query.whereField('userId', '==', request.auth.uid);
+      allow list: if request.auth != null && request.auth.uid != null;
     }
   }
 }

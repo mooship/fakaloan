@@ -162,16 +162,19 @@ const handleSubmit = async () => {
         </div>
         <div>
           <label class="form-label" for="amount">Amount</label>
-          <input
-            v-model="form.amount"
-            id="amount"
-            type="number"
-            min="0.01"
-            step="0.01"
-            required
-            class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:ring-2"
-            placeholder="e.g. 100.00"
-          />
+          <div class="relative flex items-center">
+            <span class="absolute left-3 text-gray-500">R</span>
+            <input
+              v-model="form.amount"
+              id="amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              required
+              class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 pl-8 pr-3 py-2 shadow-sm focus:ring-2 w-full"
+              placeholder="e.g. 100.00"
+            />
+          </div>
         </div>
         <div>
           <label class="form-label" for="note">Note (optional)</label>
@@ -186,14 +189,14 @@ const handleSubmit = async () => {
         <div>
           <button
             type="submit"
-            class="btn-primary w-full"
+            class="btn-primary w-auto mx-auto block"
             :disabled="submitting || isLoading"
           >
             {{ submitting ? 'Saving...' : 'Add Transaction' }}
           </button>
         </div>
       </form>
-      <div class="section-divider">
+      <div class="section-divider mt-8 flex justify-center">
         <BackButton />
       </div>
     </div>
