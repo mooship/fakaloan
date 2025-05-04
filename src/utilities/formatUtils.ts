@@ -24,7 +24,7 @@ export function formatPhoneNumber(phone: string | null): string {
 /**
  * Formats a Firestore Timestamp, Date, or string into a readable date/time string.
  * @param ts Firestore Timestamp, Date, string, or null/undefined
- * @returns string in 'YYYY/MM/DD HH:mm:ss' format, 'Pending...' if FieldValue, or '' if invalid
+ * @returns string in 'dd/MM/yyyy HH:mm:ss' format, 'Pending...' if FieldValue, or '' if invalid
  */
 export function formatDate(
   ts: { toDate?: () => Date } | Date | string | FieldValue | null | undefined
@@ -59,5 +59,7 @@ export function formatDate(
   }
 
   const pad = (n: number) => n.toString().padStart(2, '0');
-  return `${date.getFullYear()}/${pad(date.getMonth() + 1)}/${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+
+  // Format as dd/MM/yyyy HH:mm:ss
+  return `${pad(date.getDate())}/${pad(date.getMonth() + 1)}/${date.getFullYear()} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
