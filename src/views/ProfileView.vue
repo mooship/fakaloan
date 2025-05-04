@@ -201,13 +201,17 @@ const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   }
 };
 
-// Sync colorMode changes to Firestore user profile
 watch(
   () => colorMode.value,
   async (newMode, oldMode) => {
-    if (!currentUser.value || !userProfile.value) return;
-    if (newMode === oldMode) return;
-    // Only sync 'light' or 'dark' to Firestore
+    if (!currentUser.value || !userProfile.value) {
+      return;
+    }
+
+    if (newMode === oldMode) {
+      return;
+    }
+
     const modeToSave =
       newMode === 'auto'
         ? window.matchMedia('(prefers-color-scheme: dark)').matches
