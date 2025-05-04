@@ -11,7 +11,6 @@ import {
   EMAIL_REGEX,
   PHONE_NUMBER_REGEX,
   SIMPLE_EMAIL_REGEX,
-  WHITESPACE_REGEX,
   normalizePhoneNumber,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
@@ -220,7 +219,7 @@ const checkEmailValid = useDebounceFn((value: string) => {
 const checkPhoneValid = useDebounceFn((value: string) => {
   phoneCheckLoading.value = true;
   debouncedPhoneValid.value = PHONE_NUMBER_REGEX.test(
-    value.replace(WHITESPACE_REGEX, '')
+    normalizePhoneNumber(value)
   );
   phoneCheckLoading.value = false;
 }, 300);
@@ -624,7 +623,7 @@ const updateLanguage = async (): Promise<void> => {
                 v-model="cellphoneInput"
                 type="tel"
                 class="form-input-base form-input-valid bg-surface text-on-surface"
-                placeholder="+27 12 3456 789"
+                placeholder="083 234 2922"
               />
               <div class="mt-2 flex space-x-2">
                 <button

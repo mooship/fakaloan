@@ -1,19 +1,22 @@
 /**
  * Utility functions for formatting phone numbers and dates.
  */
-import { normalizePhoneNumber } from '@/constants/regex.constants';
+import {
+  LOCAL_PHONE_NUMBER_DISPLAY_REGEX,
+  normalizePhoneNumber,
+} from '@/constants/regex.constants';
 
 export function formatPhoneNumber(phone: string | null): string {
   if (!phone) {
     return '';
   }
-  // Always normalize to +27XXXXXXXXX
+  // Normalize to local format 0XXXXXXXXX
   const digits = normalizePhoneNumber(phone);
-  // Format as +27 XX XXX XXXX
-  if (/^\+27\d{9}$/.test(digits)) {
-    return `${digits.slice(0, 3)} ${digits.slice(3, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`;
+  // Format as 083 234 2922
+  const match = digits.match(LOCAL_PHONE_NUMBER_DISPLAY_REGEX);
+  if (match) {
+    return `${match[1]} ${match[2]} ${match[3]}`;
   }
-
   return digits;
 }
 
@@ -44,6 +47,7 @@ export function formatDate(
   } else {
     return '';
   }
+
   if (Number.isNaN(date.getTime())) {
     return '';
   }

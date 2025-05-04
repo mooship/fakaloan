@@ -162,7 +162,7 @@ useHead({
             :class="
               errors.cellphoneNumber ? 'form-input-invalid' : 'form-input-valid'
             "
-            placeholder="+27 12 3456 789"
+            placeholder="083 214 4933"
             autocomplete="off"
           />
           <div v-if="errors.cellphoneNumber" class="form-error-text">
