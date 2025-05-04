@@ -17,6 +17,7 @@ export default defineConfig({
           --color-primary: #2979FF;
           --color-secondary: #FF1744;
           --color-tertiary: #651FFF;
+          --color-lime: #32e043;
           --color-error: #FF3D00;
           --color-background: #FAFAFA;
           --color-surface: #FFFFFF;
@@ -30,6 +31,7 @@ export default defineConfig({
           --color-primary: #82B1FF;
           --color-secondary: #FF8A80;
           --color-tertiary: #B388FF;
+          --color-lime: #32e043;
           --color-error: #FF9E80;
           --color-background: #121212;
           --color-surface: #1E1E1E;
@@ -49,6 +51,7 @@ export default defineConfig({
       secondary: 'var(--color-secondary)',
       'secondary-variant': '#C62828',
       tertiary: 'var(--color-tertiary)',
+      lime: 'var(--color-lime)',
       error: 'var(--color-error)',
       background: 'var(--color-background)',
       surface: 'var(--color-surface)',
