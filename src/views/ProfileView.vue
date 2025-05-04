@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
