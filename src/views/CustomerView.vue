@@ -165,7 +165,7 @@
             </div>
           </div>
         </form>
-        <div v-if="!customer.deletedAt" class="mt-6 flex justify-end">
+        <div v-if="!customer.isDeleted" class="mt-6 flex justify-end">
           <button
             class="bg-error text-on-primary hover:bg-error/80 flex items-center rounded px-4 py-2 text-sm font-medium"
             @click="showDeleteConfirm"

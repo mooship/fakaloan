@@ -75,6 +75,7 @@ onMounted(() => {
       creditScore: doc.data().creditScore ?? null,
       defaultCreditTermDays: doc.data().defaultCreditTermDays ?? null,
       lastRepaymentAt: doc.data().lastRepaymentAt ?? null,
+      isDeleted: doc.data().isDeleted ?? false,
     }));
   });
 });
