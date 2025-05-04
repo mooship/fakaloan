@@ -10,7 +10,7 @@ useTitle('About | Fakaloan');
     <div
       class="bg-background flex min-h-screen flex-col items-center justify-center p-4"
     >
-      <div class="bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md">
+      <div class="card-main">
         <h1 class="text-primary mb-6 text-center text-3xl font-bold">
           About Fakaloan
         </h1>
@@ -40,7 +40,7 @@ useTitle('About | Fakaloan');
             processes by enabling you to:
           </p>
           <ul
-            class="text-on-surface/80 mt-2 list-inside list-disc space-y-1 pl-4"
+            class="text-on-surface-80 mt-2 list-inside list-disc space-y-1 pl-4"
           >
             <li>Track credit you have extended to your clients.</li>
             <li>Manage and simplify your collections process.</li>
@@ -91,11 +91,11 @@ useTitle('About | Fakaloan');
           </p>
         </section>
 
-        <div class="mt-8 flex justify-center border-t border-gray-200 pt-6">
+        <div class="section-divider mt-8 flex justify-center">
           <BackButton />
         </div>
         <footer
-          class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
+          class="text-on-surface-60 mt-8 w-full max-w-2xl text-center text-sm"
         >
           <p>
             &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights

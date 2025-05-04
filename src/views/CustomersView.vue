@@ -1,22 +1,20 @@
 <template>
   <AppLayout>
-    <div
-      class="bg-surface mx-auto mt-10 w-full max-w-2xl rounded p-8 shadow-md"
-    >
+    <div class="card-lg">
       <div class="mb-6 flex items-center justify-between">
         <BackButton />
         <button
           @click="goToAddCustomer"
           class="btn-primary flex !w-auto items-center gap-2"
         >
-          <i class="i-heroicons-user-plus h-5 w-5"></i>
+          <i class="i-heroicons-user-plus icon-btn h-5 w-5"></i>
           Add Customer
         </button>
       </div>
       <h1 class="text-primary mb-6 text-center text-2xl font-bold">
         Customers
       </h1>
-      <div v-if="loading" class="text-on-surface/60 py-8 text-center">
+      <div v-if="loading" class="text-on-surface-60 py-8 text-center">
         Loading customers...
       </div>
       <div v-else>
@@ -25,10 +23,10 @@
           class="flex flex-col items-center justify-center py-16"
         >
           <i class="i-heroicons-user-group text-primary mb-4 h-12 w-12"></i>
-          <div class="text-on-surface/70 mb-2 text-lg font-medium">
+          <div class="text-on-surface-70 mb-2 text-lg font-medium">
             No customers found
           </div>
-          <div class="text-on-surface/50 mb-4 text-sm">
+          <div class="text-on-surface-50 mb-4 text-sm">
             Add your first customer to get started.
           </div>
         </div>

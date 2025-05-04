@@ -663,7 +663,7 @@ const updateLanguage = async (): Promise<void> => {
                 'Unknown'
               }}</span>
             </div>
-            <!-- Language Preference Always-Visible Dropdown -->
+            <!-- Language Preference Dropdown -->
             <div class="flex items-center justify-between">
               <label class="form-label mb-0" for="language-select"
                 >Language Preference</label
@@ -700,6 +700,15 @@ const updateLanguage = async (): Promise<void> => {
             </div>
           </div>
         </div>
+
+        <div v-if="isPremium" class="mt-4 flex justify-center">
+          <button
+            @click="handleCancelSubscription"
+            class="border-error text-error hover:bg-error/10 !w-auto rounded-md border-2 px-4 py-2 text-sm font-medium"
+          >
+            Cancel Premium
+          </button>
+        </div>
       </div>
 
       <!-- Error State -->
@@ -731,8 +740,8 @@ const updateLanguage = async (): Promise<void> => {
           access to premium features when your current billing period ends. This
           action cannot be undone easily.
         </p>
-        <div class="flex justify-end space-x-3">
-          <button @click="cancel()" class="btn-secondary !w-auto text-sm">
+        <div class="flex justify-center space-x-3">
+          <button @click="cancel()" class="btn-primary !w-auto text-sm">
             Keep Subscription
           </button>
           <button

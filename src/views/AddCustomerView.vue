@@ -125,7 +125,7 @@ useHead({
 
 <template>
   <AppLayout>
-    <div class="bg-surface mx-auto mt-10 w-full max-w-md rounded p-8 shadow-md">
+    <div class="card-lg">
       <h1 class="text-primary mb-6 text-center text-2xl font-bold">
         Add Customer
       </h1>
@@ -211,7 +211,7 @@ useHead({
         </div>
       </form>
 
-      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+      <div class="section-divider mt-8 flex justify-center">
         <BackButton />
       </div>
     </div>

@@ -91,6 +91,16 @@ export default defineConfig({
     'auth-title': 'text-2xl font-bold text-center text-primary',
     'material-select':
       'form-input-base rounded-lg bg-surface text-on-surface border border-gray-300 shadow-sm pr-10 appearance-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all',
+    'card-main': 'bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md',
+    'card-md': 'bg-surface mx-auto mt-10 w-full max-w-md rounded p-8 shadow-md',
+    'card-lg':
+      'bg-surface mx-auto mt-10 w-full max-w-2xl rounded p-8 shadow-md',
+    'section-divider': 'border-t border-gray-200 pt-6',
+    'icon-btn': 'mr-1 align-middle',
+    'text-on-surface-80': 'text-on-surface/80',
+    'text-on-surface-70': 'text-on-surface/70',
+    'text-on-surface-60': 'text-on-surface/60',
+    'text-on-surface-50': 'text-on-surface/50',
   },
   presets: [
     presetWind4(),
