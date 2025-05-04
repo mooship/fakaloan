@@ -125,7 +125,7 @@ const handleSubmit = async () => {
     });
     toast.success(ToastMessages.TransactionAddSuccess);
     resetForm();
-    router.push('/');
+    router.push('/transactions');
   } catch {
     toast.error(ToastMessages.TransactionAddFailed);
   } finally {
