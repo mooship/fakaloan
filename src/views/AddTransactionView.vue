@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { ToastMessages } from '@/constants/toastMessages.constants';
@@ -6,7 +7,6 @@ import { TransactionTypeEnum } from '@/enums/transaction.enums';
 import { db } from '@/firebase';
 import type { Customer } from '@/interfaces/customer.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useHead } from '@vueuse/head';
 import {
   addDoc,
@@ -192,12 +192,7 @@ const handleSubmit = async () => {
         </div>
       </form>
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button
-          @click="goBackOrHome(router)"
-          class="btn-primary-outline !w-auto"
-        >
-          Back
-        </button>
+        <BackButton />
       </div>
     </div>
   </AppLayout>

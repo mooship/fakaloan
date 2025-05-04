@@ -14,6 +14,12 @@
         >
         <router-link
           v-if="currentUser"
+          to="/customers"
+          class="btn-link text-on-primary"
+          >Customers</router-link
+        >
+        <router-link
+          v-if="currentUser"
           to="/profile"
           class="btn-link text-on-primary"
           >Profile</router-link
@@ -73,6 +79,13 @@
             class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
             >Profile</router-link
+          >
+          <router-link
+            v-if="currentUser"
+            to="/customers"
+            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            @click="showMenu = false"
+            >Customers</router-link
           >
           <router-link
             to="/about"

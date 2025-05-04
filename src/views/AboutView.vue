@@ -1,18 +1,8 @@
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
-import { useRouter } from 'vue-router';
 useTitle('About | Fakaloan');
-
-const router = useRouter();
-
-function handleBack() {
-  if (window.history.length > 1) {
-    router.back();
-  } else {
-    router.push('/');
-  }
-}
 </script>
 
 <template>
@@ -101,27 +91,19 @@ function handleBack() {
           </p>
         </section>
 
-        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-          <button @click="handleBack" class="btn-primary-outline !w-auto">
-            Back
-          </button>
+        <div class="mt-8 flex justify-center border-t border-gray-200 pt-6">
+          <BackButton />
         </div>
-
-        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-          <button @click="router.push('/')" class="btn-primary-outline !w-auto">
-            Back to Home
-          </button>
-        </div>
+        <footer
+          class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
+        >
+          <p>
+            &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
+            reserved.
+          </p>
+          <p class="mt-1">Proudly South African 🇿🇦</p>
+        </footer>
       </div>
-      <footer
-        class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
-      >
-        <p>
-          &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
-          reserved.
-        </p>
-        <p class="mt-1">Proudly South African 🇿🇦</p>
-      </footer>
     </div>
   </AppLayout>
 </template>

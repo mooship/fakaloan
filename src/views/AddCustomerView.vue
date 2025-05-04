@@ -1,11 +1,11 @@
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useHead } from '@vueuse/head';
 import {
   addDoc,
@@ -212,12 +212,7 @@ useHead({
       </form>
 
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button
-          @click="goBackOrHome(router)"
-          class="btn-primary-outline !w-auto"
-        >
-          Back
-        </button>
+        <BackButton />
       </div>
     </div>
   </AppLayout>

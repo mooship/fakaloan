@@ -50,7 +50,6 @@ const handleLogout = async (): Promise<void> => {
         </p>
         <p class="text-on-surface">You are logged in as:</p>
         <p class="text-primary font-medium">{{ currentUser.email }}</p>
-        <!-- TODO: Add quick links to main features (e.g., Add Customer, View Transactions) -->
       </div>
       <div v-else-if="isLoading && !currentUser">
         <p class="text-on-surface/60">Loading user information...</p>
