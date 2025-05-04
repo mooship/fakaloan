@@ -26,7 +26,14 @@ export function useTheme() {
       colorMode.value = mode;
     },
     toggleTheme: () => {
-      colorMode.value = colorMode.value === 'dark' ? 'light' : 'dark';
+      // Cycle through: light -> dark -> auto -> light ...
+      if (colorMode.value === 'light') {
+        colorMode.value = 'dark';
+      } else if (colorMode.value === 'dark') {
+        colorMode.value = 'auto';
+      } else {
+        colorMode.value = 'light';
+      }
     },
   };
 }

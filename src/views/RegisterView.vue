@@ -2,7 +2,6 @@
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { usePasswordStrength } from '@/composables/usePasswordStrength';
-import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { EMAIL_REGEX, PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
@@ -12,7 +11,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
@@ -38,20 +37,6 @@ const {
 } = useAuth();
 
 const { setLoading } = useLoading();
-
-const isDev = import.meta.env.DEV;
-const localAllowAccountCreation =
-  String(import.meta.env.VITE_ALLOW_ACCOUNT_CREATION).toLowerCase() === 'true';
-const {
-  allowAccountCreation: remoteAllowAccountCreation,
-  isLoading: isRemoteConfigLoading,
-} = useRemoteConfig();
-const allowAccountCreation = computed(() =>
-  isDev ? localAllowAccountCreation : remoteAllowAccountCreation.value
-);
-const isLoadingConfig = computed(() =>
-  isDev ? false : isRemoteConfigLoading.value
-);
 
 const toast = useToast();
 
@@ -142,16 +127,9 @@ const goToLogin = (): void => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
-      <div v-if="isLoadingConfig" class="alert-info">
-        Checking account creation status...
-      </div>
-      <div v-if="!isLoadingConfig && !allowAccountCreation" class="alert-error">
-        Account creation is currently disabled.
-      </div>
     </template>
 
     <Form
-      v-if="!isLoadingConfig && allowAccountCreation"
       :validation-schema="schema"
       @submit="handleRegister"
       class="space-y-4"
@@ -344,14 +322,8 @@ const goToLogin = (): void => {
       <div>
         <button
           type="submit"
-          :class="[
-            'btn-primary',
-            {
-              'btn-disabled':
-                isAuthLoading || isLoadingConfig || !allowAccountCreation,
-            },
-          ]"
-          :disabled="isAuthLoading || isLoadingConfig || !allowAccountCreation"
+          :class="['btn-primary', { 'btn-disabled': isAuthLoading }]"
+          :disabled="isAuthLoading"
         >
           {{ isAuthLoading ? 'Creating...' : 'Create Account' }}
         </button>
@@ -361,13 +333,7 @@ const goToLogin = (): void => {
     <template #actions>
       <div class="mt-4 text-center text-sm">
         <span class="text-on-background">Already have an account? </span>
-        <button
-          @click="goToLogin"
-          :class="['btn-link', { 'btn-disabled': isLoadingConfig }]"
-          :disabled="isLoadingConfig"
-        >
-          Sign in
-        </button>
+        <button @click="goToLogin" class="btn-link">Sign in</button>
       </div>
     </template>
   </AuthLayout>

@@ -1,4 +1,3 @@
-import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, Theme } from '@/enums/user.enums';
 import { auth, db } from '@/firebase';
@@ -59,7 +58,6 @@ export function useAuth() {
   const toast = useToast();
   const currentUser = useCurrentUser();
   const { isOnline } = useNetwork();
-  const { allowAccountCreation } = useRemoteConfig();
 
   const [isLoading, toggleLoading] = useToggle(false);
   const authError = ref<string | null>(null);
@@ -156,11 +154,6 @@ export function useAuth() {
     );
 
   const loginWithEmail = async (values: LoginFormValues): Promise<boolean> => {
-    if (!allowAccountCreation.value) {
-      authError.value = 'Login is currently disabled.';
-      toast.error(authError.value);
-      return false;
-    }
     if (!checkNetwork()) {
       return false;
     }
@@ -209,11 +202,6 @@ export function useAuth() {
   };
 
   const loginWithGoogle = async (): Promise<boolean> => {
-    if (!allowAccountCreation.value) {
-      authError.value = 'Login is currently disabled.';
-      toast.error(authError.value);
-      return false;
-    }
     if (!checkNetwork()) {
       return false;
     }
@@ -255,11 +243,6 @@ export function useAuth() {
   const registerWithEmail = async (
     values: RegisterFormValues
   ): Promise<boolean> => {
-    if (!allowAccountCreation.value) {
-      authError.value = 'Account creation is currently disabled.';
-      toast.error(authError.value);
-      return false;
-    }
     if (!checkNetwork()) {
       return false;
     }

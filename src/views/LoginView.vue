@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
-import { useRemoteConfig } from '@/composables/useRemoteConfig';
 import { EMAIL_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
@@ -10,7 +9,7 @@ import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.ty
 import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { computed, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
@@ -39,20 +38,6 @@ const {
 const googleLoading = ref(false);
 
 const { setLoading } = useLoading();
-
-const isDev = import.meta.env.DEV;
-const localAllowAccountCreation =
-  String(import.meta.env.VITE_ALLOW_ACCOUNT_CREATION).toLowerCase() === 'true';
-const {
-  allowAccountCreation: remoteAllowAccountCreation,
-  isLoading: isRemoteConfigLoading,
-} = useRemoteConfig();
-const allowAccountCreation = computed(() =>
-  isDev ? localAllowAccountCreation : remoteAllowAccountCreation.value
-);
-const isLoadingConfig = computed(() =>
-  isDev ? false : isRemoteConfigLoading.value
-);
 
 const toast = useToast();
 
@@ -130,16 +115,9 @@ const goToForgotPassword = (): void => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
-      <div v-if="isLoadingConfig" class="alert-info">
-        Checking login status...
-      </div>
-      <div v-if="!isLoadingConfig && !allowAccountCreation" class="alert-error">
-        Login is currently disabled.
-      </div>
     </template>
 
     <Form
-      v-if="!isLoadingConfig"
       :validation-schema="schema"
       @submit="handleEmailLogin"
       class="space-y-4"
@@ -175,17 +153,7 @@ const goToForgotPassword = (): void => {
         <div class="flex items-center justify-between">
           <label for="password" class="form-label">Password</label>
           <div class="text-sm">
-            <button
-              type="button"
-              @click="goToForgotPassword"
-              :class="[
-                'btn-link',
-                {
-                  'btn-disabled': isLoadingConfig || !allowAccountCreation,
-                },
-              ]"
-              :disabled="isLoadingConfig || !allowAccountCreation"
-            >
+            <button type="button" @click="goToForgotPassword" class="btn-link">
               Forgot password?
             </button>
           </div>
@@ -236,14 +204,8 @@ const goToForgotPassword = (): void => {
       <div>
         <button
           type="submit"
-          :class="[
-            'btn-primary',
-            {
-              'btn-disabled':
-                isAuthLoading || isLoadingConfig || !allowAccountCreation,
-            },
-          ]"
-          :disabled="isAuthLoading || isLoadingConfig || !allowAccountCreation"
+          :class="['btn-primary', { 'btn-disabled': isAuthLoading }]"
+          :disabled="isAuthLoading"
         >
           {{ isAuthLoading && !googleLoading ? 'Signing in...' : 'Sign in' }}
         </button>
@@ -251,57 +213,32 @@ const goToForgotPassword = (): void => {
     </Form>
 
     <template #actions>
-      <div v-if="!isLoadingConfig">
-        <div class="relative my-4">
-          <div class="absolute inset-0 flex items-center">
-            <div class="border-secondary-variant w-full border-t"></div>
-          </div>
-          <div class="relative flex justify-center text-sm">
-            <span class="bg-surface text-secondary px-2">
-              Or continue with
-            </span>
-          </div>
+      <div class="relative my-4">
+        <div class="absolute inset-0 flex items-center">
+          <div class="border-secondary-variant w-full border-t"></div>
         </div>
+        <div class="relative flex justify-center text-sm">
+          <span class="bg-surface text-secondary px-2"> Or continue with </span>
+        </div>
+      </div>
 
-        <div>
-          <button
-            @click="handleGoogleLogin"
-            :class="[
-              'bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2',
-              isAuthLoading ||
-              googleLoading ||
-              isLoadingConfig ||
-              !allowAccountCreation
-                ? 'btn-disabled'
-                : '',
-            ]"
-            :disabled="
-              isAuthLoading ||
-              googleLoading ||
-              isLoadingConfig ||
-              !allowAccountCreation
-            "
-          >
-            <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
-            {{ googleLoading ? 'Signing in...' : 'Sign in with Google' }}
-          </button>
-        </div>
+      <div>
+        <button
+          @click="handleGoogleLogin"
+          :class="[
+            'bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2',
+            isAuthLoading || googleLoading ? 'btn-disabled' : '',
+          ]"
+          :disabled="isAuthLoading || googleLoading"
+        >
+          <i class="i-logos-google-icon mr-2 h-5 w-5"></i>
+          {{ googleLoading ? 'Signing in...' : 'Sign in with Google' }}
+        </button>
+      </div>
 
-        <div class="mt-4 text-center text-sm">
-          <span class="text-on-background">Don't have an account? </span>
-          <button
-            @click="goToRegister"
-            :class="[
-              'btn-link',
-              {
-                'btn-disabled': isLoadingConfig || !allowAccountCreation,
-              },
-            ]"
-            :disabled="isLoadingConfig || !allowAccountCreation"
-          >
-            Create one
-          </button>
-        </div>
+      <div class="mt-4 text-center text-sm">
+        <span class="text-on-background">Don't have an account? </span>
+        <button @click="goToRegister" class="btn-link">Create one</button>
       </div>
     </template>
   </AuthLayout>

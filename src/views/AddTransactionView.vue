@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { TransactionTypeEnum } from '@/enums/transaction.enums';
 import { db } from '@/firebase';
 import type { Customer } from '@/interfaces/customer.interfaces';
+import AppLayout from '@/layouts/AppLayout.vue';
+import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useHead } from '@vueuse/head';
 import {
   addDoc,
@@ -17,10 +20,19 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-const { currentUser } = useAuth();
-const customers = ref<Customer[]>([]);
-const toast = useToast();
+const { currentUser, isLoading } = useAuth();
+const { setLoading } = useLoading();
 const router = useRouter();
+const toast = useToast();
+
+const customers = ref<Customer[]>([]);
+const form = ref({
+  customerId: '',
+  type: TransactionTypeEnum.Credit,
+  amount: '',
+  note: '',
+});
+const submitting = ref(false);
 
 useHead({
   title: 'Add Transaction | Fakaloan',
@@ -49,38 +61,37 @@ onMounted(() => {
     collection(db, 'customers'),
     where('userId', '==', currentUser.value.uid)
   );
-
   onSnapshot(q, (snapshot) => {
-    customers.value = snapshot.docs.map(
-      (doc) => ({ ...doc.data(), uid: doc.id }) as Customer
-    );
+    customers.value = snapshot.docs.map((doc) => ({
+      uid: doc.id,
+      userId: doc.data().userId,
+      name: doc.data().name,
+      cellphoneNumber: doc.data().cellphoneNumber,
+      balance: doc.data().balance,
+      address: doc.data().address ?? null,
+      createdAt: doc.data().createdAt,
+      updatedAt: doc.data().updatedAt ?? null,
+      creditScore: doc.data().creditScore ?? null,
+      defaultCreditTermDays: doc.data().defaultCreditTermDays ?? null,
+      lastRepaymentAt: doc.data().lastRepaymentAt ?? null,
+    }));
   });
 });
 
-const form = ref({
-  customerId: '',
-  type: TransactionTypeEnum.Credit,
-  amount: '',
-  note: '',
-});
-
-const isSubmitting = ref(false);
-
-function resetForm() {
+const resetForm = () => {
   form.value = {
     customerId: '',
     type: TransactionTypeEnum.Credit,
     amount: '',
     note: '',
   };
-}
+};
 
-async function handleSubmit() {
+const handleSubmit = async () => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);
     return;
   }
-
   const parsedAmount = Number.parseFloat(form.value.amount);
   if (
     !form.value.customerId ||
@@ -90,8 +101,8 @@ async function handleSubmit() {
     toast.error(ToastMessages.ValidationError);
     return;
   }
-
-  isSubmitting.value = true;
+  setLoading(true);
+  submitting.value = true;
   try {
     await addDoc(collection(db, 'transactions'), {
       customerId: form.value.customerId,
@@ -102,77 +113,92 @@ async function handleSubmit() {
       updatedAt: null,
       userId: currentUser.value.uid,
     });
-
     toast.success(ToastMessages.TransactionAddSuccess);
     resetForm();
     router.push('/');
   } catch {
     toast.error(ToastMessages.TransactionAddFailed);
   } finally {
-    isSubmitting.value = false;
+    submitting.value = false;
+    setLoading(false);
   }
-}
+};
 </script>
 
 <template>
-  <div class="bg-surface mx-auto mt-10 max-w-md rounded p-6 shadow">
-    <h1 class="text-primary mb-4 text-xl font-bold">Add Transaction</h1>
-    <form @submit.prevent="handleSubmit" class="space-y-4">
-      <div>
-        <label class="form-label" for="customer">Customer</label>
-        <select
-          v-model="form.customerId"
-          id="customer"
-          required
-          class="form-input-base"
+  <AppLayout>
+    <div class="bg-surface mx-auto mt-10 w-full max-w-md rounded p-8 shadow-md">
+      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
+        Add Transaction
+      </h1>
+      <form @submit.prevent="handleSubmit" class="space-y-4">
+        <div>
+          <label class="form-label" for="customer">Customer</label>
+          <select
+            v-model="form.customerId"
+            id="customer"
+            required
+            class="material-select"
+          >
+            <option value="" disabled>Select customer</option>
+            <option v-for="c in customers" :key="c.uid" :value="c.uid">
+              {{ c.name }}
+            </option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="type">Type</label>
+          <select
+            v-model="form.type"
+            id="type"
+            required
+            class="material-select"
+          >
+            <option :value="TransactionTypeEnum.Credit">Credit</option>
+            <option :value="TransactionTypeEnum.Repayment">Repayment</option>
+          </select>
+        </div>
+        <div>
+          <label class="form-label" for="amount">Amount</label>
+          <input
+            v-model="form.amount"
+            id="amount"
+            type="number"
+            min="0.01"
+            step="0.01"
+            required
+            class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:ring-2"
+            placeholder="e.g. 100.00"
+          />
+        </div>
+        <div>
+          <label class="form-label" for="note">Note (optional)</label>
+          <input
+            v-model="form.note"
+            id="note"
+            type="text"
+            class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:ring-2"
+            placeholder="Short description"
+          />
+        </div>
+        <div>
+          <button
+            type="submit"
+            class="btn-primary w-full"
+            :disabled="submitting || isLoading"
+          >
+            {{ submitting ? 'Saving...' : 'Add Transaction' }}
+          </button>
+        </div>
+      </form>
+      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+        <button
+          @click="goBackOrHome(router)"
+          class="btn-primary-outline !w-auto"
         >
-          <option value="" disabled>Select customer</option>
-          <option v-for="c in customers" :key="c.uid" :value="c.uid">
-            {{ c.name }}
-          </option>
-        </select>
+          Back
+        </button>
       </div>
-
-      <div>
-        <label class="form-label" for="type">Type</label>
-        <select v-model="form.type" id="type" required class="form-input-base">
-          <option :value="TransactionTypeEnum.Credit">Credit</option>
-          <option :value="TransactionTypeEnum.Repayment">Repayment</option>
-        </select>
-      </div>
-
-      <div>
-        <label class="form-label" for="amount">Amount</label>
-        <input
-          v-model="form.amount"
-          id="amount"
-          type="number"
-          min="0.01"
-          step="0.01"
-          required
-          class="form-input-base"
-          placeholder="e.g. 100.00"
-        />
-        <!-- TODO: Add validation for max value, decimal places -->
-      </div>
-
-      <div>
-        <label class="form-label" for="note">Note (optional)</label>
-        <input
-          v-model="form.note"
-          id="note"
-          type="text"
-          class="form-input-base"
-          placeholder="Short description"
-        />
-      </div>
-
-      <button type="submit" class="btn-primary" :disabled="isSubmitting">
-        <span v-if="isSubmitting">Saving...</span>
-        <span v-else>Add Transaction</span>
-      </button>
-      <!-- TODO: Add support for editing or deleting transactions -->
-      <!-- TODO: Add category or type for transactions (beyond credit/repayment) -->
-    </form>
-  </div>
+    </div>
+  </AppLayout>
 </template>

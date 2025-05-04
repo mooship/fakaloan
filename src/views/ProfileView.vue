@@ -284,6 +284,7 @@ watch(
 
 <template>
   <AppLayout>
+    <LoadingOverlay v-if="isUpdating" text="Saving..." />
     <div class="bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md">
       <h1 class="text-primary mb-6 text-center text-3xl font-bold">
         Your Profile
@@ -298,12 +299,8 @@ watch(
       <div v-else-if="currentUser && userProfile" class="space-y-8">
         <!-- Premium Status Section -->
         <div
-          class="rounded-lg border-2 p-5"
-          :class="
-            isPremium
-              ? 'border-primary-variant bg-primary-variant/10'
-              : 'border-secondary-variant bg-secondary-variant/20'
-          "
+          class="bg-primary/5 rounded-lg border p-5"
+          :class="isPremium ? 'border-primary' : 'border-gray-300'"
         >
           <div class="flex items-center justify-between">
             <div>
@@ -357,7 +354,7 @@ watch(
         </div>
 
         <!-- Account Information Section -->
-        <div class="border-secondary-variant bg-surface rounded-lg border p-4">
+        <div class="bg-surface rounded-lg border border-gray-300 p-4">
           <h2 class="text-on-surface mb-4 text-xl font-medium">
             Account Information
           </h2>
@@ -541,7 +538,7 @@ watch(
         </div>
 
         <!-- Additional Information Section -->
-        <div class="border-secondary-variant bg-surface rounded-lg border p-4">
+        <div class="bg-surface rounded-lg border border-gray-300 p-4">
           <h2 class="text-on-surface mb-4 text-xl font-medium">
             Additional Information
           </h2>
@@ -603,17 +600,6 @@ watch(
                     }}
                   </span>
                 </button>
-                <select
-                  v-model="colorMode"
-                  class="ml-2 rounded border px-2 py-1 text-sm"
-                >
-                  <option value="light">Light</option>
-                  <option value="dark">Dark</option>
-                  <option value="auto">Auto</option>
-                </select>
-                <span v-if="isUpdating" class="text-on-surface/60 ml-2 text-xs"
-                  >Saving...</span
-                >
               </span>
             </div>
           </div>
@@ -626,7 +612,7 @@ watch(
       </div>
 
       <!-- Back Button -->
-      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
+      <div class="mt-8 border-t border-gray-200 pt-6 text-center">
         <button
           @click="goBackOrHome(router)"
           class="btn-primary-outline !w-auto"

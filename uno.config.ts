@@ -89,6 +89,8 @@ export default defineConfig({
       'flex items-center justify-center min-h-screen bg-background',
     'auth-card': 'w-full max-w-md p-8 space-y-6 bg-surface rounded shadow-md',
     'auth-title': 'text-2xl font-bold text-center text-primary',
+    'material-select':
+      'form-input-base rounded-lg bg-surface text-on-surface border border-gray-300 shadow-sm pr-10 appearance-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all',
   },
   presets: [
     presetWind4(),
