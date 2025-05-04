@@ -197,7 +197,7 @@ useHead({
         <div>
           <button
             type="submit"
-            class="btn-primary w-auto mx-auto block"
+            class="btn-primary mx-auto block w-auto"
             :disabled="submitting || isLoading"
           >
             {{ submitting ? 'Adding...' : 'Add Customer' }}

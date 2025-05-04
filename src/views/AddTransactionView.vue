@@ -171,7 +171,7 @@ const handleSubmit = async () => {
               min="0.01"
               step="0.01"
               required
-              class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 pl-8 pr-3 py-2 shadow-sm focus:ring-2 w-full"
+              class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 py-2 pl-8 pr-3 shadow-sm focus:ring-2"
               placeholder="e.g. 100.00"
             />
           </div>
@@ -189,7 +189,7 @@ const handleSubmit = async () => {
         <div>
           <button
             type="submit"
-            class="btn-primary w-auto mx-auto block"
+            class="btn-primary mx-auto block w-auto"
             :disabled="submitting || isLoading"
           >
             {{ submitting ? 'Saving...' : 'Add Transaction' }}
