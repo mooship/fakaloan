@@ -99,8 +99,7 @@ async function fetchCustomers() {
   try {
     const q = query(
       collection(db, 'customers'),
-      where('userId', '==', currentUser.value.uid),
-      where('isDeleted', '==', false)
+      where('userId', '==', currentUser.value.uid)
     );
     const allCustomersSnapshot = await getDocs(q);
     if (allCustomersSnapshot.empty) {
@@ -111,23 +110,25 @@ async function fetchCustomers() {
       ...doc.data(),
     }));
     console.log('Fetched customers from Firestore:', rawCustomers);
-    customers.value = allCustomersSnapshot.docs.map((doc) => {
-      const data = doc.data();
-      return {
-        uid: doc.id,
-        userId: data.userId,
-        name: data.name,
-        cellphoneNumber: data.cellphoneNumber,
-        balance: data.balance,
-        address: data.address ?? null,
-        createdAt: data.createdAt,
-        updatedAt: data.updatedAt ?? null,
-        creditScore: data.creditScore ?? null,
-        defaultCreditTermDays: data.defaultCreditTermDays ?? null,
-        lastRepaymentAt: data.lastRepaymentAt ?? null,
-        isDeleted: data.isDeleted ?? false,
-      };
-    });
+    customers.value = allCustomersSnapshot.docs
+      .map((doc) => {
+        const data = doc.data();
+        return {
+          uid: doc.id,
+          userId: data.userId,
+          name: data.name,
+          cellphoneNumber: data.cellphoneNumber,
+          balance: data.balance,
+          address: data.address ?? null,
+          createdAt: data.createdAt,
+          updatedAt: data.updatedAt ?? null,
+          creditScore: data.creditScore ?? null,
+          defaultCreditTermDays: data.defaultCreditTermDays ?? null,
+          lastRepaymentAt: data.lastRepaymentAt ?? null,
+          isDeleted: data.isDeleted ?? false,
+        };
+      })
+      .filter((customer) => !customer.isDeleted);
   } catch (err) {
     console.error('Error fetching customers:', err);
     customers.value = [];

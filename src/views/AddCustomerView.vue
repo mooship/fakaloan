@@ -85,7 +85,6 @@ const handleSubmit = async (): Promise<void> => {
       creditScore: null,
       defaultCreditTermDays: form.value.defaultCreditTermDays,
       lastRepaymentAt: null,
-      deletedAt: null,
       isDeleted: false,
     });
 

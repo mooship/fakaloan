@@ -32,10 +32,8 @@ service cloud.firestore {
       // Allow get, update, delete if user owns the customer
       allow get, update, delete: if isCustomerOwner();
       // Allow list if user is authenticated and only their own customers
-      // (Soft-delete: only show customers where isDeleted == false)
       allow list: if request.auth != null &&
-        request.query.whereField('userId', '==', request.auth.uid) &&
-        request.query.whereField('isDeleted', '==', false);
+        request.query.whereField('userId', '==', request.auth.uid);
       // Only allow create if user is authenticated and creating their own customer
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }

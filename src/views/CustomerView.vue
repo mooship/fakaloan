@@ -271,7 +271,6 @@ import {
   getDocs,
   getFirestore,
   query,
-  serverTimestamp,
   updateDoc,
   where,
 } from 'firebase/firestore';
@@ -402,7 +401,7 @@ async function deleteCustomer() {
 
   try {
     await updateDoc(doc(db, 'customers', customerId), {
-      deletedAt: serverTimestamp(),
+      isDeleted: true,
     });
     toast.success('Customer deleted.');
     await fetchCustomer();
