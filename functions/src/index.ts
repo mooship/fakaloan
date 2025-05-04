@@ -1,5 +1,36 @@
-import { onRequest } from 'firebase-functions/v2/https';
+import { initializeApp } from 'firebase-admin/app';
+import { getFirestore } from 'firebase-admin/firestore';
+import { onDocumentWritten } from 'firebase-functions/v2/firestore';
 
-export const placeholder = onRequest((req, res) => {
-  res.send('Placeholder function. Replace or remove me!');
-});
+initializeApp();
+
+export const updateCustomerBalanceOnTransaction = onDocumentWritten(
+  'transactions/{transactionId}',
+  async (event) => {
+    const db = getFirestore();
+    const transaction = event.data?.after?.data();
+
+    if (!transaction || !transaction.customerId) {
+      return;
+    }
+
+    const customerId = transaction.customerId;
+
+    // Fetch all transactions for this customer
+    const txSnapshot = await db
+      .collection('transactions')
+      .where('customerId', '==', customerId)
+      .get();
+    let balance = 0;
+    for (const doc of txSnapshot.docs) {
+      const tx = doc.data();
+      if (tx.type === 'Credit') {
+        balance += Number(tx.amount);
+      } else if (tx.type === 'Repayment') {
+        balance -= Number(tx.amount);
+      }
+    }
+    // Update the customer's balance
+    await db.collection('customers').doc(customerId).update({ balance });
+  }
+);
