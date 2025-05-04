@@ -24,8 +24,13 @@ service cloud.firestore {
 
     // Customers collection
     match /customers/{customerId} {
-      allow get, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
-      allow list: if request.auth != null;
+      function isCustomerOwner() {
+        return request.auth != null && request.auth.uid == resource.data.userId;
+      }
+      allow get, update, delete: if isCustomerOwner();
+      allow list: if request.auth != null &&
+        request.query.whereField('userId', '==', request.auth.uid) &&
+        request.query.whereField('deletedAt', '==', null);
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
 
@@ -39,6 +44,8 @@ service cloud.firestore {
       }
       allow read, update, delete: if isTransactionOwner();
       allow create: if isCreatingTransaction();
+      allow list: if request.auth != null &&
+        request.query.whereField('userId', '==', request.auth.uid);
     }
   }
 }
