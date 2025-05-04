@@ -20,15 +20,15 @@
         >
         <router-link
           v-if="currentUser"
-          to="/profile"
-          class="btn-link text-on-primary"
-          >Profile</router-link
-        >
-        <router-link
-          v-if="currentUser"
           to="/transactions"
           class="btn-link text-on-primary"
           >Transactions</router-link
+        >
+        <router-link
+          v-if="currentUser"
+          to="/profile"
+          class="btn-link text-on-primary"
+          >Profile</router-link
         >
         <router-link to="/about" class="btn-link text-on-primary"
           >About</router-link
@@ -81,13 +81,6 @@
           >
           <router-link
             v-if="currentUser"
-            to="/profile"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
-            @click="showMenu = false"
-            >Profile</router-link
-          >
-          <router-link
-            v-if="currentUser"
             to="/customers"
             class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
@@ -99,6 +92,13 @@
             class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
             @click="showMenu = false"
             >Transactions</router-link
+          >
+          <router-link
+            v-if="currentUser"
+            to="/profile"
+            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            @click="showMenu = false"
+            >Profile</router-link
           >
           <router-link
             to="/about"
