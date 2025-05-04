@@ -1,6 +1,3 @@
-/** * AppLayout.vue * * Main application layout for Fakaloan. * Provides a
-responsive navigation bar and a slot for main content. * Navigation links are
-shown/hidden based on authentication state. * * @module layouts/AppLayout */
 <template>
   <div class="bg-background flex min-h-screen flex-col">
     <!-- App Bar -->
@@ -36,8 +33,6 @@ shown/hidden based on authentication state. * * @module layouts/AppLayout */
           class="btn-link text-on-primary"
           >Register</router-link
         >
-        <!-- TODO: Add user avatar or dropdown for account actions in the nav bar -->
-        <!-- TODO: Add notification or alert icon for important updates -->
       </nav>
       <!-- Hamburger (Mobile) -->
       <button
@@ -99,7 +94,6 @@ shown/hidden based on authentication state. * * @module layouts/AppLayout */
             @click="showMenu = false"
             >Register</router-link
           >
-          <!-- TODO: Add user avatar or dropdown for account actions in mobile menu -->
         </div>
       </transition>
     </header>
@@ -109,7 +103,6 @@ shown/hidden based on authentication state. * * @module layouts/AppLayout */
         <slot />
       </div>
     </main>
-    <!-- TODO: Make navigation links configurable via a central config -->
   </div>
 </template>
 
@@ -118,12 +111,6 @@ import { useAuth } from '@/composables/useAuth';
 import { ref } from 'vue';
 const { currentUser } = useAuth();
 const showMenu = ref(false);
-
-/**
- * App layout component with responsive navigation bar and slot for main content.
- *
- * Shows navigation links based on authentication state.
- */
 </script>
 
 <style scoped>
