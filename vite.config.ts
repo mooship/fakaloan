@@ -33,7 +33,7 @@ export default defineConfig({
           ],
           validation: ['vee-validate', 'yup'],
           toast: ['vue-toastification'],
-          vueuse: ['@vueuse/core'],
+          vueuse: ['@vueuse/core', '@vueuse/head'],
         },
       },
     },

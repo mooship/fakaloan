@@ -3,19 +3,31 @@ import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { usePasswordStrength } from '@/composables/usePasswordStrength';
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
-import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import { EMAIL_REGEX, PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
-import { useTitle } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
+import { useHead } from '@vueuse/head';
+import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
-useTitle('Register | Fakaloan');
+useHead({
+  title: 'Register | Fakaloan',
+  meta: [
+    { name: 'description', content: 'Create a new Fakaloan account.' },
+    { property: 'og:title', content: 'Register | Fakaloan' },
+    { property: 'og:description', content: 'Create a new Fakaloan account.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 
 const router = useRouter();
 const {
@@ -61,6 +73,32 @@ const passwordConfirmation = ref('');
 const showPassword = ref(false);
 const showPasswordConfirmation = ref(false);
 const { label, color } = usePasswordStrength(password);
+
+const email = ref('');
+const emailUnique = ref(true);
+const emailCheckLoading = ref(false);
+
+const checkEmailUnique = useDebounceFn(async (value: string) => {
+  if (!value || !EMAIL_REGEX.test(value)) {
+    emailUnique.value = true;
+    emailCheckLoading.value = false;
+    return;
+  }
+  emailCheckLoading.value = true;
+  try {
+    const methods = await fetchSignInMethodsForEmail(getAuth(), value);
+    emailUnique.value = methods.length === 0;
+  } catch {
+    emailUnique.value = true;
+  } finally {
+    emailCheckLoading.value = false;
+  }
+}, 400);
+
+// Watch email input for uniqueness check
+watch(email, (val) => {
+  checkEmailUnique(val);
+});
 
 const handleRegister = async (values: GenericFormValues): Promise<void> => {
   setLoading(true);
@@ -174,6 +212,7 @@ const goToLogin = (): void => {
         >
           <input
             v-bind="field"
+            v-model="email"
             :class="[
               'form-input-base',
               errors.length ? 'form-input-invalid' : 'form-input-valid',
@@ -184,6 +223,15 @@ const goToLogin = (): void => {
           />
         </Field>
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
+        <div v-if="emailCheckLoading" class="text-info mt-1 text-sm">
+          Checking email...
+        </div>
+        <div
+          v-if="!emailUnique && !emailCheckLoading"
+          class="text-error mt-1 text-sm"
+        >
+          This email is already registered.
+        </div>
       </div>
 
       <div>

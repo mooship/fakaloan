@@ -2,18 +2,30 @@
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useRemoteConfig } from '@/composables/useRemoteConfig';
+import { EMAIL_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { LoginFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.types';
-import { useTitle } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
+import { useHead } from '@vueuse/head';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
 
-useTitle('Login | Fakaloan');
+useHead({
+  title: 'Login | Fakaloan',
+  meta: [
+    { name: 'description', content: 'Login to your Fakaloan account.' },
+    { property: 'og:title', content: 'Login | Fakaloan' },
+    { property: 'og:description', content: 'Login to your Fakaloan account.' },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 
 const router = useRouter();
 const {
@@ -44,6 +56,20 @@ const schema = yup.object({
 });
 
 const showPassword = ref(false);
+
+const email = ref('');
+const emailValid = ref(true);
+const emailCheckLoading = ref(false);
+
+const checkEmailValid = useDebounceFn((value: string) => {
+  emailCheckLoading.value = true;
+  emailValid.value = EMAIL_REGEX.test(value);
+  emailCheckLoading.value = false;
+}, 300);
+
+watch(email, (val) => {
+  checkEmailValid(val);
+});
 
 const handleEmailLogin = async (
   values: AppGenericFormValues
@@ -122,9 +148,12 @@ const goToForgotPassword = (): void => {
         >
           <input
             v-bind="field"
+            v-model="email"
             :class="[
               'form-input-base',
-              errors.length ? 'form-input-invalid' : 'form-input-valid',
+              errors.length || !emailValid
+                ? 'form-input-invalid'
+                : 'form-input-valid',
               'bg-surface text-on-surface placeholder:text-on-surface/60',
             ]"
             placeholder="you@example.com"

@@ -14,3 +14,11 @@ export const WHITESPACE_REGEX = /\s+/g;
  * Regex for grouping digits in phone numbers for display.
  */
 export const GROUP_3_4_REGEX = /(\d{3,4})(?=\d)/g;
+/**
+ * Regex for validating email addresses (simple version).
+ */
+export const EMAIL_REGEX = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+/**
+ * Regex for basic email validation (used in ProfileView.vue for quick checks).
+ */
+export const SIMPLE_EMAIL_REGEX = /^\S+@\S+\.\S+$/;

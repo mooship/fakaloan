@@ -4,11 +4,27 @@ import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { useTitle } from '@vueuse/core';
+import { useHead } from '@vueuse/head';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-useTitle('Home | Fakaloan');
+useHead({
+  title: 'Home | Fakaloan',
+  meta: [
+    {
+      name: 'description',
+      content: 'Dashboard and quick access to Fakaloan features.',
+    },
+    { property: 'og:title', content: 'Home | Fakaloan' },
+    {
+      property: 'og:description',
+      content: 'Dashboard and quick access to Fakaloan features.',
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 const { setLoading } = useLoading();

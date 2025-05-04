@@ -4,6 +4,7 @@ import { ToastMessages } from '@/constants/toastMessages.constants';
 import { TransactionTypeEnum } from '@/enums/transaction.enums';
 import { db } from '@/firebase';
 import type { Customer } from '@/interfaces/customer.interfaces';
+import { useHead } from '@vueuse/head';
 import {
   addDoc,
   collection,
@@ -20,6 +21,24 @@ const { currentUser } = useAuth();
 const customers = ref<Customer[]>([]);
 const toast = useToast();
 const router = useRouter();
+
+useHead({
+  title: 'Add Transaction | Fakaloan',
+  meta: [
+    {
+      name: 'description',
+      content: 'Add a new transaction to your Fakaloan account.',
+    },
+    { property: 'og:title', content: 'Add Transaction | Fakaloan' },
+    {
+      property: 'og:description',
+      content: 'Add a new transaction to your Fakaloan account.',
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 
 onMounted(() => {
   if (!currentUser.value) {

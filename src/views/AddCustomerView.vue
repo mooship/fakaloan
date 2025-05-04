@@ -6,6 +6,7 @@ import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { goBackOrHome } from '@/utilities/navigationUtils';
+import { useHead } from '@vueuse/head';
 import {
   addDoc,
   collection,
@@ -102,6 +103,24 @@ const handleSubmit = async (): Promise<void> => {
     setLoading(false);
   }
 };
+
+useHead({
+  title: 'Add Customer | Fakaloan',
+  meta: [
+    {
+      name: 'description',
+      content: 'Add a new customer to your Fakaloan account.',
+    },
+    { property: 'og:title', content: 'Add Customer | Fakaloan' },
+    {
+      property: 'og:description',
+      content: 'Add a new customer to your Fakaloan account.',
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 </script>
 
 <template>

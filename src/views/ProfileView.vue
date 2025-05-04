@@ -5,8 +5,10 @@ import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
 import {
   DISPLAY_PHONE_NUMBER_REGEX,
+  EMAIL_REGEX,
   GROUP_3_4_REGEX,
   PHONE_NUMBER_REGEX,
+  SIMPLE_EMAIL_REGEX,
   WHITESPACE_REGEX,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
@@ -14,14 +16,31 @@ import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { goBackOrHome } from '@/utilities/navigationUtils';
-import { useConfirmDialog, useTitle } from '@vueuse/core';
+import { useConfirmDialog, useDebounceFn } from '@vueuse/core';
+import { useHead } from '@vueuse/head';
 import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
 import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 
-useTitle('Profile | Fakaloan');
+useHead({
+  title: 'Profile | Fakaloan',
+  meta: [
+    {
+      name: 'description',
+      content: 'View and edit your Fakaloan user profile.',
+    },
+    { property: 'og:title', content: 'Profile | Fakaloan' },
+    {
+      property: 'og:description',
+      content: 'View and edit your Fakaloan user profile.',
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
+});
 const {
   currentUser,
   userProfile,
@@ -202,6 +221,33 @@ const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
   }
 };
 
+const debouncedEmailValid = ref(true);
+const debouncedPhoneValid = ref(true);
+const emailCheckLoading = ref(false);
+const phoneCheckLoading = ref(false);
+
+const checkEmailValid = useDebounceFn((value: string) => {
+  emailCheckLoading.value = true;
+  debouncedEmailValid.value = EMAIL_REGEX.test(value);
+  emailCheckLoading.value = false;
+}, 300);
+
+const checkPhoneValid = useDebounceFn((value: string) => {
+  phoneCheckLoading.value = true;
+  debouncedPhoneValid.value = PHONE_NUMBER_REGEX.test(
+    value.replace(WHITESPACE_REGEX, '')
+  );
+  phoneCheckLoading.value = false;
+}, 300);
+
+watch(newEmail, (val) => {
+  checkEmailValid(val);
+});
+
+watch(cellphoneInput, (val) => {
+  checkPhoneValid(val);
+});
+
 watch(
   () => colorMode.value,
   async (newMode, oldMode) => {
@@ -347,7 +393,7 @@ watch(
                 placeholder="Enter new email"
               />
               <div
-                v-if="!/^\S+@\S+\.\S+$/.test(newEmail)"
+                v-if="!SIMPLE_EMAIL_REGEX.test(newEmail)"
                 class="form-error-text"
               >
                 Please enter a valid email address
@@ -355,7 +401,7 @@ watch(
               <div class="mt-2 flex space-x-2">
                 <button
                   @click="updateUserEmail"
-                  :disabled="isUpdating || !/^\S+@\S+\.\S+$/.test(newEmail)"
+                  :disabled="isUpdating || !SIMPLE_EMAIL_REGEX.test(newEmail)"
                   class="btn-primary !w-auto text-sm"
                 >
                   <span v-if="isUpdating">Updating...</span>

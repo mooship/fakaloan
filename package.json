@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@vueuse/core": "^13.1.0",
+    "@vueuse/head": "^2.0.0",
     "firebase": "^11.6.1",
     "pinia": "^3.0.1",
     "vee-validate": "^4.15.0",
