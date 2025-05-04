@@ -10,6 +10,7 @@ export function formatPhoneNumber(phone: string | null): string {
   if (/^\+27\d{9}$/.test(digits)) {
     return `${digits.slice(0, 3)} ${digits.slice(3, 5)} ${digits.slice(5, 8)} ${digits.slice(8)}`;
   }
+
   return digits;
 }
 
@@ -21,7 +22,10 @@ export function formatPhoneNumber(phone: string | null): string {
 export function formatDate(
   ts: { toDate?: () => Date } | Date | string | null | undefined
 ): string {
-  if (!ts) return '';
+  if (!ts) {
+    return '';
+  }
+
   let date: Date;
   if (
     typeof ts === 'object' &&

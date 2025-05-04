@@ -3,6 +3,7 @@ import type { useToast } from 'vue-toastification';
 
 /**
  * Ensures the user is online before proceeding. Sets error and shows toast if offline.
+ *
  * @param isOnline - Whether the user is online.
  * @param setError - Function to set the error message.
  * @param toast - Toast instance for showing errors.
@@ -19,12 +20,12 @@ export function ensureOnline(
     return false;
   }
   setError(null);
-
   return true;
 }
 
 /**
  * Ensures a required field is present. Sets error and shows toast if missing.
+ *
  * @param value - The value to check.
  * @param errorMessage - Error message to show if missing.
  * @param setError - Function to set the error message.
@@ -42,7 +43,6 @@ export function requireField(
     toast.error(errorMessage);
     return false;
   }
-
   setError(null);
   return true;
 }

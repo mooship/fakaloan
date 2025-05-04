@@ -5,6 +5,9 @@ import type {
 } from '@/enums/user.enums';
 import type { Timestamp } from 'firebase/firestore';
 
+/**
+ * User profile as stored in Firestore.
+ */
 export interface UserProfile {
   uid: string;
   firstName: string;

@@ -1,8 +1,14 @@
+/**
+ * Login form values.
+ */
 export interface LoginFormValues {
   email: string;
   password: string;
 }
 
+/**
+ * Registration form values.
+ */
 export interface RegisterFormValues {
   firstName: string;
   lastName: string;
@@ -11,6 +17,9 @@ export interface RegisterFormValues {
   passwordConfirmation: string;
 }
 
+/**
+ * Forgot password form values.
+ */
 export interface ForgotPasswordForm {
   email: string;
 }

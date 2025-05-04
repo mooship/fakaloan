@@ -1,5 +1,8 @@
 import { AuthErrorCode } from '@/enums/authErrors.enums';
 
+/**
+ * Maps Firebase Auth error codes to user-friendly error messages.
+ */
 export const AUTH_ERROR_MESSAGES: Record<AuthErrorCode, string> = {
   [AuthErrorCode.InvalidEmail]: 'Invalid email address format.',
   [AuthErrorCode.UserDisabled]: 'This user account has been disabled.',
@@ -17,5 +20,8 @@ export const AUTH_ERROR_MESSAGES: Record<AuthErrorCode, string> = {
     'This operation is sensitive and requires recent authentication. Please log in again.',
 };
 
+/**
+ * Default error message for unexpected authentication errors.
+ */
 export const DEFAULT_AUTH_ERROR_MESSAGE =
   'An unexpected error occurred. Please try again.';

@@ -1,5 +1,8 @@
 import type { Timestamp } from 'firebase/firestore';
 
+/**
+ * Customer record as stored in Firestore.
+ */
 export interface Customer {
   uid: string;
   userId: string;

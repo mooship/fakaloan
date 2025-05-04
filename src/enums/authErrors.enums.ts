@@ -1,3 +1,6 @@
+/**
+ * Firebase Auth error codes used in the app.
+ */
 export enum AuthErrorCode {
   InvalidEmail = 'auth/invalid-email',
   UserDisabled = 'auth/user-disabled',
