@@ -258,6 +258,7 @@
 
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
+import { useAuth } from '@/composables/useAuth';
 import type { Customer } from '@/interfaces/customer.interfaces';
 import type { Transaction } from '@/interfaces/transaction.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -301,6 +302,8 @@ const nameInput = ref('');
 const cellphoneInput = ref('');
 const addressInput = ref('');
 
+const { currentUser } = useAuth();
+
 async function fetchCustomer() {
   loading.value = true;
   try {
@@ -322,9 +325,16 @@ async function fetchCustomer() {
 async function fetchTransactions() {
   transactionsLoading.value = true;
   try {
+    if (!currentUser.value || !currentUser.value.uid) {
+      transactions.value = [];
+      transactionsLoading.value = false;
+
+      return;
+    }
     const q = query(
       collection(db, 'transactions'),
-      where('customerId', '==', customerId)
+      where('customerId', '==', customerId),
+      where('userId', '==', currentUser.value.uid)
     );
     const querySnapshot = await getDocs(q);
     transactions.value = querySnapshot.docs.map((doc) => ({
