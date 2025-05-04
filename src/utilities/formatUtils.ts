@@ -5,6 +5,7 @@ import {
   LOCAL_PHONE_NUMBER_DISPLAY_REGEX,
   normalizePhoneNumber,
 } from '@/constants/regex.constants';
+import type { FieldValue } from 'firebase/firestore';
 
 export function formatPhoneNumber(phone: string | null): string {
   if (!phone) {
@@ -23,13 +24,18 @@ export function formatPhoneNumber(phone: string | null): string {
 /**
  * Formats a Firestore Timestamp, Date, or string into a readable date/time string.
  * @param ts Firestore Timestamp, Date, string, or null/undefined
- * @returns string in 'YYYY/MM/DD HH:mm:ss' format or '' if invalid
+ * @returns string in 'YYYY/MM/DD HH:mm:ss' format, 'Pending...' if FieldValue, or '' if invalid
  */
 export function formatDate(
-  ts: { toDate?: () => Date } | Date | string | null | undefined
+  ts: { toDate?: () => Date } | Date | string | FieldValue | null | undefined
 ): string {
   if (!ts) {
     return '';
+  }
+
+  // If it's a Firestore FieldValue (no toDate method), show 'Pending...'
+  if (typeof ts === 'object' && ts && !('toDate' in ts) && !('getTime' in ts)) {
+    return 'Pending...';
   }
 
   let date: Date;
@@ -53,6 +59,5 @@ export function formatDate(
   }
 
   const pad = (n: number) => n.toString().padStart(2, '0');
-
   return `${date.getFullYear()}/${pad(date.getMonth() + 1)}/${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
 }
