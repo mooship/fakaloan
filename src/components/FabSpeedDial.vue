@@ -31,7 +31,7 @@ const handleAddCustomer = () => {
       <div v-if="showSpeedDial" class="flex flex-col items-center space-y-2">
         <button
           @click="handleAddTransaction"
-          class="bg-tertiary text-on-tertiary hover:bg-tertiary/80 focus:ring-tertiary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          class="bg-lime hover:bg-lime/80 focus:ring-lime flex items-center space-x-2 rounded-full p-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
           aria-label="Add Transaction"
         >
           <span class="text-sm font-medium">Transaction</span>
