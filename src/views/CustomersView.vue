@@ -1,4 +1,5 @@
 <template>
+  <LoadingOverlay />
   <AppLayout>
     <div class="card-lg">
       <div class="mb-6 flex items-center justify-between">
@@ -14,46 +15,41 @@
       <h1 class="text-primary mb-6 text-center text-2xl font-bold">
         Customers
       </h1>
-      <div v-if="loading" class="text-on-surface-60 py-8 text-center">
-        Loading customers...
-      </div>
-      <div v-else>
-        <div
-          v-if="customers.length === 0"
-          class="flex flex-col items-center justify-center py-16"
-        >
-          <i class="i-heroicons-user-group text-primary mb-4 h-12 w-12"></i>
-          <div class="text-on-surface-70 mb-2 text-lg font-medium">
-            No customers found
-          </div>
-          <div class="text-on-surface-50 mb-4 text-sm">
-            Add your first customer to get started.
-          </div>
+      <div
+        v-if="customers.length === 0"
+        class="flex flex-col items-center justify-center py-16"
+      >
+        <i class="i-heroicons-user-group text-primary mb-4 h-12 w-12"></i>
+        <div class="text-on-surface-70 mb-2 text-lg font-medium">
+          No customers found
         </div>
-        <ul v-else class="divide-y divide-gray-200">
-          <li
-            v-for="customer in customers"
-            :key="customer.uid"
-            class="flex items-center justify-between py-4"
-          >
-            <div>
-              <div class="font-semibold">{{ customer.name }}</div>
-              <div class="text-sm text-gray-500">
-                {{ formatPhoneNumber(customer.cellphoneNumber) }}
-              </div>
-              <div class="text-xs text-gray-400">
-                Balance: {{ customer.balance }}
-              </div>
-            </div>
-            <button
-              class="btn btn-primary ml-auto !w-auto"
-              @click="goToCustomer(customer.uid)"
-            >
-              View
-            </button>
-          </li>
-        </ul>
+        <div class="text-on-surface-50 mb-4 text-sm">
+          Add your first customer to get started.
+        </div>
       </div>
+      <ul v-else class="divide-y divide-gray-200">
+        <li
+          v-for="customer in customers"
+          :key="customer.uid"
+          class="flex items-center justify-between py-4"
+        >
+          <div>
+            <div class="font-semibold">{{ customer.name }}</div>
+            <div class="text-sm text-gray-500">
+              {{ formatPhoneNumber(customer.cellphoneNumber) }}
+            </div>
+            <div class="text-xs text-gray-400">
+              Balance: {{ customer.balance }}
+            </div>
+          </div>
+          <button
+            class="btn btn-primary ml-auto !w-auto"
+            @click="goToCustomer(customer.uid)"
+          >
+            View
+          </button>
+        </li>
+      </ul>
     </div>
     <FabSpeedDial />
   </AppLayout>
@@ -62,7 +58,9 @@
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import type { Customer } from '@/interfaces/customer.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { formatPhoneNumber } from '@/utilities/formatUtils';
@@ -77,10 +75,10 @@ import { onMounted, ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const customers = ref<Customer[]>([]);
-const loading = ref(true);
 const router = useRouter();
 const db = getFirestore();
 const { currentUser } = useAuth();
+const { setLoading } = useLoading();
 
 function goToCustomer(uid: string) {
   router.push(`/customers/${uid}`);
@@ -93,10 +91,10 @@ function goToAddCustomer() {
 async function fetchCustomers() {
   if (!currentUser.value) {
     customers.value = [];
-    loading.value = false;
+    setLoading(false);
     return;
   }
-  loading.value = true;
+  setLoading(true);
   try {
     const q = query(
       collection(db, 'customers'),
@@ -111,7 +109,7 @@ async function fetchCustomers() {
   } catch {
     customers.value = [];
   } finally {
-    loading.value = false;
+    setLoading(false);
   }
 }
 
