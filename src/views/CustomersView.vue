@@ -39,13 +39,16 @@
             <div>
               <div class="font-semibold">{{ customer.name }}</div>
               <div class="text-sm text-gray-500">
-                {{ customer.cellphoneNumber }}
+                {{ formatPhoneNumber(customer.cellphoneNumber) }}
               </div>
               <div class="text-xs text-gray-400">
                 Balance: {{ customer.balance }}
               </div>
             </div>
-            <button class="btn btn-primary" @click="goToCustomer(customer.uid)">
+            <button
+              class="btn btn-primary ml-auto !w-auto"
+              @click="goToCustomer(customer.uid)"
+            >
               View
             </button>
           </li>
@@ -62,6 +65,7 @@ import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
 import type { Customer } from '@/interfaces/customer.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { formatPhoneNumber } from '@/utilities/formatUtils';
 import {
   collection,
   getDocs,
