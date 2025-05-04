@@ -13,16 +13,16 @@
       <div v-else-if="customer">
         <form @submit.prevent class="space-y-4">
           <!-- Name Field -->
-          <div>
-            <label class="mb-1 block text-sm font-medium">Name</label>
-            <div class="flex items-center gap-2">
-              <input
-                v-model="form.name"
-                :readonly="editField !== 'name'"
-                class="input w-full"
-              />
+          <div class="mb-4 border-b border-gray-200 pb-4">
+            <div
+              class="flex items-center justify-between"
+              v-if="!isEditingName"
+            >
+              <div>
+                <p class="text-on-surface/80 text-sm font-medium">Name:</p>
+                <span class="text-on-surface">{{ customer.name }}</span>
+              </div>
               <button
-                v-if="editField !== 'name'"
                 type="button"
                 class="btn-link text-sm"
                 @click="startEdit('name')"
@@ -30,18 +30,27 @@
                 <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 Edit
               </button>
-              <div v-else class="flex gap-1">
+            </div>
+            <div v-else class="space-y-3">
+              <label class="form-label text-sm">Name</label>
+              <input
+                v-model="nameInput"
+                type="text"
+                class="form-input-base form-input-valid bg-surface text-on-surface"
+                placeholder="Enter name"
+              />
+              <div class="mt-2 flex space-x-2">
                 <button
                   type="button"
-                  class="btn-primary !w-auto text-sm"
                   @click="saveField('name')"
+                  class="btn-primary !w-auto text-sm"
                 >
                   Save
                 </button>
                 <button
                   type="button"
+                  @click="cancelEdit('name')"
                   class="btn-secondary !w-auto text-sm"
-                  @click="cancelEdit()"
                 >
                   Cancel
                 </button>
@@ -49,18 +58,20 @@
             </div>
           </div>
           <!-- Cellphone Number Field -->
-          <div>
-            <label class="mb-1 block text-sm font-medium"
-              >Cellphone Number</label
+          <div class="mb-4 border-b border-gray-200 pb-4">
+            <div
+              class="flex items-center justify-between"
+              v-if="!isEditingCellphone"
             >
-            <div class="flex items-center gap-2">
-              <input
-                v-model="form.cellphoneNumber"
-                :readonly="editField !== 'cellphoneNumber'"
-                class="input w-full"
-              />
+              <div>
+                <p class="text-on-surface/80 text-sm font-medium">
+                  Cellphone Number:
+                </p>
+                <span class="text-on-surface">{{
+                  customer.cellphoneNumber
+                }}</span>
+              </div>
               <button
-                v-if="editField !== 'cellphoneNumber'"
                 type="button"
                 class="btn-link text-sm"
                 @click="startEdit('cellphoneNumber')"
@@ -68,18 +79,27 @@
                 <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 Edit
               </button>
-              <div v-else class="flex gap-1">
+            </div>
+            <div v-else class="space-y-3">
+              <label class="form-label text-sm">Cellphone Number</label>
+              <input
+                v-model="cellphoneInput"
+                type="tel"
+                class="form-input-base form-input-valid bg-surface text-on-surface"
+                placeholder="Enter cellphone number"
+              />
+              <div class="mt-2 flex space-x-2">
                 <button
                   type="button"
-                  class="btn-primary !w-auto text-sm"
                   @click="saveField('cellphoneNumber')"
+                  class="btn-primary !w-auto text-sm"
                 >
                   Save
                 </button>
                 <button
                   type="button"
+                  @click="cancelEdit('cellphoneNumber')"
                   class="btn-secondary !w-auto text-sm"
-                  @click="cancelEdit()"
                 >
                   Cancel
                 </button>
@@ -87,17 +107,18 @@
             </div>
           </div>
           <!-- Address Field -->
-          <div>
-            <label class="mb-1 block text-sm font-medium">Address</label>
-            <div class="flex items-center gap-2">
-              <input
-                v-model="form.address"
-                :readonly="editField !== 'address'"
-                class="input w-full"
-                :placeholder="!form.address ? 'N/A' : ''"
-              />
+          <div class="mb-4 border-b border-gray-200 pb-4">
+            <div
+              class="flex items-center justify-between"
+              v-if="!isEditingAddress"
+            >
+              <div>
+                <p class="text-on-surface/80 text-sm font-medium">Address:</p>
+                <span class="text-on-surface">{{
+                  customer.address || 'N/A'
+                }}</span>
+              </div>
               <button
-                v-if="editField !== 'address'"
                 type="button"
                 class="btn-link text-sm"
                 @click="startEdit('address')"
@@ -105,18 +126,27 @@
                 <span class="i-heroicons-pencil mr-1 align-middle"></span>
                 Edit
               </button>
-              <div v-else class="flex gap-1">
+            </div>
+            <div v-else class="space-y-3">
+              <label class="form-label text-sm">Address</label>
+              <input
+                v-model="addressInput"
+                type="text"
+                class="form-input-base form-input-valid bg-surface text-on-surface"
+                placeholder="Enter address"
+              />
+              <div class="mt-2 flex space-x-2">
                 <button
                   type="button"
-                  class="btn-primary !w-auto text-sm"
                   @click="saveField('address')"
+                  class="btn-primary !w-auto text-sm"
                 >
                   Save
                 </button>
                 <button
                   type="button"
+                  @click="cancelEdit('address')"
                   class="btn-secondary !w-auto text-sm"
-                  @click="cancelEdit()"
                 >
                   Cancel
                 </button>
@@ -263,6 +293,14 @@ const toast = useToast();
 const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
 const deletePending = ref(false);
 
+const isEditingName = ref(false);
+const isEditingCellphone = ref(false);
+const isEditingAddress = ref(false);
+
+const nameInput = ref('');
+const cellphoneInput = ref('');
+const addressInput = ref('');
+
 async function fetchCustomer() {
   loading.value = true;
   try {
@@ -300,10 +338,27 @@ async function fetchTransactions() {
 
 function startEdit(field: EditableField) {
   editField.value = field;
+  if (field === 'name') {
+    isEditingName.value = true;
+    nameInput.value = form.value.name;
+  } else if (field === 'cellphoneNumber') {
+    isEditingCellphone.value = true;
+    cellphoneInput.value = form.value.cellphoneNumber;
+  } else if (field === 'address') {
+    isEditingAddress.value = true;
+    addressInput.value = form.value.address;
+  }
 }
 
-function cancelEdit() {
+function cancelEdit(field: EditableField) {
   editField.value = null;
+  if (field === 'name') {
+    isEditingName.value = false;
+  } else if (field === 'cellphoneNumber') {
+    isEditingCellphone.value = false;
+  } else if (field === 'address') {
+    isEditingAddress.value = false;
+  }
   if (customer.value) {
     form.value.name = customer.value.name;
     form.value.cellphoneNumber = customer.value.cellphoneNumber;
@@ -320,6 +375,13 @@ async function saveField(field: EditableField) {
     [field]: form.value[field],
   });
   editField.value = null;
+  if (field === 'name') {
+    isEditingName.value = false;
+  } else if (field === 'cellphoneNumber') {
+    isEditingCellphone.value = false;
+  } else if (field === 'address') {
+    isEditingAddress.value = false;
+  }
   await fetchCustomer();
 }
 
