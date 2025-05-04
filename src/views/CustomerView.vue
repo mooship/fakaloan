@@ -198,7 +198,7 @@
                     {{ tx.type === 'credit' ? 'Credit' : 'Repayment' }}
                   </div>
                   <div class="text-xs text-gray-500">
-                    {{ tx.createdAt?.toDate().toLocaleString() }}
+                    {{ formatDate(tx.createdAt) }}
                   </div>
                   <div class="text-xs text-gray-400" v-if="tx.note">
                     Note: {{ tx.note }}
@@ -267,6 +267,7 @@ import type { Customer } from '@/interfaces/customer.interfaces';
 import type { Transaction } from '@/interfaces/transaction.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { EditableField } from '@/types/forms.types';
+import { formatDate } from '@/utilities/formatUtils';
 import { useConfirmDialog } from '@vueuse/core';
 import {
   collection,
