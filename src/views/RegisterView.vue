@@ -12,7 +12,7 @@ import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
@@ -39,8 +39,19 @@ const {
 
 const { setLoading } = useLoading();
 
-const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
-  useRemoteConfig();
+const isDev = import.meta.env.DEV;
+const localAllowAccountCreation =
+  String(import.meta.env.VITE_ALLOW_ACCOUNT_CREATION).toLowerCase() === 'true';
+const {
+  allowAccountCreation: remoteAllowAccountCreation,
+  isLoading: isRemoteConfigLoading,
+} = useRemoteConfig();
+const allowAccountCreation = computed(() =>
+  isDev ? localAllowAccountCreation : remoteAllowAccountCreation.value
+);
+const isLoadingConfig = computed(() =>
+  isDev ? false : isRemoteConfigLoading.value
+);
 
 const toast = useToast();
 
@@ -131,19 +142,16 @@ const goToLogin = (): void => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
-      <div v-if="isRemoteConfigLoading" class="alert-info">
+      <div v-if="isLoadingConfig" class="alert-info">
         Checking account creation status...
       </div>
-      <div
-        v-if="!isRemoteConfigLoading && !allowAccountCreation"
-        class="alert-error"
-      >
+      <div v-if="!isLoadingConfig && !allowAccountCreation" class="alert-error">
         Account creation is currently disabled.
       </div>
     </template>
 
     <Form
-      v-if="!isRemoteConfigLoading && allowAccountCreation"
+      v-if="!isLoadingConfig && allowAccountCreation"
       :validation-schema="schema"
       @submit="handleRegister"
       class="space-y-4"
@@ -340,12 +348,10 @@ const goToLogin = (): void => {
             'btn-primary',
             {
               'btn-disabled':
-                isAuthLoading || isRemoteConfigLoading || !allowAccountCreation,
+                isAuthLoading || isLoadingConfig || !allowAccountCreation,
             },
           ]"
-          :disabled="
-            isAuthLoading || isRemoteConfigLoading || !allowAccountCreation
-          "
+          :disabled="isAuthLoading || isLoadingConfig || !allowAccountCreation"
         >
           {{ isAuthLoading ? 'Creating...' : 'Create Account' }}
         </button>
@@ -357,8 +363,8 @@ const goToLogin = (): void => {
         <span class="text-on-background">Already have an account? </span>
         <button
           @click="goToLogin"
-          :class="['btn-link', { 'btn-disabled': isRemoteConfigLoading }]"
-          :disabled="isRemoteConfigLoading"
+          :class="['btn-link', { 'btn-disabled': isLoadingConfig }]"
+          :disabled="isLoadingConfig"
         >
           Sign in
         </button>

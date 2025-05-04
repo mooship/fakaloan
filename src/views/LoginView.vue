@@ -10,7 +10,7 @@ import type { GenericFormValues as AppGenericFormValues } from '@/types/forms.ty
 import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { ErrorMessage, Field, Form } from 'vee-validate';
-import { ref, watch } from 'vue';
+import { computed, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
 import * as yup from 'yup';
@@ -40,8 +40,19 @@ const googleLoading = ref(false);
 
 const { setLoading } = useLoading();
 
-const { allowAccountCreation, isLoading: isRemoteConfigLoading } =
-  useRemoteConfig();
+const isDev = import.meta.env.DEV;
+const localAllowAccountCreation =
+  String(import.meta.env.VITE_ALLOW_ACCOUNT_CREATION).toLowerCase() === 'true';
+const {
+  allowAccountCreation: remoteAllowAccountCreation,
+  isLoading: isRemoteConfigLoading,
+} = useRemoteConfig();
+const allowAccountCreation = computed(() =>
+  isDev ? localAllowAccountCreation : remoteAllowAccountCreation.value
+);
+const isLoadingConfig = computed(() =>
+  isDev ? false : isRemoteConfigLoading.value
+);
 
 const toast = useToast();
 
@@ -119,19 +130,16 @@ const goToForgotPassword = (): void => {
       <div v-if="authError" class="alert-error">
         {{ authError }}
       </div>
-      <div v-if="isRemoteConfigLoading" class="alert-info">
+      <div v-if="isLoadingConfig" class="alert-info">
         Checking login status...
       </div>
-      <div
-        v-if="!isRemoteConfigLoading && !allowAccountCreation"
-        class="alert-error"
-      >
+      <div v-if="!isLoadingConfig && !allowAccountCreation" class="alert-error">
         Login is currently disabled.
       </div>
     </template>
 
     <Form
-      v-if="!isRemoteConfigLoading"
+      v-if="!isLoadingConfig"
       :validation-schema="schema"
       @submit="handleEmailLogin"
       class="space-y-4"
@@ -173,11 +181,10 @@ const goToForgotPassword = (): void => {
               :class="[
                 'btn-link',
                 {
-                  'btn-disabled':
-                    isRemoteConfigLoading || !allowAccountCreation,
+                  'btn-disabled': isLoadingConfig || !allowAccountCreation,
                 },
               ]"
-              :disabled="isRemoteConfigLoading || !allowAccountCreation"
+              :disabled="isLoadingConfig || !allowAccountCreation"
             >
               Forgot password?
             </button>
@@ -233,12 +240,10 @@ const goToForgotPassword = (): void => {
             'btn-primary',
             {
               'btn-disabled':
-                isAuthLoading || isRemoteConfigLoading || !allowAccountCreation,
+                isAuthLoading || isLoadingConfig || !allowAccountCreation,
             },
           ]"
-          :disabled="
-            isAuthLoading || isRemoteConfigLoading || !allowAccountCreation
-          "
+          :disabled="isAuthLoading || isLoadingConfig || !allowAccountCreation"
         >
           {{ isAuthLoading && !googleLoading ? 'Signing in...' : 'Sign in' }}
         </button>
@@ -246,7 +251,7 @@ const goToForgotPassword = (): void => {
     </Form>
 
     <template #actions>
-      <div v-if="!isRemoteConfigLoading">
+      <div v-if="!isLoadingConfig">
         <div class="relative my-4">
           <div class="absolute inset-0 flex items-center">
             <div class="border-secondary-variant w-full border-t"></div>
@@ -265,7 +270,7 @@ const goToForgotPassword = (): void => {
               'bg-surface text-on-surface border-primary hover:bg-primary/10 focus:ring-primary flex w-full items-center justify-center rounded-md border px-4 py-2 font-medium shadow-sm focus:outline-0 focus:ring-2',
               isAuthLoading ||
               googleLoading ||
-              isRemoteConfigLoading ||
+              isLoadingConfig ||
               !allowAccountCreation
                 ? 'btn-disabled'
                 : '',
@@ -273,7 +278,7 @@ const goToForgotPassword = (): void => {
             :disabled="
               isAuthLoading ||
               googleLoading ||
-              isRemoteConfigLoading ||
+              isLoadingConfig ||
               !allowAccountCreation
             "
           >
@@ -289,10 +294,10 @@ const goToForgotPassword = (): void => {
             :class="[
               'btn-link',
               {
-                'btn-disabled': isRemoteConfigLoading || !allowAccountCreation,
+                'btn-disabled': isLoadingConfig || !allowAccountCreation,
               },
             ]"
-            :disabled="isRemoteConfigLoading || !allowAccountCreation"
+            :disabled="isLoadingConfig || !allowAccountCreation"
           >
             Create one
           </button>

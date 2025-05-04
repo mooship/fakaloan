@@ -6,10 +6,13 @@ import {
 } from 'firebase/remote-config';
 import { onMounted, readonly, ref, type Ref } from 'vue';
 
-const DEFAULT_ALLOW_ACCOUNT_CREATION = true;
+const envAllowAccountCreation =
+  typeof import.meta.env.VITE_ALLOW_ACCOUNT_CREATION !== 'undefined'
+    ? String(import.meta.env.VITE_ALLOW_ACCOUNT_CREATION).toLowerCase() ===
+      'true'
+    : true;
 
-const allowAccountCreation = ref<boolean>(DEFAULT_ALLOW_ACCOUNT_CREATION);
-
+const allowAccountCreation = ref<boolean>(envAllowAccountCreation);
 const isLoading = ref<boolean>(true);
 
 /**
@@ -27,7 +30,7 @@ export function useRemoteConfig(): {
       const remoteConfig = getRemoteConfig(firebaseApp);
 
       remoteConfig.defaultConfig = {
-        allow_account_creation: DEFAULT_ALLOW_ACCOUNT_CREATION,
+        allow_account_creation: envAllowAccountCreation,
       };
 
       remoteConfig.settings.minimumFetchIntervalMillis = import.meta.env.DEV
@@ -50,7 +53,7 @@ export function useRemoteConfig(): {
       );
     } catch (error) {
       console.error('Error fetching or activating remote config:', error);
-      allowAccountCreation.value = DEFAULT_ALLOW_ACCOUNT_CREATION;
+      allowAccountCreation.value = envAllowAccountCreation;
     } finally {
       isLoading.value = false;
     }
