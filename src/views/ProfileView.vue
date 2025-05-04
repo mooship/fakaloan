@@ -6,9 +6,7 @@ import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
 import {
-  DISPLAY_PHONE_NUMBER_REGEX,
   EMAIL_REGEX,
-  GROUP_3_4_REGEX,
   PHONE_NUMBER_REGEX,
   SIMPLE_EMAIL_REGEX,
   WHITESPACE_REGEX,
@@ -17,6 +15,7 @@ import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { formatPhoneNumber } from '@/utilities/formatUtils';
 import { useConfirmDialog, useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { updateEmail } from 'firebase/auth';
@@ -77,21 +76,6 @@ const hasActiveSubscription = computed(() =>
     subscriptionStatus.value as SubscriptionStatus
   )
 );
-
-function formatPhoneNumber(phone: string | null): string {
-  if (!phone) {
-    return '';
-  }
-
-  const digits = phone.replace(WHITESPACE_REGEX, '');
-  const match = digits.match(DISPLAY_PHONE_NUMBER_REGEX);
-
-  if (match) {
-    return `${match[1]} ${match[2]} ${match[3]} ${match[4]}`.trim();
-  }
-
-  return digits.replace(GROUP_3_4_REGEX, '$1 ').trim();
-}
 
 const updateCellphone = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {

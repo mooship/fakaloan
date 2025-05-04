@@ -95,7 +95,7 @@ const handleSubmit = async (): Promise<void> => {
     await updateDoc(docRef, { id: docRef.id });
 
     toast.success(ToastMessages.CustomerAddSuccess);
-    router.push('/');
+    router.push({ name: 'customers' });
   } catch {
     toast.error(ToastMessages.CustomerAddFailed);
   } finally {
