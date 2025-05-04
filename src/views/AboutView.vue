@@ -5,6 +5,14 @@ import { useRouter } from 'vue-router';
 useTitle('About | Fakaloan');
 
 const router = useRouter();
+
+function handleBack() {
+  if (window.history.length > 1) {
+    router.back();
+  } else {
+    router.push('/');
+  }
+}
 </script>
 
 <template>
@@ -94,10 +102,9 @@ const router = useRouter();
         </section>
 
         <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-          <button @click="router.back()" class="btn-primary-outline !w-auto">
+          <button @click="handleBack" class="btn-primary-outline !w-auto">
             Back
           </button>
-          <!-- TODO: Fallback to home if history is empty -->
         </div>
 
         <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
