@@ -12,6 +12,11 @@ const allowAccountCreation = ref<boolean>(DEFAULT_ALLOW_ACCOUNT_CREATION);
 
 const isLoading = ref<boolean>(true);
 
+/**
+ * Provides access to remote config values (e.g., allowAccountCreation) and loading state.
+ * Fetches and activates remote config on mount.
+ * @returns An object with allowAccountCreation and isLoading refs.
+ */
 export function useRemoteConfig(): {
   allowAccountCreation: Readonly<Ref<boolean>>;
   isLoading: Readonly<Ref<boolean>>;

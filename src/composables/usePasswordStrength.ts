@@ -1,5 +1,10 @@
 import { computed, type Ref } from 'vue';
 
+/**
+ * Computes password strength and provides a label and color for UI feedback.
+ * @param password - A ref to the password string.
+ * @returns An object with score, label, and color for the password strength.
+ */
 export function usePasswordStrength(password: Ref<string>) {
   const score = computed(() => {
     let s = 0;

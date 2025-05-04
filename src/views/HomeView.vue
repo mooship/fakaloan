@@ -45,7 +45,6 @@ const handleLogout = async (): Promise<void> => {
       <div v-else-if="isLoading && !currentUser">
         <p class="text-on-surface/60">Loading user information...</p>
       </div>
-      <!-- Logout Button -->
       <div>
         <button
           @click="handleLogout"

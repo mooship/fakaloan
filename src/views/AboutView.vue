@@ -121,7 +121,6 @@ function handleBack() {
           reserved.
         </p>
         <p class="mt-1">Proudly South African 🇿🇦</p>
-        <!-- TODO: Add links to privacy policy, terms, or FAQ if available -->
       </footer>
     </div>
   </AppLayout>

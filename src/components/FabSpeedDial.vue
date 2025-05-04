@@ -29,7 +29,6 @@ const handleAddCustomer = () => {
       leave-to-class="opacity-0 scale-95"
     >
       <div v-if="showSpeedDial" class="flex flex-col items-center space-y-2">
-        <!-- Add Transaction Button -->
         <button
           @click="handleAddTransaction"
           class="bg-tertiary text-on-tertiary hover:bg-tertiary/80 focus:ring-tertiary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -38,7 +37,6 @@ const handleAddCustomer = () => {
           <span class="text-sm font-medium">Transaction</span>
           <i class="i-heroicons-currency-dollar h-5 w-5"></i>
         </button>
-        <!-- Add Customer Button -->
         <button
           @click="handleAddCustomer"
           class="bg-primary text-on-primary hover:bg-primary/80 focus:ring-primary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
@@ -49,7 +47,6 @@ const handleAddCustomer = () => {
         </button>
       </div>
     </transition>
-    <!-- Main Floating Action Button -->
     <button
       @click="toggleSpeedDial"
       class="bg-primary text-on-primary hover:bg-primary-variant focus:ring-primary-variant rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"

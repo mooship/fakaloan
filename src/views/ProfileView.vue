@@ -527,7 +527,6 @@ watch(
               >
               <span class="text-on-surface capitalize">
                 {{ displayLanguage }}
-                <!-- TODO: Add edit button for language preference -->
               </span>
             </div>
             <div class="flex items-center justify-between">

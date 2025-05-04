@@ -125,7 +125,6 @@ const handleSubmit = async (): Promise<void> => {
             {{ errors.name }}
           </div>
         </div>
-        <!-- TODO: Add duplicate customer check (by phone or name) -->
         <div>
           <label class="form-label" for="cellphone">Cellphone Number</label>
           <input
@@ -191,7 +190,6 @@ const handleSubmit = async (): Promise<void> => {
             {{ submitting ? 'Adding...' : 'Add Customer' }}
           </button>
         </div>
-        <!-- TODO: Allow attaching notes or tags to customers -->
       </form>
 
       <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
