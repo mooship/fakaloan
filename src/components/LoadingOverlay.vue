@@ -38,6 +38,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * LoadingOverlay.vue
+ * Displays a loading overlay with a spinner and optional text.
+ */
 import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
 import { computed } from 'vue';

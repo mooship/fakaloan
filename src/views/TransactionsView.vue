@@ -82,6 +82,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * TransactionsView.vue
+ * Lists all transactions for the current user, with filtering by customer.
+ */
 import BackButton from '@/components/BackButton.vue';
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
@@ -131,6 +135,9 @@ const filteredTransactions = computed(() => {
   );
 });
 
+/**
+ * Fetches all customers for the current user from Firestore.
+ */
 async function fetchCustomers() {
   if (!currentUser.value) {
     customers.value = [];
@@ -162,6 +169,9 @@ async function fetchCustomers() {
   });
 }
 
+/**
+ * Fetches all transactions for the current user from Firestore.
+ */
 async function fetchTransactions() {
   if (!currentUser.value) {
     transactions.value = [];

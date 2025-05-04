@@ -1,3 +1,6 @@
+/**
+ * Utility functions for formatting phone numbers and dates.
+ */
 import { normalizePhoneNumber } from '@/constants/regex.constants';
 
 export function formatPhoneNumber(phone: string | null): string {

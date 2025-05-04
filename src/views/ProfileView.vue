@@ -1,3 +1,5 @@
+/** * ProfileView.vue * Allows users to view and update their profile, including
+name, email, password, phone, language, and theme. */
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
@@ -78,6 +80,9 @@ const hasActiveSubscription = computed(() =>
   )
 );
 
+/**
+ * Update the user's cellphone number in Firestore after validation.
+ */
 const updateCellphone = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
@@ -109,6 +114,9 @@ const updateCellphone = async (): Promise<void> => {
   }
 };
 
+/**
+ * Update the user's email address in Firebase Auth and Firestore.
+ */
 const updateUserEmail = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
@@ -133,6 +141,9 @@ const updateUserEmail = async (): Promise<void> => {
   }
 };
 
+/**
+ * Update the user's password after validation.
+ */
 const handlePasswordUpdate = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
@@ -255,6 +266,9 @@ const isEditingName = ref(false);
 const firstNameInput = ref(userProfile.value?.firstName || '');
 const lastNameInput = ref(userProfile.value?.lastName || '');
 
+/**
+ * Update the user's name in Firestore.
+ */
 const updateName = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
@@ -292,6 +306,9 @@ const languageInput = ref(
   userProfile.value?.preferences?.preferredLanguage || LanguageCode.English
 );
 
+/**
+ * Update the user's preferred language in Firestore.
+ */
 const updateLanguage = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;

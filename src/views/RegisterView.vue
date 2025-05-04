@@ -1,4 +1,8 @@
 <script setup lang="ts">
+/**
+ * RegisterView.vue
+ * Handles user registration, including validation, password strength, and email uniqueness check.
+ */
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { usePasswordStrength } from '@/composables/usePasswordStrength';
@@ -100,6 +104,9 @@ watch(email, (val) => {
   checkEmailUnique(val);
 });
 
+/**
+ * Handles registration form submission, normalizes cellphone, and shows toast on success/failure.
+ */
 const handleRegister = async (values: GenericFormValues): Promise<void> => {
   setLoading(true);
   try {
@@ -121,6 +128,9 @@ const handleRegister = async (values: GenericFormValues): Promise<void> => {
   }
 };
 
+/**
+ * Navigates to the login page.
+ */
 const goToLogin = (): void => {
   router.push({ name: 'login' });
 };

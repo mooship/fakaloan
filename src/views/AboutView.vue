@@ -1,3 +1,5 @@
+/** * AboutView.vue * Displays information about the Fakaloan platform, its
+purpose, and support details. */
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';

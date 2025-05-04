@@ -133,6 +133,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * AppLayout.vue
+ * Main application layout with navigation bar and responsive menu.
+ */
 import { useAuth } from '@/composables/useAuth';
 import { ref } from 'vue';
 const { currentUser } = useAuth();

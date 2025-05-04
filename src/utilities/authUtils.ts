@@ -1,3 +1,7 @@
+/**
+ * Utility functions for authentication and form validation.
+ * Includes online check and required field validation with toast feedback.
+ */
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { useToast } from 'vue-toastification';
 

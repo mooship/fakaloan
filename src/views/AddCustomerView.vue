@@ -1,3 +1,5 @@
+/** * AddCustomerView.vue * Handles adding a new customer, including validation
+and Firestore integration. */
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -46,6 +48,10 @@ const schema = yup.object({
     .max(90, 'Maximum is 90 days'),
 });
 
+/**
+ * Validates the add customer form using Yup schema.
+ * @returns {Promise<boolean>} True if valid, false otherwise.
+ */
 const validate = async (): Promise<boolean> => {
   try {
     await schema.validate(form.value, { abortEarly: false });
@@ -63,6 +69,9 @@ const validate = async (): Promise<boolean> => {
   }
 };
 
+/**
+ * Handles form submission to add a new customer to Firestore.
+ */
 const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);

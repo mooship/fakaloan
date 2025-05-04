@@ -56,6 +56,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * CustomersView.vue
+ * Lists all customers for the current user and allows navigation to add/view customer details.
+ */
 import BackButton from '@/components/BackButton.vue';
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
@@ -88,6 +92,9 @@ function goToAddCustomer() {
   router.push('/add-customer');
 }
 
+/**
+ * Fetches all customers for the current user from Firestore.
+ */
 async function fetchCustomers() {
   if (!currentUser.value) {
     customers.value = [];

@@ -1,3 +1,5 @@
+/** * AuthLayout.vue * Layout for authentication-related pages, providing a
+consistent card UI. */
 <script setup lang="ts">
 defineProps<{ title: string }>();
 </script>

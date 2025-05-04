@@ -1,3 +1,5 @@
+/** * HomeView.vue * Dashboard and quick access to Fakaloan features for
+authenticated users. * Handles logout and displays user info. */
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -27,6 +29,9 @@ const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 const { setLoading } = useLoading();
 
+/**
+ * Handles user logout and redirects to login page.
+ */
 const handleLogout = async (): Promise<void> => {
   setLoading(true);
   try {

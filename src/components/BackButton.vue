@@ -1,3 +1,5 @@
+/** * BackButton.vue * A reusable back button that navigates to the previous
+page or home if no history. */
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';

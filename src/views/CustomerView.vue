@@ -257,6 +257,10 @@
 </template>
 
 <script setup lang="ts">
+/**
+ * CustomerView.vue
+ * Displays and allows editing of a single customer's details and their transactions.
+ */
 import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import type { Customer } from '@/interfaces/customer.interfaces';
@@ -303,6 +307,9 @@ const addressInput = ref('');
 
 const { currentUser } = useAuth();
 
+/**
+ * Fetches customer details from Firestore.
+ */
 async function fetchCustomer() {
   loading.value = true;
   try {
@@ -321,6 +328,9 @@ async function fetchCustomer() {
   }
 }
 
+/**
+ * Fetches transactions for the customer from Firestore.
+ */
 async function fetchTransactions() {
   transactionsLoading.value = true;
   try {
@@ -345,6 +355,9 @@ async function fetchTransactions() {
   }
 }
 
+/**
+ * Start editing a specific field for the customer.
+ */
 function startEdit(field: EditableField) {
   editField.value = field;
   if (field === 'name') {
@@ -359,6 +372,9 @@ function startEdit(field: EditableField) {
   }
 }
 
+/**
+ * Cancel editing a specific field and revert changes.
+ */
 function cancelEdit(field: EditableField) {
   editField.value = null;
   if (field === 'name') {
@@ -375,6 +391,9 @@ function cancelEdit(field: EditableField) {
   }
 }
 
+/**
+ * Save changes to a specific field for the customer.
+ */
 async function saveField(field: EditableField) {
   if (!customer.value) {
     return;
@@ -394,6 +413,9 @@ async function saveField(field: EditableField) {
   await fetchCustomer();
 }
 
+/**
+ * Soft-delete the customer in Firestore.
+ */
 async function deleteCustomer() {
   if (!customer.value) {
     return;
@@ -410,10 +432,16 @@ async function deleteCustomer() {
   }
 }
 
+/**
+ * Show the delete confirmation dialog.
+ */
 function showDeleteConfirm() {
   reveal();
 }
 
+/**
+ * Handle confirmation of customer deletion.
+ */
 async function confirmDeleteCustomer(choice: boolean) {
   if (!choice) return;
   deletePending.value = true;

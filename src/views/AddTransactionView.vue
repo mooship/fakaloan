@@ -1,3 +1,5 @@
+/** * AddTransactionView.vue * Handles adding a new transaction for a customer,
+including validation and Firestore integration. */
 <script setup lang="ts">
 import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -80,6 +82,9 @@ onMounted(() => {
   });
 });
 
+/**
+ * Resets the add transaction form to its initial state.
+ */
 const resetForm = () => {
   form.value = {
     customerId: '',
@@ -89,6 +94,9 @@ const resetForm = () => {
   };
 };
 
+/**
+ * Handles form submission to add a new transaction to Firestore.
+ */
 const handleSubmit = async () => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);

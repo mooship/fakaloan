@@ -1,3 +1,7 @@
+/**
+ * Vue Router configuration for Fakaloan app.
+ * Handles route definitions and navigation guards for authentication.
+ */
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 

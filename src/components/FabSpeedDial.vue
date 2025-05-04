@@ -1,3 +1,5 @@
+/** * FabSpeedDial.vue * Floating action button for quick access to add
+transaction or customer. */
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';

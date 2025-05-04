@@ -1,3 +1,6 @@
+/**
+ * Utility for navigation: go back if possible, otherwise go home.
+ */
 import type { Router } from 'vue-router';
 
 /**
