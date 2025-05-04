@@ -9,7 +9,7 @@ import type { Timestamp } from 'firebase/firestore';
  * User profile as stored in Firestore.
  */
 export interface UserProfile {
-  uid?: string | null;
+  uid: string;
   firstName: string;
   lastName: string;
   email: string | null;
