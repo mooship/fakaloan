@@ -78,20 +78,6 @@ const hasActiveSubscription = computed(() =>
   )
 );
 
-const displayLanguage = computed(() => {
-  const lang = userProfile.value?.preferences.preferredLanguage;
-  switch (lang) {
-    case LanguageCode.English:
-      return 'English';
-    case LanguageCode.Zulu:
-      return 'Zulu';
-    case LanguageCode.Xhosa:
-      return 'Xhosa';
-    default:
-      return lang || 'Not set';
-  }
-});
-
 function formatPhoneNumber(phone: string | null): string {
   if (!phone) {
     return '';
@@ -677,63 +663,22 @@ const updateLanguage = async (): Promise<void> => {
                 'Unknown'
               }}</span>
             </div>
-            <!-- Language Preference Display/Edit -->
-            <div>
-              <div
-                v-if="!isEditingLanguage"
-                class="flex items-center justify-between"
+            <!-- Language Preference Always-Visible Dropdown -->
+            <div class="flex items-center justify-between">
+              <label class="form-label mb-0" for="language-select"
+                >Language Preference</label
               >
-                <div>
-                  <p class="text-on-surface/80 text-sm font-medium">
-                    Language Preference:
-                  </p>
-                  <span class="text-on-surface capitalize">{{
-                    displayLanguage
-                  }}</span>
-                </div>
-                <button
-                  @click="
-                    isEditingLanguage = true;
-                    languageInput =
-                      userProfile.preferences?.preferredLanguage ||
-                      LanguageCode.English;
-                  "
-                  class="btn-link text-sm"
-                >
-                  <span class="i-heroicons-pencil mr-1 align-middle"></span>
-                  Edit
-                </button>
-              </div>
-              <div v-else class="space-y-3">
-                <p class="text-on-surface/80 mb-1 text-sm font-medium">
-                  Language Preference
-                </p>
-                <select
-                  v-model="languageInput"
-                  class="form-input-base form-input-valid bg-surface text-on-surface"
-                >
-                  <option :value="LanguageCodeEnum.English">English</option>
-                  <option :value="LanguageCodeEnum.Zulu">Zulu</option>
-                  <option :value="LanguageCodeEnum.Xhosa">Xhosa</option>
-                </select>
-                <div class="mt-2 flex space-x-2">
-                  <button
-                    @click="updateLanguage"
-                    :disabled="isUpdating"
-                    class="btn-primary !w-auto text-sm"
-                  >
-                    <span v-if="isUpdating">Updating...</span>
-                    <span v-else>Update Language</span>
-                  </button>
-                  <button
-                    @click="isEditingLanguage = false"
-                    :disabled="isUpdating"
-                    class="btn-secondary !w-auto text-sm"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </div>
+              <select
+                v-model="languageInput"
+                @change="updateLanguage"
+                id="language-select"
+                class="material-select w-26 max-w-xs"
+                :disabled="isUpdating"
+              >
+                <option :value="LanguageCodeEnum.English">English</option>
+                <option :value="LanguageCodeEnum.Zulu">Zulu</option>
+                <option :value="LanguageCodeEnum.Xhosa">Xhosa</option>
+              </select>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-on-surface/80 font-medium">Theme:</span>
