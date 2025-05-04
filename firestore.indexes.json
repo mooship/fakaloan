@@ -1,4 +1,18 @@
 {
-  "indexes": [],
+  "indexes": [
+    {
+      "collectionGroup": "customers",
+      "queryScope": "COLLECTION",
+      "fields": [
+        { "fieldPath": "userId", "order": "ASCENDING" },
+        { "fieldPath": "deletedAt", "order": "ASCENDING" }
+      ]
+    },
+    {
+      "collectionGroup": "transactions",
+      "queryScope": "COLLECTION",
+      "fields": [{ "fieldPath": "customerId", "order": "ASCENDING" }]
+    }
+  ],
   "fieldOverrides": []
 }
