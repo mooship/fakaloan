@@ -7,12 +7,7 @@ import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useHead } from '@vueuse/head';
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  updateDoc,
-} from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -79,7 +74,7 @@ const handleSubmit = async (): Promise<void> => {
   submitting.value = true;
 
   try {
-    const docRef = await addDoc(collection(db, 'customers'), {
+    await addDoc(collection(db, 'customers'), {
       name: form.value.name,
       cellphoneNumber: form.value.cellphoneNumber,
       address: form.value.address || null,
@@ -90,9 +85,8 @@ const handleSubmit = async (): Promise<void> => {
       creditScore: null,
       defaultCreditTermDays: form.value.defaultCreditTermDays,
       lastRepaymentAt: null,
+      deletedAt: null,
     });
-
-    await updateDoc(docRef, { id: docRef.id });
 
     toast.success(ToastMessages.CustomerAddSuccess);
     router.push({ name: 'customers' });

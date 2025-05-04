@@ -59,7 +59,8 @@ onMounted(() => {
 
   const q = query(
     collection(db, 'customers'),
-    where('userId', '==', currentUser.value.uid)
+    where('userId', '==', currentUser.value.uid),
+    where('deletedAt', '==', null)
   );
   onSnapshot(q, (snapshot) => {
     customers.value = snapshot.docs.map((doc) => ({
