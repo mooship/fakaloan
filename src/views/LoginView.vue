@@ -49,7 +49,7 @@ const handleEmailLogin = async (
   values: AppGenericFormValues
 ): Promise<void> => {
   setLoading(true);
-  googleLoading.value = false; // Ensure Google loading is false
+  googleLoading.value = false;
   try {
     await loginWithEmail(values as unknown as LoginFormValues);
     router.push({ name: 'home' });
