@@ -1,3 +1,5 @@
+/** * HomeView.vue * Dashboard and quick access to Fakaloan features for
+authenticated users. * Handles logout and displays user info. */
 <script setup lang="ts">
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import { useAuth } from '@/composables/useAuth';
@@ -27,6 +29,9 @@ const { currentUser, logout, isLoading } = useAuth();
 const router = useRouter();
 const { setLoading } = useLoading();
 
+/**
+ * Handles user logout and redirects to login page.
+ */
 const handleLogout = async (): Promise<void> => {
   setLoading(true);
   try {
@@ -40,7 +45,7 @@ const handleLogout = async (): Promise<void> => {
 
 <template>
   <AppLayout>
-    <div class="bg-surface space-y-4 rounded p-8 text-center shadow-md">
+    <div class="card-main text-center">
       <h1 class="text-primary text-2xl font-bold">Welcome to Fakaloan!</h1>
       <div v-if="currentUser">
         <p class="text-on-surface mb-2">
@@ -50,10 +55,9 @@ const handleLogout = async (): Promise<void> => {
         </p>
         <p class="text-on-surface">You are logged in as:</p>
         <p class="text-primary font-medium">{{ currentUser.email }}</p>
-        <!-- TODO: Add quick links to main features (e.g., Add Customer, View Transactions) -->
       </div>
       <div v-else-if="isLoading && !currentUser">
-        <p class="text-on-surface/60">Loading user information...</p>
+        <p class="text-on-surface-60">Loading user information...</p>
       </div>
       <div>
         <button

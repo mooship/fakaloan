@@ -1,3 +1,5 @@
+/** * FabSpeedDial.vue * Floating action button for quick access to add
+transaction or customer. */
 <script setup lang="ts">
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
@@ -30,20 +32,20 @@ const handleAddCustomer = () => {
     >
       <div v-if="showSpeedDial" class="flex flex-col items-center space-y-2">
         <button
-          @click="handleAddTransaction"
-          class="bg-tertiary text-on-tertiary hover:bg-tertiary/80 focus:ring-tertiary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
-          aria-label="Add Transaction"
-        >
-          <span class="text-sm font-medium">Transaction</span>
-          <i class="i-heroicons-currency-dollar h-5 w-5"></i>
-        </button>
-        <button
           @click="handleAddCustomer"
           class="bg-primary text-on-primary hover:bg-primary/80 focus:ring-primary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
           aria-label="Add Customer"
         >
           <span class="hidden text-sm font-medium sm:inline">Customer</span>
           <i class="i-heroicons-user-plus h-5 w-5"></i>
+        </button>
+        <button
+          @click="handleAddTransaction"
+          class="bg-lime hover:bg-lime/80 focus:ring-lime flex items-center space-x-2 rounded-full p-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          aria-label="Add Transaction"
+        >
+          <span class="text-sm font-medium">Transaction</span>
+          <i class="i-heroicons-currency-dollar h-5 w-5"></i>
         </button>
       </div>
     </transition>

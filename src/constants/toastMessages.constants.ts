@@ -1,3 +1,6 @@
+/**
+ * Toast message strings for user feedback.
+ */
 export enum ToastMessages {
   LoginSuccess = 'Login successful!',
   LoginFailed = 'Login failed. Please try again.',

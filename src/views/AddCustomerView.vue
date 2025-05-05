@@ -1,18 +1,18 @@
+/** * AddCustomerView.vue * Handles adding a new customer, including validation
+and Firestore integration. */
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
-import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import {
+  normalizePhoneNumber,
+  PHONE_NUMBER_REGEX,
+} from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useHead } from '@vueuse/head';
-import {
-  addDoc,
-  collection,
-  serverTimestamp,
-  updateDoc,
-} from 'firebase/firestore';
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import { useToast } from 'vue-toastification';
@@ -39,7 +39,7 @@ const schema = yup.object({
     .string()
     .trim()
     .required('Cellphone number is required')
-    .matches(PHONE_NUMBER_REGEX, 'Enter a valid phone number'),
+    .matches(PHONE_NUMBER_REGEX, 'Enter a valid South African phone number'),
   address: yup.string().trim().nullable(),
   defaultCreditTermDays: yup
     .number()
@@ -48,6 +48,10 @@ const schema = yup.object({
     .max(90, 'Maximum is 90 days'),
 });
 
+/**
+ * Validates the add customer form using Yup schema.
+ * @returns {Promise<boolean>} True if valid, false otherwise.
+ */
 const validate = async (): Promise<boolean> => {
   try {
     await schema.validate(form.value, { abortEarly: false });
@@ -65,6 +69,9 @@ const validate = async (): Promise<boolean> => {
   }
 };
 
+/**
+ * Handles form submission to add a new customer to Firestore.
+ */
 const handleSubmit = async (): Promise<void> => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);
@@ -75,11 +82,14 @@ const handleSubmit = async (): Promise<void> => {
     return;
   }
 
+  // Normalize cellphone before saving
+  form.value.cellphoneNumber = normalizePhoneNumber(form.value.cellphoneNumber);
+
   setLoading(true);
   submitting.value = true;
 
   try {
-    const docRef = await addDoc(collection(db, 'customers'), {
+    await addDoc(collection(db, 'customers'), {
       name: form.value.name,
       cellphoneNumber: form.value.cellphoneNumber,
       address: form.value.address || null,
@@ -90,12 +100,11 @@ const handleSubmit = async (): Promise<void> => {
       creditScore: null,
       defaultCreditTermDays: form.value.defaultCreditTermDays,
       lastRepaymentAt: null,
+      isDeleted: false,
     });
 
-    await updateDoc(docRef, { id: docRef.id });
-
     toast.success(ToastMessages.CustomerAddSuccess);
-    router.push('/');
+    router.push({ name: 'customers' });
   } catch {
     toast.error(ToastMessages.CustomerAddFailed);
   } finally {
@@ -125,7 +134,7 @@ useHead({
 
 <template>
   <AppLayout>
-    <div class="bg-surface mx-auto mt-10 w-full max-w-md rounded p-8 shadow-md">
+    <div class="card-lg">
       <h1 class="text-primary mb-6 text-center text-2xl font-bold">
         Add Customer
       </h1>
@@ -153,7 +162,7 @@ useHead({
             :class="
               errors.cellphoneNumber ? 'form-input-invalid' : 'form-input-valid'
             "
-            placeholder="+27 12 3456 789"
+            placeholder="083 214 4933"
             autocomplete="off"
           />
           <div v-if="errors.cellphoneNumber" class="form-error-text">
@@ -203,7 +212,7 @@ useHead({
         <div>
           <button
             type="submit"
-            class="btn-primary"
+            class="btn-primary mx-auto block w-auto"
             :disabled="submitting || isLoading"
           >
             {{ submitting ? 'Adding...' : 'Add Customer' }}
@@ -211,13 +220,8 @@ useHead({
         </div>
       </form>
 
-      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button
-          @click="goBackOrHome(router)"
-          class="btn-primary-outline !w-auto"
-        >
-          Back
-        </button>
+      <div class="section-divider mt-8 flex justify-center">
+        <BackButton />
       </div>
     </div>
   </AppLayout>

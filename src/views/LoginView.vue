@@ -1,3 +1,5 @@
+/** * LoginView.vue * Handles user login via email/password or Google, with
+validation and error handling. */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -63,6 +65,10 @@ watch(email, (val) => {
   checkEmailValid(val);
 });
 
+/**
+ * Handles login with email and password.
+ * @param values - The form values for login.
+ */
 const handleEmailLogin = async (
   values: AppGenericFormValues
 ): Promise<void> => {
@@ -76,6 +82,9 @@ const handleEmailLogin = async (
   }
 };
 
+/**
+ * Handles login with Google provider.
+ */
 const handleGoogleLogin = async (): Promise<void> => {
   setLoading(true);
   googleLoading.value = true;
@@ -83,7 +92,6 @@ const handleGoogleLogin = async (): Promise<void> => {
     const success = await loginWithGoogle();
     if (success) {
       router.push({ name: 'home' });
-      // Removed duplicate toast.success
     }
   } finally {
     googleLoading.value = false;

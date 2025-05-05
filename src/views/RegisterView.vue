@@ -1,8 +1,16 @@
 <script setup lang="ts">
+/**
+ * RegisterView.vue
+ * Handles user registration, including validation, password strength, and email uniqueness check.
+ */
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { usePasswordStrength } from '@/composables/usePasswordStrength';
-import { EMAIL_REGEX, PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
+import {
+  EMAIL_REGEX,
+  PHONE_NUMBER_REGEX,
+  normalizePhoneNumber,
+} from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
@@ -60,7 +68,7 @@ const schema = yup.object({
   cellphone: yup
     .string()
     .trim()
-    .matches(PHONE_NUMBER_REGEX, 'Enter a valid phone number')
+    .matches(PHONE_NUMBER_REGEX, 'Enter a valid South African phone number')
     .notRequired(),
 });
 
@@ -96,9 +104,16 @@ watch(email, (val) => {
   checkEmailUnique(val);
 });
 
+/**
+ * Handles registration form submission, normalizes cellphone, and shows toast on success/failure.
+ */
 const handleRegister = async (values: GenericFormValues): Promise<void> => {
   setLoading(true);
   try {
+    // Normalize cellphone before registration
+    if (values.cellphone) {
+      values.cellphone = normalizePhoneNumber(values.cellphone as string);
+    }
     const success = await registerWithEmail(
       values as unknown as RegisterFormValues
     );
@@ -113,6 +128,9 @@ const handleRegister = async (values: GenericFormValues): Promise<void> => {
   }
 };
 
+/**
+ * Navigates to the login page.
+ */
 const goToLogin = (): void => {
   router.push({ name: 'login' });
 };

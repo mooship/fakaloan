@@ -1,0 +1,238 @@
+[debug] [2025-05-04T15:19:05.133Z] ----------------------------------------------------------------------
+[debug] [2025-05-04T15:19:05.134Z] Command:       /Users/timothybrits/.nvm/versions/node/v22.14.0/bin/node /Users/timothybrits/.nvm/versions/node/v22.14.0/bin/firebase deploy
+[debug] [2025-05-04T15:19:05.134Z] CLI Version:   14.2.1
+[debug] [2025-05-04T15:19:05.134Z] Platform:      darwin
+[debug] [2025-05-04T15:19:05.134Z] Node Version:  v22.14.0
+[debug] [2025-05-04T15:19:05.134Z] Time:          Sun May 04 2025 17:19:05 GMT+0200 (South Africa Standard Time)
+[debug] [2025-05-04T15:19:05.134Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-05-04T15:19:05.223Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-04T15:19:05.223Z] > authorizing via signed-in user (timmohb@gmail.com)
+[debug] [2025-05-04T15:19:05.223Z] [iam] checking project fakaloan-cloud for permissions ["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2025-05-04T15:19:05.223Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:05.223Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:05.224Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions [none]
+[debug] [2025-05-04T15:19:05.224Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:05.224Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-04T15:19:07.249Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions 200
+[debug] [2025-05-04T15:19:07.249Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions {"permissions":["cloudfunctions.functions.create","cloudfunctions.functions.delete","cloudfunctions.functions.get","cloudfunctions.functions.list","cloudfunctions.functions.update","cloudfunctions.operations.get","datastore.indexes.create","datastore.indexes.delete","datastore.indexes.list","datastore.indexes.update","firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2025-05-04T15:19:07.249Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:07.249Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:07.250Z] >>> [apiv2][query] POST https://iam.googleapis.com/v1/projects/fakaloan-cloud/serviceAccounts/fakaloan-cloud@appspot.gserviceaccount.com:testIamPermissions [none]
+[debug] [2025-05-04T15:19:07.250Z] >>> [apiv2][body] POST https://iam.googleapis.com/v1/projects/fakaloan-cloud/serviceAccounts/fakaloan-cloud@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-04T15:19:09.185Z] <<< [apiv2][status] POST https://iam.googleapis.com/v1/projects/fakaloan-cloud/serviceAccounts/fakaloan-cloud@appspot.gserviceaccount.com:testIamPermissions 200
+[debug] [2025-05-04T15:19:09.185Z] <<< [apiv2][body] POST https://iam.googleapis.com/v1/projects/fakaloan-cloud/serviceAccounts/fakaloan-cloud@appspot.gserviceaccount.com:testIamPermissions {"permissions":["iam.serviceAccounts.actAs"]}
+[debug] [2025-05-04T15:19:09.187Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:09.187Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:09.187Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud [none]
+[debug] [2025-05-04T15:19:10.100Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud 200
+[debug] [2025-05-04T15:19:10.100Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud {"projectId":"fakaloan-cloud","projectNumber":"1093681062574","displayName":"fakaloan-cloud","name":"projects/fakaloan-cloud","resources":{"hostingSite":"fakaloan-cloud"},"state":"ACTIVE","etag":"1_a56e42c9-236f-4efe-b5f5-a4b1bfeffc6f"}
+[info] 
+[info] === Deploying to 'fakaloan-cloud'...
+[info] 
+[info] i  deploying firestore, functions, hosting 
+[info] Running command: npm --prefix "$RESOURCE_DIR" run build
+[info] ✔  functions: Finished running predeploy script. 
+[info] i  firestore: reading indexes from firestore.indexes.json... 
+[info] i  cloud.firestore: checking firestore.rules for compilation errors... 
+[debug] [2025-05-04T15:19:12.805Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:12.805Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:12.805Z] >>> [apiv2][query] POST https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud:test [none]
+[debug] [2025-05-04T15:19:12.805Z] >>> [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud:test [omitted]
+[debug] [2025-05-04T15:19:14.203Z] <<< [apiv2][status] POST https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud:test 200
+[debug] [2025-05-04T15:19:14.203Z] <<< [apiv2][body] POST https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud:test {}
+[info] ✔  cloud.firestore: rules file firestore.rules compiled successfully 
+[debug] [2025-05-04T15:19:14.207Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:14.208Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:14.208Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud [none]
+[debug] [2025-05-04T15:19:15.844Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud 200
+[debug] [2025-05-04T15:19:15.844Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud {"projectNumber":"1093681062574","projectId":"fakaloan-cloud","lifecycleState":"ACTIVE","name":"fakaloan-cloud","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-04-27T09:45:52.480995Z"}
+[info] i  functions: preparing codebase default for deployment 
+[info] i  functions: ensuring required API cloudfunctions.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:15.846Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.846Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.846Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.846Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  functions: ensuring required API cloudbuild.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:15.847Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.847Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  artifactregistry: ensuring required API artifactregistry.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:15.847Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.847Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:15.848Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudfunctions.googleapis.com [none]
+[debug] [2025-05-04T15:19:15.848Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudfunctions.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:15.850Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/runtimeconfig.googleapis.com [none]
+[debug] [2025-05-04T15:19:15.851Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/runtimeconfig.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:15.853Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudbuild.googleapis.com [none]
+[debug] [2025-05-04T15:19:15.853Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudbuild.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:15.855Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/artifactregistry.googleapis.com [none]
+[debug] [2025-05-04T15:19:15.855Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/artifactregistry.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:17.966Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudfunctions.googleapis.com 200
+[debug] [2025-05-04T15:19:17.967Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudfunctions.googleapis.com [omitted]
+[info] ✔  functions: required API cloudfunctions.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:17.975Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudbuild.googleapis.com 200
+[debug] [2025-05-04T15:19:17.975Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/cloudbuild.googleapis.com [omitted]
+[info] ✔  functions: required API cloudbuild.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:17.977Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/artifactregistry.googleapis.com 200
+[debug] [2025-05-04T15:19:17.978Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/artifactregistry.googleapis.com [omitted]
+[info] ✔  artifactregistry: required API artifactregistry.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:18.069Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/runtimeconfig.googleapis.com 200
+[debug] [2025-05-04T15:19:18.069Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/runtimeconfig.googleapis.com [omitted]
+[debug] [2025-05-04T15:19:18.071Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:18.071Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:18.071Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud/adminSdkConfig [none]
+[debug] [2025-05-04T15:19:18.713Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud/adminSdkConfig 200
+[debug] [2025-05-04T15:19:18.713Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/fakaloan-cloud/adminSdkConfig {"projectId":"fakaloan-cloud","storageBucket":"fakaloan-cloud.firebasestorage.app"}
+[debug] [2025-05-04T15:19:18.714Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:18.714Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:18.715Z] >>> [apiv2][query] GET https://runtimeconfig.googleapis.com/v1beta1/projects/fakaloan-cloud/configs [none]
+[debug] [2025-05-04T15:19:19.633Z] <<< [apiv2][status] GET https://runtimeconfig.googleapis.com/v1beta1/projects/fakaloan-cloud/configs 200
+[debug] [2025-05-04T15:19:19.633Z] <<< [apiv2][body] GET https://runtimeconfig.googleapis.com/v1beta1/projects/fakaloan-cloud/configs {}
+[debug] [2025-05-04T15:19:19.636Z] Validating nodejs source
+[debug] [2025-05-04T15:19:20.326Z] > [functions] package.json contents: {
+  "name": "functions",
+  "private": true,
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "tsc",
+    "build:watch": "tsc --watch",
+    "deploy": "firebase deploy --only functions",
+    "logs": "firebase functions:log",
+    "serve": "npm run build && firebase emulators:start --only functions",
+    "shell": "npm run build && firebase functions:shell",
+    "start": "npm run shell"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "firebase-functions": "^6.0.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/parser": "^5.12.0",
+    "firebase-functions-test": "^3.1.0",
+    "typescript": "^4.9.0"
+  },
+  "engines": {
+    "node": "22"
+  }
+}
+[debug] [2025-05-04T15:19:20.326Z] Building nodejs source
+[info] i  functions: Loading and analyzing source code for codebase default to determine what to deploy 
+[debug] [2025-05-04T15:19:20.327Z] Could not find functions.yaml. Must use http discovery
+[debug] [2025-05-04T15:19:20.334Z] Found firebase-functions binary at '/Users/timothybrits/Source/fakaloan/functions/node_modules/.bin/firebase-functions'
+[info] Serving at port 8831
+
+[debug] [2025-05-04T15:19:20.557Z] Got response from /__/functions.yaml {"endpoints":{"placeholder":{"availableMemoryMb":null,"timeoutSeconds":null,"minInstances":null,"maxInstances":null,"ingressSettings":null,"concurrency":null,"serviceAccountEmail":null,"vpc":null,"platform":"gcfv2","labels":{},"httpsTrigger":{},"entryPoint":"placeholder"}},"specVersion":"v1alpha1","requiredAPIs":[],"extensions":{}}
+[info] i  extensions: ensuring required API firebaseextensions.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:24.577Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:24.577Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:24.577Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/firebaseextensions.googleapis.com [none]
+[debug] [2025-05-04T15:19:24.578Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/firebaseextensions.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:26.393Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/firebaseextensions.googleapis.com 200
+[debug] [2025-05-04T15:19:26.393Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/firebaseextensions.googleapis.com [omitted]
+[info] ✔  extensions: required API firebaseextensions.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:26.394Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-05-04T15:19:26.394Z] > authorizing via signed-in user (timmohb@gmail.com)
+[debug] [2025-05-04T15:19:26.394Z] [iam] checking project fakaloan-cloud for permissions ["firebase.projects.get","firebaseextensions.instances.list"]
+[debug] [2025-05-04T15:19:26.394Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:26.394Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:26.395Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions [none]
+[debug] [2025-05-04T15:19:26.395Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:26.395Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-04T15:19:28.027Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions 200
+[debug] [2025-05-04T15:19:28.028Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud:testIamPermissions {"permissions":["firebase.projects.get","firebaseextensions.instances.list"]}
+[debug] [2025-05-04T15:19:28.029Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:28.029Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:28.030Z] >>> [apiv2][query] GET https://firebaseextensions.googleapis.com/v1beta/projects/fakaloan-cloud/instances pageSize=100&pageToken=
+[debug] [2025-05-04T15:19:30.179Z] <<< [apiv2][status] GET https://firebaseextensions.googleapis.com/v1beta/projects/fakaloan-cloud/instances 200
+[debug] [2025-05-04T15:19:30.180Z] <<< [apiv2][body] GET https://firebaseextensions.googleapis.com/v1beta/projects/fakaloan-cloud/instances {}
+[info] i  functions: preparing functions directory for uploading... 
+[info] i  functions: packaged /Users/timothybrits/Source/fakaloan/functions (86.41 KB) for uploading 
+[debug] [2025-05-04T15:19:30.240Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:30.240Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:30.240Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/fakaloan-cloud/locations/-/functions [none]
+[debug] [2025-05-04T15:19:31.428Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/fakaloan-cloud/locations/-/functions 200
+[debug] [2025-05-04T15:19:31.429Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/fakaloan-cloud/locations/-/functions {}
+[debug] [2025-05-04T15:19:31.430Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:31.430Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:31.431Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/fakaloan-cloud/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-05-04T15:19:32.543Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/fakaloan-cloud/locations/-/functions 200
+[debug] [2025-05-04T15:19:32.543Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/fakaloan-cloud/locations/-/functions {"functions":[{"name":"projects/fakaloan-cloud/locations/us-central1/functions/placeholder","buildConfig":{"build":"projects/1093681062574/locations/us-central1/builds/9ad51dc9-5172-40a9-807a-2d6a7f2066f8","runtime":"nodejs22","entryPoint":"placeholder","source":{"storageSource":{"bucket":"gcf-v2-sources-1093681062574-us-central1","object":"placeholder/function-source.zip","generation":"1746187350726568"}},"environmentVariables":{"GOOGLE_NODE_RUN_SCRIPTS":""},"dockerRepository":"projects/fakaloan-cloud/locations/us-central1/repositories/gcf-artifacts","sourceProvenance":{"resolvedStorageSource":{"bucket":"gcf-v2-sources-1093681062574-us-central1","object":"placeholder/function-source.zip","generation":"1746187350726568"}},"dockerRegistry":"ARTIFACT_REGISTRY","serviceAccount":"projects/fakaloan-cloud/serviceAccounts/1093681062574-compute@developer.gserviceaccount.com","automaticUpdatePolicy":{}},"serviceConfig":{"service":"projects/fakaloan-cloud/locations/us-central1/services/placeholder","timeoutSeconds":60,"environmentVariables":{"FIREBASE_CONFIG":"{\"projectId\":\"fakaloan-cloud\",\"storageBucket\":\"fakaloan-cloud.firebasestorage.app\"}","GCLOUD_PROJECT":"fakaloan-cloud","EVENTARC_CLOUD_EVENT_SOURCE":"projects/fakaloan-cloud/locations/us-central1/services/placeholder","FUNCTION_TARGET":"placeholder","LOG_EXECUTION_ID":"true"},"maxInstanceCount":40,"ingressSettings":"ALLOW_ALL","uri":"https://placeholder-rjy25uaocq-uc.a.run.app","serviceAccountEmail":"1093681062574-compute@developer.gserviceaccount.com","availableMemory":"256Mi","allTrafficOnLatestRevision":true,"revision":"placeholder-00002-kah","maxInstanceRequestConcurrency":80,"availableCpu":"1"},"state":"ACTIVE","updateTime":"2025-05-02T12:03:51.904988748Z","labels":{"deployment-tool":"cli-firebase","firebase-functions-hash":"543d595ac4c133e4a9e90fd9310ef607ca3bf461"},"environment":"GEN_2","url":"https://us-central1-fakaloan-cloud.cloudfunctions.net/placeholder","createTime":"2025-05-02T11:08:43.160065547Z","satisfiesPzi":true}]}
+[info] i  functions: ensuring required API run.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  functions: ensuring required API eventarc.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  functions: ensuring required API pubsub.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:32.546Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  functions: ensuring required API storage.googleapis.com is enabled... 
+[debug] [2025-05-04T15:19:32.547Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:32.547Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:32.547Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/run.googleapis.com [none]
+[debug] [2025-05-04T15:19:32.547Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/run.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:32.549Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/eventarc.googleapis.com [none]
+[debug] [2025-05-04T15:19:32.549Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/eventarc.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:32.551Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/pubsub.googleapis.com [none]
+[debug] [2025-05-04T15:19:32.551Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/pubsub.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:32.552Z] >>> [apiv2][query] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/storage.googleapis.com [none]
+[debug] [2025-05-04T15:19:32.552Z] >>> [apiv2][(partial)header] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/storage.googleapis.com x-goog-quota-user=projects/fakaloan-cloud
+[debug] [2025-05-04T15:19:34.382Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/eventarc.googleapis.com 200
+[debug] [2025-05-04T15:19:34.383Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/eventarc.googleapis.com [omitted]
+[info] ✔  functions: required API eventarc.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:34.386Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/pubsub.googleapis.com 200
+[debug] [2025-05-04T15:19:34.387Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/pubsub.googleapis.com [omitted]
+[info] ✔  functions: required API pubsub.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:34.388Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/storage.googleapis.com 200
+[debug] [2025-05-04T15:19:34.388Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/storage.googleapis.com [omitted]
+[info] ✔  functions: required API storage.googleapis.com is enabled 
+[debug] [2025-05-04T15:19:34.840Z] <<< [apiv2][status] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/run.googleapis.com 200
+[debug] [2025-05-04T15:19:34.841Z] <<< [apiv2][body] GET https://serviceusage.googleapis.com/v1/projects/fakaloan-cloud/services/run.googleapis.com [omitted]
+[info] ✔  functions: required API run.googleapis.com is enabled 
+[info] i  functions: generating the service identity for pubsub.googleapis.com... 
+[debug] [2025-05-04T15:19:34.843Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:34.843Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  functions: generating the service identity for eventarc.googleapis.com... 
+[debug] [2025-05-04T15:19:34.843Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:34.843Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:34.844Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/pubsub.googleapis.com:generateServiceIdentity [none]
+[debug] [2025-05-04T15:19:34.844Z] >>> [apiv2][query] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/eventarc.googleapis.com:generateServiceIdentity [none]
+[debug] [2025-05-04T15:19:35.328Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/eventarc.googleapis.com:generateServiceIdentity 200
+[debug] [2025-05-04T15:19:35.328Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/eventarc.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1093681062574@gcp-sa-eventarc.iam.gserviceaccount.com","uniqueId":"105348274919268979041"}}
+[debug] [2025-05-04T15:19:36.531Z] <<< [apiv2][status] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/pubsub.googleapis.com:generateServiceIdentity 200
+[debug] [2025-05-04T15:19:36.532Z] <<< [apiv2][body] POST https://serviceusage.googleapis.com/v1beta1/projects/1093681062574/services/pubsub.googleapis.com:generateServiceIdentity {"name":"operations/finished.DONE_OPERATION","done":true,"response":{"@type":"type.googleapis.com/google.api.serviceusage.v1beta1.ServiceIdentity","email":"service-1093681062574@gcp-sa-pubsub.iam.gserviceaccount.com","uniqueId":"116885478038408536841"}}
+[debug] [2025-05-04T15:19:36.535Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:36.535Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:36.535Z] >>> [apiv2][query] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud [none]
+[debug] [2025-05-04T15:19:38.270Z] <<< [apiv2][status] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud 200
+[debug] [2025-05-04T15:19:38.270Z] <<< [apiv2][body] GET https://cloudresourcemanager.googleapis.com/v1/projects/fakaloan-cloud {"projectNumber":"1093681062574","projectId":"fakaloan-cloud","lifecycleState":"ACTIVE","name":"fakaloan-cloud","labels":{"firebase":"enabled","firebase-core":"disabled"},"createTime":"2025-04-27T09:45:52.480995Z"}
+[debug] [2025-05-04T15:19:38.274Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:38.274Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:38.275Z] >>> [apiv2][query] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/fakaloan-cloud/versions [none]
+[debug] [2025-05-04T15:19:38.275Z] >>> [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/fakaloan-cloud/versions {"status":"CREATED","labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-05-04T15:19:41.340Z] <<< [apiv2][status] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/fakaloan-cloud/versions 200
+[debug] [2025-05-04T15:19:41.340Z] <<< [apiv2][body] POST https://firebasehosting.googleapis.com/v1beta1/projects/-/sites/fakaloan-cloud/versions {"name":"projects/1093681062574/sites/fakaloan-cloud/versions/122a2c09bb67377b","status":"CREATED","config":{},"labels":{"deployment-tool":"cli-firebase"}}
+[debug] [2025-05-04T15:19:41.342Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:41.342Z] Checked if tokens are valid: true, expires at: 1746373155365
+[info] i  firestore: deploying indexes... 
+[debug] [2025-05-04T15:19:41.344Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:41.344Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:41.344Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/releases pageSize=10&pageToken=
+[debug] [2025-05-04T15:19:41.348Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/indexes [none]
+[debug] [2025-05-04T15:19:42.159Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/indexes 200
+[debug] [2025-05-04T15:19:42.159Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/indexes {"indexes":[{"name":"projects/fakaloan-cloud/databases/(default)/collectionGroups/transactions/indexes/CICAgOjXh4EJ","queryScope":"COLLECTION","fields":[{"fieldPath":"userId","order":"ASCENDING"},{"fieldPath":"createdAt","order":"DESCENDING"},{"fieldPath":"__name__","order":"DESCENDING"}],"state":"READY","density":"SPARSE_ALL"}]}
+[debug] [2025-05-04T15:19:42.160Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:42.160Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:42.160Z] >>> [apiv2][query] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* [none]
+[debug] [2025-05-04T15:19:42.362Z] <<< [apiv2][status] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* 200
+[debug] [2025-05-04T15:19:42.362Z] <<< [apiv2][body] GET https://firestore.googleapis.com/v1/projects/fakaloan-cloud/databases/(default)/collectionGroups/-/fields?filter=indexConfig.usesAncestorConfig=false OR ttlConfig:* {"fields":[{"name":"projects/fakaloan-cloud/databases/(default)/collectionGroups/__default__/fields/*","indexConfig":{"indexes":[{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"ASCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","order":"DESCENDING"}],"state":"READY"},{"queryScope":"COLLECTION","fields":[{"fieldPath":"*","arrayConfig":"CONTAINS"}],"state":"READY"}]}}]}
+[info] i  firestore: The following indexes are defined in your project but are not present in your firestore indexes file:
+	(transactions) -- (userId,ASCENDING) (createdAt,DESCENDING)  
+[debug] [2025-05-04T15:19:42.383Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/releases 200
+[debug] [2025-05-04T15:19:42.383Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/releases {"releases":[{"name":"projects/fakaloan-cloud/releases/cloud.firestore","rulesetName":"projects/fakaloan-cloud/rulesets/5f00dc52-bbde-472e-91a5-3cbc6c65e0d2","createTime":"2025-04-27T09:47:43.253763Z","updateTime":"2025-05-04T14:39:59.391040Z"}]}
+[debug] [2025-05-04T15:19:42.384Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:42.384Z] Checked if tokens are valid: true, expires at: 1746373155365
+[debug] [2025-05-04T15:19:42.384Z] >>> [apiv2][query] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/rulesets/5f00dc52-bbde-472e-91a5-3cbc6c65e0d2 [none]
+[debug] [2025-05-04T15:19:43.283Z] <<< [apiv2][status] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/rulesets/5f00dc52-bbde-472e-91a5-3cbc6c65e0d2 200
+[debug] [2025-05-04T15:19:43.283Z] <<< [apiv2][body] GET https://firebaserules.googleapis.com/v1/projects/fakaloan-cloud/rulesets/5f00dc52-bbde-472e-91a5-3cbc6c65e0d2 [omitted]
+[info] i  firestore: latest version of firestore.rules already up to date, skipping upload... 

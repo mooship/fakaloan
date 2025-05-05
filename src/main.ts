@@ -1,3 +1,4 @@
+import '@fontsource/roboto';
 import '@unocss/reset/tailwind.css';
 import { createHead } from '@vueuse/head';
 import { createPinia } from 'pinia';

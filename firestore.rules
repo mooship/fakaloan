@@ -2,34 +2,43 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Users collection
+    // USERS COLLECTION
+    // Only allow users to access their own user document
     match /users/{userId} {
       function isOwner() {
         return request.auth != null && request.auth.uid == userId;
       }
-
+      // Only allow create if user is authenticated and creating their own doc
       allow create: if isOwner()
                       && request.resource.data.uid == request.auth.uid
                       && request.resource.data.isPremium == false;
-
+      // Only allow read if user is owner
       allow read: if isOwner();
-
+      // Only allow update if user is owner and not changing immutable fields
       allow update: if isOwner()
                       && request.resource.data.uid == resource.data.uid
                       && request.resource.data.createdAt == resource.data.createdAt
                       && request.resource.data.isPremium == resource.data.isPremium;
-
+      // Never allow delete
       allow delete: if false;
     }
 
-    // Customers collection
+    // CUSTOMERS COLLECTION
+    // Only allow users to access their own customers
     match /customers/{customerId} {
-      allow get, update, delete: if request.auth != null && request.auth.uid == resource.data.userId;
+      function isCustomerOwner() {
+        return request.auth != null && request.auth.uid == resource.data.userId;
+      }
+      // Allow get, update, delete if user owns the customer
+      allow get, update, delete: if isCustomerOwner();
+      // Allow list if user is authenticated
       allow list: if request.auth != null;
+      // Only allow create if user is authenticated and creating their own customer
       allow create: if request.auth != null && request.auth.uid == request.resource.data.userId;
     }
 
-    // Transactions collection
+    // TRANSACTIONS COLLECTION
+    // Only allow users to access their own transactions
     match /transactions/{transactionId} {
       function isTransactionOwner() {
         return request.auth != null && request.auth.uid == resource.data.userId;
@@ -37,8 +46,12 @@ service cloud.firestore {
       function isCreatingTransaction() {
         return request.auth != null && request.auth.uid == request.resource.data.userId;
       }
+      // Allow read, update, delete if user owns the transaction
       allow read, update, delete: if isTransactionOwner();
+      // Allow create if user is authenticated and creating their own transaction
       allow create: if isCreatingTransaction();
+      // Allow list if user is authenticated and only their own transactions
+      allow list: if request.auth != null && request.auth.uid != null;
     }
   }
 }

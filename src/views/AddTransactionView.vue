@@ -1,4 +1,7 @@
+/** * AddTransactionView.vue * Handles adding a new transaction for a customer,
+including validation and Firestore integration. */
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { ToastMessages } from '@/constants/toastMessages.constants';
@@ -6,7 +9,6 @@ import { TransactionTypeEnum } from '@/enums/transaction.enums';
 import { db } from '@/firebase';
 import type { Customer } from '@/interfaces/customer.interfaces';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { goBackOrHome } from '@/utilities/navigationUtils';
 import { useHead } from '@vueuse/head';
 import {
   addDoc,
@@ -59,7 +61,8 @@ onMounted(() => {
 
   const q = query(
     collection(db, 'customers'),
-    where('userId', '==', currentUser.value.uid)
+    where('userId', '==', currentUser.value.uid),
+    where('isDeleted', '==', false)
   );
   onSnapshot(q, (snapshot) => {
     customers.value = snapshot.docs.map((doc) => ({
@@ -74,10 +77,14 @@ onMounted(() => {
       creditScore: doc.data().creditScore ?? null,
       defaultCreditTermDays: doc.data().defaultCreditTermDays ?? null,
       lastRepaymentAt: doc.data().lastRepaymentAt ?? null,
+      isDeleted: doc.data().isDeleted ?? false,
     }));
   });
 });
 
+/**
+ * Resets the add transaction form to its initial state.
+ */
 const resetForm = () => {
   form.value = {
     customerId: '',
@@ -87,6 +94,9 @@ const resetForm = () => {
   };
 };
 
+/**
+ * Handles form submission to add a new transaction to Firestore.
+ */
 const handleSubmit = async () => {
   if (!currentUser.value) {
     toast.error(ToastMessages.AuthRequired);
@@ -115,7 +125,7 @@ const handleSubmit = async () => {
     });
     toast.success(ToastMessages.TransactionAddSuccess);
     resetForm();
-    router.push('/');
+    router.push('/transactions');
   } catch {
     toast.error(ToastMessages.TransactionAddFailed);
   } finally {
@@ -127,7 +137,7 @@ const handleSubmit = async () => {
 
 <template>
   <AppLayout>
-    <div class="bg-surface mx-auto mt-10 w-full max-w-md rounded p-8 shadow-md">
+    <div class="card-md">
       <h1 class="text-primary mb-6 text-center text-2xl font-bold">
         Add Transaction
       </h1>
@@ -160,16 +170,19 @@ const handleSubmit = async () => {
         </div>
         <div>
           <label class="form-label" for="amount">Amount</label>
-          <input
-            v-model="form.amount"
-            id="amount"
-            type="number"
-            min="0.01"
-            step="0.01"
-            required
-            class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 rounded-lg border border-gray-300 px-3 py-2 shadow-sm focus:ring-2"
-            placeholder="e.g. 100.00"
-          />
+          <div class="relative flex items-center">
+            <span class="absolute left-3 text-gray-500">R</span>
+            <input
+              v-model="form.amount"
+              id="amount"
+              type="number"
+              min="0.01"
+              step="0.01"
+              required
+              class="form-input-base bg-surface text-on-surface focus:border-primary focus:ring-primary/20 w-full rounded-lg border border-gray-300 py-2 pl-8 pr-3 shadow-sm focus:ring-2"
+              placeholder="e.g. 100.00"
+            />
+          </div>
         </div>
         <div>
           <label class="form-label" for="note">Note (optional)</label>
@@ -184,20 +197,15 @@ const handleSubmit = async () => {
         <div>
           <button
             type="submit"
-            class="btn-primary w-full"
+            class="btn-primary mx-auto block w-auto"
             :disabled="submitting || isLoading"
           >
             {{ submitting ? 'Saving...' : 'Add Transaction' }}
           </button>
         </div>
       </form>
-      <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-        <button
-          @click="goBackOrHome(router)"
-          class="btn-primary-outline !w-auto"
-        >
-          Back
-        </button>
+      <div class="section-divider mt-8 flex justify-center">
+        <BackButton />
       </div>
     </div>
   </AppLayout>

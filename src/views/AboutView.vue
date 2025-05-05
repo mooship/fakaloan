@@ -1,18 +1,10 @@
+/** * AboutView.vue * Displays information about the Fakaloan platform, its
+purpose, and support details. */
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import { useTitle } from '@vueuse/core';
-import { useRouter } from 'vue-router';
 useTitle('About | Fakaloan');
-
-const router = useRouter();
-
-function handleBack() {
-  if (window.history.length > 1) {
-    router.back();
-  } else {
-    router.push('/');
-  }
-}
 </script>
 
 <template>
@@ -20,7 +12,7 @@ function handleBack() {
     <div
       class="bg-background flex min-h-screen flex-col items-center justify-center p-4"
     >
-      <div class="bg-surface w-full max-w-2xl space-y-6 rounded p-8 shadow-md">
+      <div class="card-main">
         <h1 class="text-primary mb-6 text-center text-3xl font-bold">
           About Fakaloan
         </h1>
@@ -50,7 +42,7 @@ function handleBack() {
             processes by enabling you to:
           </p>
           <ul
-            class="text-on-surface/80 mt-2 list-inside list-disc space-y-1 pl-4"
+            class="text-on-surface-80 mt-2 list-inside list-disc space-y-1 pl-4"
           >
             <li>Track credit you have extended to your clients.</li>
             <li>Manage and simplify your collections process.</li>
@@ -101,27 +93,19 @@ function handleBack() {
           </p>
         </section>
 
-        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-          <button @click="handleBack" class="btn-primary-outline !w-auto">
-            Back
-          </button>
+        <div class="section-divider mt-8 flex justify-center">
+          <BackButton />
         </div>
-
-        <div class="border-secondary-variant mt-8 border-t pt-6 text-center">
-          <button @click="router.push('/')" class="btn-primary-outline !w-auto">
-            Back to Home
-          </button>
-        </div>
+        <footer
+          class="text-on-surface-60 mt-8 w-full max-w-2xl text-center text-sm"
+        >
+          <p>
+            &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
+            reserved.
+          </p>
+          <p class="mt-1">Proudly South African 🇿🇦</p>
+        </footer>
       </div>
-      <footer
-        class="text-on-surface/60 mt-8 w-full max-w-2xl text-center text-sm"
-      >
-        <p>
-          &copy; {{ new Date().getFullYear() }} Timothy Brits. All rights
-          reserved.
-        </p>
-        <p class="mt-1">Proudly South African 🇿🇦</p>
-      </footer>
     </div>
   </AppLayout>
 </template>

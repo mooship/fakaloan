@@ -41,6 +41,11 @@ export const mapAuthError = (authError: AuthError): string => {
   return DEFAULT_AUTH_ERROR_MESSAGE;
 };
 
+/**
+ * Composable for authentication and user profile management.
+ * Provides login, registration, logout, password reset, and user profile utilities.
+ * Uses Firebase Auth and Firestore.
+ */
 export function useAuth() {
   const toast = useToast();
   const currentUser = useCurrentUser();

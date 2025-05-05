@@ -1,3 +1,5 @@
+/** * ForgotPasswordView.vue * Handles password reset requests for users who
+forgot their password. */
 <script setup lang="ts">
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
@@ -39,6 +41,9 @@ const schema = yup.object({
     .email('Please enter a valid email address'),
 });
 
+/**
+ * Handles password reset form submission.
+ */
 const handlePasswordReset = async (
   values: GenericFormValues
 ): Promise<void> => {
@@ -55,6 +60,9 @@ const handlePasswordReset = async (
   }
 };
 
+/**
+ * Navigates to the login page.
+ */
 const goToLogin = (): void => {
   router.push({ name: 'login' });
 };

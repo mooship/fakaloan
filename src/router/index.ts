@@ -1,3 +1,7 @@
+/**
+ * Vue Router configuration for Fakaloan app.
+ * Handles route definitions and navigation guards for authentication.
+ */
 import { createRouter, createWebHistory } from 'vue-router';
 import { getCurrentUser } from 'vuefire';
 
@@ -50,6 +54,24 @@ const router = createRouter({
       path: '/add-transaction',
       name: 'add-transaction',
       component: () => import('../views/AddTransactionView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/customers',
+      name: 'customers',
+      component: () => import('../views/CustomersView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/customers/:id',
+      name: 'customer',
+      component: () => import('../views/CustomerView.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/transactions',
+      name: 'transactions',
+      component: () => import('../views/TransactionsView.vue'),
       meta: { requiresAuth: true },
     },
   ],

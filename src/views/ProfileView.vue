@@ -1,22 +1,23 @@
+/** * ProfileView.vue * Allows users to view and update their profile, including
+name, email, password, phone, language, and theme. */
 <script setup lang="ts">
+import BackButton from '@/components/BackButton.vue';
 import FabSpeedDial from '@/components/FabSpeedDial.vue';
 import LoadingOverlay from '@/components/LoadingOverlay.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { useTheme } from '@/composables/useTheme';
 import {
-  DISPLAY_PHONE_NUMBER_REGEX,
   EMAIL_REGEX,
-  GROUP_3_4_REGEX,
   PHONE_NUMBER_REGEX,
   SIMPLE_EMAIL_REGEX,
-  WHITESPACE_REGEX,
+  normalizePhoneNumber,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { goBackOrHome } from '@/utilities/navigationUtils';
+import { formatDate, formatPhoneNumber } from '@/utilities/formatUtils';
 import { useConfirmDialog, useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { updateEmail } from 'firebase/auth';
@@ -78,41 +79,16 @@ const hasActiveSubscription = computed(() =>
   )
 );
 
-const displayLanguage = computed(() => {
-  const lang = userProfile.value?.preferences.preferredLanguage;
-  switch (lang) {
-    case LanguageCode.English:
-      return 'English';
-    case LanguageCode.Zulu:
-      return 'Zulu';
-    case LanguageCode.Xhosa:
-      return 'Xhosa';
-    default:
-      return lang || 'Not set';
-  }
-});
-
-function formatPhoneNumber(phone: string | null): string {
-  if (!phone) {
-    return '';
-  }
-
-  const digits = phone.replace(WHITESPACE_REGEX, '');
-  const match = digits.match(DISPLAY_PHONE_NUMBER_REGEX);
-
-  if (match) {
-    return `${match[1]} ${match[2]} ${match[3]} ${match[4]}`.trim();
-  }
-
-  return digits.replace(GROUP_3_4_REGEX, '$1 ').trim();
-}
-
+/**
+ * Update the user's cellphone number in Firestore after validation.
+ */
 const updateCellphone = async (): Promise<void> => {
   if (!currentUser.value || !userProfile.value) {
     return;
   }
 
-  const trimmedCellphone = cellphoneInput.value.replace(WHITESPACE_REGEX, '');
+  // Normalize input before validation and saving
+  const trimmedCellphone = normalizePhoneNumber(cellphoneInput.value);
   if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
     toast.error(ToastMessages.ValidationError);
     return;
@@ -137,10 +113,14 @@ const updateCellphone = async (): Promise<void> => {
   }
 };
 
+/**
+ * Update the user's email address in Firebase Auth and Firestore.
+ */
 const updateUserEmail = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
   }
+
   setLoading(true);
   try {
     isUpdating.value = true;
@@ -160,6 +140,9 @@ const updateUserEmail = async (): Promise<void> => {
   }
 };
 
+/**
+ * Update the user's password after validation.
+ */
 const handlePasswordUpdate = async (): Promise<void> => {
   if (!currentUser.value) {
     return;
@@ -236,7 +219,7 @@ const checkEmailValid = useDebounceFn((value: string) => {
 const checkPhoneValid = useDebounceFn((value: string) => {
   phoneCheckLoading.value = true;
   debouncedPhoneValid.value = PHONE_NUMBER_REGEX.test(
-    value.replace(WHITESPACE_REGEX, '')
+    normalizePhoneNumber(value)
   );
   phoneCheckLoading.value = false;
 }, 300);
@@ -246,7 +229,8 @@ watch(newEmail, (val) => {
 });
 
 watch(cellphoneInput, (val) => {
-  checkPhoneValid(val);
+  // Always normalize for validation
+  checkPhoneValid(normalizePhoneNumber(val));
 });
 
 watch(
@@ -260,12 +244,7 @@ watch(
       return;
     }
 
-    const modeToSave =
-      newMode === 'auto'
-        ? window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? 'dark'
-          : 'light'
-        : newMode;
+    const modeToSave = newMode;
     isUpdating.value = true;
     try {
       const userDocRef = doc(db, 'users', currentUser.value.uid);
@@ -281,6 +260,75 @@ watch(
     }
   }
 );
+
+const isEditingName = ref(false);
+const firstNameInput = ref(userProfile.value?.firstName || '');
+const lastNameInput = ref(userProfile.value?.lastName || '');
+
+/**
+ * Update the user's name in Firestore.
+ */
+const updateName = async (): Promise<void> => {
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
+
+  if (!firstNameInput.value.trim() || !lastNameInput.value.trim()) {
+    toast.error(ToastMessages.ValidationError);
+    return;
+  }
+
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      firstName: firstNameInput.value.trim(),
+      lastName: lastNameInput.value.trim(),
+    });
+    isEditingName.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update name:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
+};
+
+// expose LanguageCode to template
+const LanguageCodeEnum = LanguageCode;
+
+const isEditingLanguage = ref(false);
+const languageInput = ref(
+  userProfile.value?.preferences?.preferredLanguage || LanguageCode.English
+);
+
+/**
+ * Update the user's preferred language in Firestore.
+ */
+const updateLanguage = async (): Promise<void> => {
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      'preferences.preferredLanguage': languageInput.value,
+    });
+    isEditingLanguage.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update language:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
+};
 </script>
 
 <template>
@@ -360,8 +408,68 @@ watch(
             Account Information
           </h2>
 
+          <!-- Name Display/Edit -->
+          <div class="mb-4 border-b border-gray-200 pb-4">
+            <div
+              class="flex items-center justify-between"
+              v-if="!isEditingName"
+            >
+              <div>
+                <p class="text-on-surface/80 text-sm font-medium">Name:</p>
+                <span class="text-on-surface">{{
+                  `${userProfile.firstName} ${userProfile.lastName}`
+                }}</span>
+              </div>
+              <button
+                @click="
+                  isEditingName = true;
+                  firstNameInput = userProfile.firstName || '';
+                  lastNameInput = userProfile.lastName || '';
+                "
+                class="btn-link text-sm"
+              >
+                <span class="i-heroicons-pencil mr-1 align-middle"></span>
+                Edit
+              </button>
+            </div>
+            <div v-else class="space-y-3">
+              <p class="text-on-surface/80 mb-1 text-sm font-medium">Name</p>
+              <label class="form-label text-sm">First Name</label>
+              <input
+                v-model="firstNameInput"
+                type="text"
+                class="form-input-base form-input-valid bg-surface text-on-surface"
+                placeholder="Enter first name"
+              />
+              <label class="form-label text-sm">Last Name</label>
+              <input
+                v-model="lastNameInput"
+                type="text"
+                class="form-input-base form-input-valid bg-surface text-on-surface"
+                placeholder="Enter last name"
+              />
+              <div class="mt-2 flex space-x-2">
+                <button
+                  @click="updateName"
+                  :disabled="isUpdating"
+                  class="btn-primary !w-auto text-sm"
+                >
+                  <span v-if="isUpdating">Updating...</span>
+                  <span v-else>Update Name</span>
+                </button>
+                <button
+                  @click="isEditingName = false"
+                  :disabled="isUpdating"
+                  class="btn-secondary !w-auto text-sm"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+
           <!-- Email Display/Edit -->
-          <div class="border-secondary-variant mb-4 border-b pb-4">
+          <div class="mb-4 border-b border-gray-200 pb-4">
             <div
               v-if="!isEditingEmail"
               class="flex items-center justify-between"
@@ -417,7 +525,7 @@ watch(
           </div>
 
           <!-- Password Display/Edit -->
-          <div class="border-secondary-variant mb-4 border-b pb-4">
+          <div class="mb-4 border-b border-gray-200 pb-4">
             <div
               v-if="!isEditingPassword"
               class="flex items-center justify-between"
@@ -515,7 +623,7 @@ watch(
                 v-model="cellphoneInput"
                 type="tel"
                 class="form-input-base form-input-valid bg-surface text-on-surface"
-                placeholder="+27 12 3456 789"
+                placeholder="083 234 2922"
               />
               <div class="mt-2 flex space-x-2">
                 <button
@@ -545,12 +653,6 @@ watch(
           </h2>
           <div class="grid grid-cols-1 gap-3 text-sm">
             <div class="flex items-center justify-between">
-              <span class="text-on-surface/80 font-medium">Name:</span>
-              <span class="text-on-surface">{{
-                `${userProfile.firstName} ${userProfile.lastName}`
-              }}</span>
-            </div>
-            <div class="flex items-center justify-between">
               <span class="text-on-surface/80 font-medium">User ID:</span>
               <span class="text-on-surface break-all text-xs">{{
                 userProfile.uid
@@ -561,17 +663,25 @@ watch(
                 >Account Created:</span
               >
               <span class="text-on-surface">{{
-                userProfile.createdAt?.toDate().toLocaleDateString() ||
-                'Unknown'
+                formatDate(userProfile.createdAt) || 'Unknown'
               }}</span>
             </div>
+            <!-- Language Preference Dropdown -->
             <div class="flex items-center justify-between">
-              <span class="text-on-surface/80 font-medium"
-                >Language Preference:</span
+              <label class="form-label mb-0" for="language-select"
+                >Language Preference</label
               >
-              <span class="text-on-surface capitalize">
-                {{ displayLanguage }}
-              </span>
+              <select
+                v-model="languageInput"
+                @change="updateLanguage"
+                id="language-select"
+                class="material-select w-26 max-w-xs"
+                :disabled="isUpdating"
+              >
+                <option :value="LanguageCodeEnum.English">English</option>
+                <option :value="LanguageCodeEnum.Zulu">Zulu</option>
+                <option :value="LanguageCodeEnum.Xhosa">Xhosa</option>
+              </select>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-on-surface/80 font-medium">Theme:</span>
@@ -579,31 +689,28 @@ watch(
                 <button
                   @click="toggleTheme()"
                   :aria-label="
-                    isDark
-                      ? 'Switch to light mode'
-                      : colorMode === 'auto'
-                        ? 'Switch to system mode'
-                        : 'Switch to dark mode'
+                    isDark ? 'Switch to light mode' : 'Switch to dark mode'
                   "
                   class="btn-primary-outline flex !w-auto items-center gap-1"
                   :disabled="isUpdating"
                   type="button"
                 >
-                  <i
-                    v-if="colorMode === 'auto'"
-                    class="i-heroicons-computer-desktop h-5 w-5"
-                  ></i>
-                  <i v-else-if="isDark" class="i-heroicons-moon h-5 w-5"></i>
+                  <i v-if="isDark" class="i-heroicons-moon h-5 w-5"></i>
                   <i v-else class="i-heroicons-sun h-5 w-5"></i>
-                  <span>
-                    {{
-                      colorMode === 'auto' ? 'Auto' : isDark ? 'Dark' : 'Light'
-                    }}
-                  </span>
+                  <span>{{ isDark ? 'Dark' : 'Light' }}</span>
                 </button>
               </span>
             </div>
           </div>
+        </div>
+
+        <div v-if="isPremium" class="mt-4 flex justify-center">
+          <button
+            @click="handleCancelSubscription"
+            class="border-error text-error hover:bg-error/10 !w-auto rounded-md border-2 px-4 py-2 text-sm font-medium"
+          >
+            Cancel Premium
+          </button>
         </div>
       </div>
 
@@ -613,13 +720,8 @@ watch(
       </div>
 
       <!-- Back Button -->
-      <div class="mt-8 border-t border-gray-200 pt-6 text-center">
-        <button
-          @click="goBackOrHome(router)"
-          class="btn-primary-outline !w-auto"
-        >
-          Back
-        </button>
+      <div class="mt-8 flex justify-center border-t border-gray-200 pt-6">
+        <BackButton />
       </div>
     </div>
     <FabSpeedDial />
@@ -641,8 +743,8 @@ watch(
           access to premium features when your current billing period ends. This
           action cannot be undone easily.
         </p>
-        <div class="flex justify-end space-x-3">
-          <button @click="cancel()" class="btn-secondary !w-auto text-sm">
+        <div class="flex justify-center space-x-3">
+          <button @click="cancel()" class="btn-primary !w-auto text-sm">
             Keep Subscription
           </button>
           <button

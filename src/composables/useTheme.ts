@@ -8,32 +8,39 @@ import { computed } from 'vue';
  */
 export function useTheme() {
   const colorMode = useColorMode({
-    emitAuto: true,
+    emitAuto: false,
     modes: {
       dark: 'dark',
       light: 'light',
-      auto: 'auto',
     },
     storageKey: 'fakaloan-theme',
     selector: 'html',
     attribute: 'class',
   });
 
+  const setHtmlClass = (mode: string) => {
+    const html = document.documentElement;
+    html.classList.remove('dark', 'light');
+    html.classList.add(mode);
+  };
+
+  colorMode.value = colorMode.value === 'dark' ? 'dark' : 'light';
+  setHtmlClass(colorMode.value);
+
+  const isDark = computed(() => colorMode.value === 'dark');
+
+  const toggleTheme = () => {
+    colorMode.value = colorMode.value === 'light' ? 'dark' : 'light';
+    setHtmlClass(colorMode.value);
+  };
+
   return {
     colorMode,
-    isDark: computed(() => colorMode.value === 'dark'),
+    isDark,
     setTheme: (mode: Theme) => {
       colorMode.value = mode;
+      setHtmlClass(mode);
     },
-    toggleTheme: () => {
-      // Cycle through: light -> dark -> auto -> light ...
-      if (colorMode.value === 'light') {
-        colorMode.value = 'dark';
-      } else if (colorMode.value === 'dark') {
-        colorMode.value = 'auto';
-      } else {
-        colorMode.value = 'light';
-      }
-    },
+    toggleTheme,
   };
 }

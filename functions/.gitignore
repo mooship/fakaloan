@@ -11,3 +11,5 @@ node_modules/
 
 # Firebase Hosting cache
 .firebase/hosting.ZGlzdA.cache
+
+firebase-debug.log
