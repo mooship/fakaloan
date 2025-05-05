@@ -61,6 +61,9 @@ export default defineConfig({
       'on-background': 'var(--color-on-background)',
       'on-surface': 'var(--color-on-surface)',
     },
+    fontFamily: {
+      sans: '"Roboto", sans-serif',
+    },
   },
   shortcuts: {
     'form-input-base':

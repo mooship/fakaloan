@@ -22,6 +22,7 @@
     ]
   },
   "dependencies": {
+    "@fontsource/roboto": "^5.2.5",
     "@vueuse/core": "^13.1.0",
     "@vueuse/head": "^2.0.0",
     "firebase": "^11.6.1",
