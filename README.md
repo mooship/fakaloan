@@ -1,4 +1,4 @@
-# fakaloan
+# fakaloan [![Node.js CI](https://github.com/mooship/fakaloan/actions/workflows/node.js.yml/badge.svg)](https://github.com/mooship/fakaloan/actions/workflows/node.js.yml)
 
 ## Recommended IDE Setup
 

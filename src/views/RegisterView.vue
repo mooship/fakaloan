@@ -6,15 +6,12 @@
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
 import { usePasswordStrength } from '@/composables/usePasswordStrength';
-import {
-  EMAIL_REGEX,
-  PHONE_NUMBER_REGEX,
-  normalizePhoneNumber,
-} from '@/constants/regex.constants';
+import { EMAIL_REGEX, PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import type { RegisterFormValues } from '@/interfaces/auth.interfaces';
 import AuthLayout from '@/layouts/AuthLayout.vue';
 import type { GenericFormValues } from '@/types/forms.types';
+import { normalizePhoneNumber } from '@/utilities/formatUtils';
 import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { fetchSignInMethodsForEmail, getAuth } from 'firebase/auth';

@@ -1,11 +1,31 @@
 /**
  * Utility functions for formatting phone numbers and dates.
  */
-import {
-  LOCAL_PHONE_NUMBER_DISPLAY_REGEX,
-  normalizePhoneNumber,
-} from '@/constants/regex.constants';
+import { LOCAL_PHONE_NUMBER_DISPLAY_REGEX } from '@/constants/regex.constants';
 import type { FieldValue } from 'firebase/firestore';
+
+/**
+ * Normalizes a South African phone number to local 0XXXXXXXXX format.
+ * @param input - The input phone number string.
+ * @returns The normalized phone number in 0XXXXXXXXX format, or an empty string if input is empty or invalid.
+ */
+export function normalizePhoneNumber(input: string): string {
+  if (!input) {
+    return '';
+  }
+
+  const digits = input.replace(/\D/g, '');
+
+  if (digits.startsWith('27') && digits.length === 11) {
+    return `0${digits.slice(2)}`;
+  }
+
+  if (digits.startsWith('0') && digits.length === 10) {
+    return digits;
+  }
+
+  return '';
+}
 
 export function formatPhoneNumber(phone: string | null): string {
   if (!phone) {
