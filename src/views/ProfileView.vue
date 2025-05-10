@@ -11,13 +11,16 @@ import {
   EMAIL_REGEX,
   PHONE_NUMBER_REGEX,
   SIMPLE_EMAIL_REGEX,
-  normalizePhoneNumber,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { formatDate, formatPhoneNumber } from '@/utilities/formatUtils';
+import {
+  formatDate,
+  formatPhoneNumber,
+  normalizePhoneNumber,
+} from '@/utilities/formatUtils';
 import { useConfirmDialog, useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { updateEmail } from 'firebase/auth';

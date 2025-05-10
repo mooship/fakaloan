@@ -4,13 +4,11 @@ and Firestore integration. */
 import BackButton from '@/components/BackButton.vue';
 import { useAuth } from '@/composables/useAuth';
 import { useLoading } from '@/composables/useLoading';
-import {
-  normalizePhoneNumber,
-  PHONE_NUMBER_REGEX,
-} from '@/constants/regex.constants';
+import { PHONE_NUMBER_REGEX } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
+import { normalizePhoneNumber } from '@/utilities/formatUtils';
 import { useHead } from '@vueuse/head';
 import { addDoc, collection, serverTimestamp } from 'firebase/firestore';
 import { ref } from 'vue';
