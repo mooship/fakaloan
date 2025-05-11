@@ -2,6 +2,9 @@
   <LoadingOverlay />
   <AppLayout>
     <div class="card-lg">
+      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
+        Transactions
+      </h1>
       <div class="mb-6 flex items-center justify-between">
         <BackButton />
         <button
@@ -12,9 +15,6 @@
           Add Transaction
         </button>
       </div>
-      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
-        Transactions
-      </h1>
       <div class="mb-4 flex flex-col items-center gap-2">
         <label for="customerFilter" class="w-full text-center font-medium"
           >Filter by Customer:</label
@@ -55,8 +55,8 @@
                 class="ml-2 rounded px-2 py-0.5 text-xs"
                 :class="
                   tx.type === TransactionTypeEnum.Credit
-                    ? 'bg-green-100 text-green-700'
-                    : 'bg-blue-100 text-blue-700'
+                    ? 'bg-red-100 text-red-700'
+                    : 'bg-green-100 text-green-700'
                 "
               >
                 {{
@@ -173,16 +173,10 @@ async function fetchCustomers() {
  * Fetches all transactions for the current user from Firestore.
  */
 async function fetchTransactions() {
-  if (!currentUser.value) {
-    transactions.value = [];
-    setLoading(false);
-    return;
-  }
   setLoading(true);
   try {
     const q = query(
       collection(db, 'transactions'),
-      where('userId', '==', currentUser.value.uid),
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
@@ -215,6 +209,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.btn {
+.font-semibold {
+  color: var(--color-on-surface);
 }
 </style>

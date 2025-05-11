@@ -2,6 +2,9 @@
   <LoadingOverlay />
   <AppLayout>
     <div class="card-lg">
+      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
+        Customers
+      </h1>
       <div class="mb-6 flex items-center justify-between">
         <BackButton />
         <button
@@ -12,9 +15,6 @@
           Add Customer
         </button>
       </div>
-      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
-        Customers
-      </h1>
       <div
         v-if="customers.length === 0"
         class="flex flex-col items-center justify-center py-16"
@@ -150,5 +150,9 @@ onMounted(fetchCustomers);
 <style scoped>
 .btn {
   @apply bg-primary text-on-primary hover:bg-primary-dark rounded px-4 py-2 transition;
+}
+
+.font-semibold {
+  color: var(--color-on-surface);
 }
 </style>

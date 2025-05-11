@@ -10,15 +10,13 @@ service cloud.firestore {
       }
       // Only allow create if user is authenticated and creating their own doc
       allow create: if isOwner()
-                      && request.resource.data.uid == request.auth.uid
-                      && request.resource.data.isPremium == false;
+                      && request.resource.data.uid == request.auth.uid;
       // Only allow read if user is owner
       allow read: if isOwner();
       // Only allow update if user is owner and not changing immutable fields
       allow update: if isOwner()
                       && request.resource.data.uid == resource.data.uid
-                      && request.resource.data.createdAt == resource.data.createdAt
-                      && request.resource.data.isPremium == resource.data.isPremium;
+                      && request.resource.data.createdAt == resource.data.createdAt;
       // Never allow delete
       allow delete: if false;
     }

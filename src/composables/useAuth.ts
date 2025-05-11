@@ -106,20 +106,10 @@ export function useAuth() {
           email: email,
           createdAt: serverTimestamp(),
           cellphone: null,
-          isPremium: false,
           preferences: {
             theme: Theme.Light,
             preferredLanguage: LanguageCode.English,
           },
-          paystackCustomerId: null,
-          paystackSubscriptionId: null,
-          paystackPlanId: null,
-          subscriptionStatus: null,
-          subscriptionStartDate: null,
-          nextBillingDate: null,
-          lastPaymentDate: null,
-          lastPaymentAmount: null,
-          trialEndsAt: null,
         });
         console.log('Firestore document created for user:', userId);
       } else {
