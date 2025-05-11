@@ -2,6 +2,9 @@
   <LoadingOverlay />
   <AppLayout>
     <div class="card-lg">
+      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
+        Transactions
+      </h1>
       <div class="mb-6 flex items-center justify-between">
         <BackButton />
         <button
@@ -12,9 +15,6 @@
           Add Transaction
         </button>
       </div>
-      <h1 class="text-primary mb-6 text-center text-2xl font-bold">
-        Transactions
-      </h1>
       <div class="mb-4 flex flex-col items-center gap-2">
         <label for="customerFilter" class="w-full text-center font-medium"
           >Filter by Customer:</label
