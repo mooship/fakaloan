@@ -209,8 +209,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.btn {
-}
 .font-semibold {
   color: var(--color-on-surface);
 }
