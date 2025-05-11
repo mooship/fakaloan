@@ -151,4 +151,8 @@ onMounted(fetchCustomers);
 .btn {
   @apply bg-primary text-on-primary hover:bg-primary-dark rounded px-4 py-2 transition;
 }
+
+.font-semibold {
+  color: var(--color-on-surface);
+}
 </style>

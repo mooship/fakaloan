@@ -35,11 +35,11 @@ export default defineConfig({
           --color-error: #FF9E80;
           --color-background: #121212;
           --color-surface: #1E1E1E;
-          --color-on-primary: #000000;
+          --color-on-primary: #FFFFFF;
           --color-on-secondary: #000000;
           --color-on-tertiary: #000000;
           --color-on-background: #EDEDED;
-          --color-on-surface: #EDEDED;
+          --color-on-surface: #FFFFFF;
         }
       `,
     },
