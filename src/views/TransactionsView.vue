@@ -173,16 +173,10 @@ async function fetchCustomers() {
  * Fetches all transactions for the current user from Firestore.
  */
 async function fetchTransactions() {
-  if (!currentUser.value) {
-    transactions.value = [];
-    setLoading(false);
-    return;
-  }
   setLoading(true);
   try {
     const q = query(
       collection(db, 'transactions'),
-      where('userId', '==', currentUser.value.uid),
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
