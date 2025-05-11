@@ -13,7 +13,7 @@ import {
   SIMPLE_EMAIL_REGEX,
 } from '@/constants/regex.constants';
 import { ToastMessages } from '@/constants/toastMessages.constants';
-import { LanguageCode, SubscriptionStatus } from '@/enums/user.enums';
+import { LanguageCode } from '@/enums/user.enums';
 import { db } from '@/firebase';
 import AppLayout from '@/layouts/AppLayout.vue';
 import {
@@ -21,12 +21,11 @@ import {
   formatPhoneNumber,
   normalizePhoneNumber,
 } from '@/utilities/formatUtils';
-import { useConfirmDialog, useDebounceFn } from '@vueuse/core';
+import { useDebounceFn } from '@vueuse/core';
 import { useHead } from '@vueuse/head';
 import { updateEmail } from 'firebase/auth';
 import { doc, updateDoc } from 'firebase/firestore';
-import { computed, ref, watch } from 'vue';
-import { useRouter } from 'vue-router';
+import { ref, watch } from 'vue';
 import { useToast } from 'vue-toastification';
 
 useHead({
@@ -53,7 +52,6 @@ const {
   updatePassword,
   error: authError,
 } = useAuth();
-const router = useRouter();
 const toast = useToast();
 
 const isEditingContact = ref(false);
@@ -69,18 +67,6 @@ const newEmail = ref(userProfile.value?.email || '');
 
 const { colorMode, isDark, toggleTheme } = useTheme();
 const { setLoading } = useLoading();
-
-const { isRevealed, reveal, confirm, cancel } = useConfirmDialog();
-
-const isPremium = computed(() => userProfile.value?.isPremium || false);
-const subscriptionStatus = computed(
-  () => userProfile.value?.subscriptionStatus || null
-);
-const hasActiveSubscription = computed(() =>
-  [SubscriptionStatus.Active, SubscriptionStatus.Trialing].includes(
-    subscriptionStatus.value as SubscriptionStatus
-  )
-);
 
 /**
  * Update the user's cellphone number in Firestore after validation.
@@ -186,26 +172,6 @@ const handlePasswordUpdate = async (): Promise<void> => {
   }
   isUpdating.value = false;
   setLoading(false);
-};
-
-const goToPremiumPage = (): void => {
-  router.push('/premium');
-};
-
-const handleCancelSubscription = (): void => {
-  reveal();
-};
-
-const confirmCancelSubscription = async (choice: boolean): Promise<void> => {
-  if (!choice) {
-    return;
-  }
-  try {
-    // TODO: implement subscription cancellation API call
-    toast.success(ToastMessages.SubscriptionCancelSuccess);
-  } catch {
-    toast.error(ToastMessages.SubscriptionCancelFailed);
-  }
 };
 
 const debouncedEmailValid = ref(true);
@@ -349,62 +315,6 @@ const updateLanguage = async (): Promise<void> => {
 
       <!-- Profile Content -->
       <div v-else-if="currentUser && userProfile" class="space-y-8">
-        <!-- Premium Status Section -->
-        <div
-          class="bg-primary/5 rounded-lg border p-5"
-          :class="isPremium ? 'border-primary' : 'border-gray-300'"
-        >
-          <div class="flex items-center justify-between">
-            <div>
-              <h2
-                class="text-xl font-bold"
-                :class="isPremium ? 'text-primary' : 'text-on-surface'"
-              >
-                <span
-                  v-if="isPremium"
-                  class="i-heroicons-star-solid mr-2 align-middle text-2xl text-yellow-500"
-                ></span>
-                <span
-                  v-else
-                  class="i-heroicons-star mr-2 align-middle text-xl"
-                ></span>
-                {{ isPremium ? 'Premium Account' : 'Free Account' }}
-              </h2>
-              <p
-                v-if="hasActiveSubscription"
-                class="text-on-surface/80 mt-1 text-sm"
-              >
-                Subscription Status:
-                <span class="text-primary font-medium capitalize">{{
-                  subscriptionStatus
-                }}</span>
-              </p>
-            </div>
-            <!-- Action Buttons -->
-            <button
-              v-if="!isPremium && !hasActiveSubscription"
-              @click="goToPremiumPage"
-              class="btn-premium !w-auto"
-            >
-              <span class="btn-premium-text">Upgrade to Premium</span>
-            </button>
-            <button
-              v-else-if="hasActiveSubscription"
-              @click="handleCancelSubscription"
-              class="border-error text-error hover:bg-error/10 !w-auto rounded-md border-2 px-4 py-2 text-sm font-medium"
-            >
-              Cancel Subscription
-            </button>
-            <button
-              v-else
-              @click="goToPremiumPage"
-              class="btn-renew-premium !w-auto"
-            >
-              <span class="btn-premium-text">Renew Premium</span>
-            </button>
-          </div>
-        </div>
-
         <!-- Account Information Section -->
         <div class="bg-surface rounded-lg border border-gray-300 p-4">
           <h2 class="text-on-surface mb-4 text-xl font-medium">
@@ -706,15 +616,6 @@ const updateLanguage = async (): Promise<void> => {
             </div>
           </div>
         </div>
-
-        <div v-if="isPremium" class="mt-4 flex justify-center">
-          <button
-            @click="handleCancelSubscription"
-            class="border-error text-error hover:bg-error/10 !w-auto rounded-md border-2 px-4 py-2 text-sm font-medium"
-          >
-            Cancel Premium
-          </button>
-        </div>
       </div>
 
       <!-- Error State -->
@@ -729,38 +630,4 @@ const updateLanguage = async (): Promise<void> => {
     </div>
     <FabSpeedDial />
   </AppLayout>
-
-  <!-- Confirmation Dialog -->
-  <Teleport to="body">
-    <div
-      v-if="isRevealed"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
-      @click.self="cancel()"
-    >
-      <div class="bg-surface w-full max-w-md rounded-lg p-6 shadow-xl">
-        <h3 class="text-error mb-4 text-lg font-bold">
-          Cancel Premium Subscription?
-        </h3>
-        <p class="text-on-surface/80 mb-6 text-sm">
-          Are you sure you want to cancel your premium subscription? You'll lose
-          access to premium features when your current billing period ends. This
-          action cannot be undone easily.
-        </p>
-        <div class="flex justify-center space-x-3">
-          <button @click="cancel()" class="btn-primary !w-auto text-sm">
-            Keep Subscription
-          </button>
-          <button
-            @click="
-              confirm(true);
-              confirmCancelSubscription(true);
-            "
-            class="bg-error text-on-primary hover:bg-error/80 rounded px-4 py-2 text-sm font-medium"
-          >
-            Yes, Cancel Subscription
-          </button>
-        </div>
-      </div>
-    </div>
-  </Teleport>
 </template>

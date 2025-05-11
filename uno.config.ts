@@ -81,11 +81,6 @@ export default defineConfig({
       'btn w-full inline-flex items-center justify-center text-on-secondary bg-secondary hover:bg-secondary-variant border border-secondary shadow-sm',
     'btn-link':
       'font-medium text-primary hover:text-primary-variant focus:outline-0 focus:underline',
-    'btn-premium':
-      'bg-tertiary text-white font-extrabold px-6 py-3 rounded-md hover:bg-tertiary/80 shadow-xl transform hover:scale-105 transition-transform border-2 border-tertiary text-lg tracking-wide',
-    'btn-premium-text': 'drop-shadow-lg text-white',
-    'btn-renew-premium':
-      'bg-tertiary text-white font-extrabold px-6 py-3 rounded-md hover:bg-tertiary/80 shadow-xl transform hover:scale-105 transition-transform border-2 border-tertiary text-lg tracking-wide',
     'btn-disabled': 'opacity-50! cursor-not-allowed! pointer-events-none! ',
     'alert-error':
       'p-3 mb-4 text-sm text-error bg-error/10 rounded-md border border-error',
@@ -125,10 +120,5 @@ export default defineConfig({
       },
     }),
   ],
-  safelist: [
-    'btn‑premium',
-    'btn‑premium‑text',
-    'btn‑renew‑premium',
-    'btn‑disabled',
-  ],
+  safelist: ['btn‑disabled'],
 });

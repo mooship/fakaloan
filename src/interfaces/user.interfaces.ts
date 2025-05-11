@@ -1,8 +1,4 @@
-import type {
-  LanguageCode,
-  SubscriptionStatus,
-  Theme,
-} from '@/enums/user.enums';
+import type { LanguageCode, Theme } from '@/enums/user.enums';
 import type { FieldValue, Timestamp } from 'firebase/firestore';
 
 /**
@@ -16,15 +12,5 @@ export interface UserProfile {
   email: string | null;
   createdAt: Timestamp | FieldValue;
   cellphone: string | null;
-  isPremium: boolean;
   preferences: { theme: Theme; preferredLanguage: LanguageCode };
-  paystackCustomerCode: string | null;
-  paystackSubscriptionCode: string | null;
-  paystackPlanCode: string | null;
-  subscriptionStatus: SubscriptionStatus | null;
-  subscriptionStartDate: Timestamp | FieldValue | null;
-  nextBillingDate: Timestamp | FieldValue | null;
-  lastPaymentDate: Timestamp | FieldValue | null;
-  lastPaymentAmount: number | null;
-  trialEndsAt: Timestamp | FieldValue | null;
 }
