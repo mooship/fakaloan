@@ -202,7 +202,7 @@
                   </div>
                   <div class="text-xs text-gray-400" v-if="tx.note">
                     Note:
-                    <span class="truncate-ellipsis block max-w-[28rem]">{{
+                    <span class="truncate-ellipsis block max-w-[24rem]">{{
                       tx.note
                     }}</span>
                   </div>
