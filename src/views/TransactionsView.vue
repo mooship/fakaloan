@@ -71,7 +71,15 @@
             </div>
             <div class="text-xs text-gray-400">
               {{ formatDate(tx.createdAt) }}
-              <span v-if="tx.note"> | {{ tx.note }}</span>
+            </div>
+            <div
+              class="flex flex-wrap items-center gap-x-2 text-xs text-gray-400"
+              v-if="tx.note"
+            >
+              <span>Note:</span>
+              <span class="truncate-ellipsis block max-w-[28rem]">{{
+                tx.note
+              }}</span>
             </div>
           </div>
         </li>

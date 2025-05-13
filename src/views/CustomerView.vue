@@ -201,7 +201,10 @@
                     {{ formatDate(tx.createdAt) }}
                   </div>
                   <div class="text-xs text-gray-400" v-if="tx.note">
-                    Note: {{ tx.note }}
+                    Note:
+                    <span class="truncate-ellipsis block max-w-[28rem]">{{
+                      tx.note
+                    }}</span>
                   </div>
                 </div>
                 <div
@@ -455,26 +458,3 @@ onMounted(() => {
   fetchTransactions();
 });
 </script>
-
-<style scoped>
-.input {
-  background-color: var(--color-surface, #fff);
-  color: var(--color-on-surface, #222);
-  width: 100%;
-  border-radius: 0.375rem;
-  border: 1px solid #d1d5db;
-  padding: 0.5rem 0.75rem;
-}
-.btn {
-  background-color: var(--color-primary, #2563eb);
-  color: var(--color-on-primary, #fff);
-  border-radius: 0.375rem;
-  padding: 0.5rem 1rem;
-  transition: background 0.2s;
-  border: none;
-  cursor: pointer;
-}
-.btn:hover {
-  background-color: var(--color-primary-dark, #1d4ed8);
-}
-</style>
