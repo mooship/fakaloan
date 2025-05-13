@@ -33,10 +33,10 @@ const handleAddCustomer = () => {
       <div v-if="showSpeedDial" class="flex flex-col items-center space-y-2">
         <button
           @click="handleAddCustomer"
-          class="bg-primary text-on-primary hover:bg-primary/80 focus:ring-primary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          class="bg-tertiary text-on-tertiary hover:bg-tertiary/80 focus:ring-tertiary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
           aria-label="Add Customer"
         >
-          <span class="hidden text-sm font-medium sm:inline">Customer</span>
+          <span class="text-sm font-medium">Customer</span>
           <i class="i-heroicons-user-plus h-5 w-5"></i>
         </button>
         <button
