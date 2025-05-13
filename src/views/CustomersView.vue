@@ -84,6 +84,8 @@ const db = getFirestore();
 const { currentUser } = useAuth();
 const { setLoading } = useLoading();
 
+setLoading(true);
+
 function goToCustomer(uid: string) {
   router.push(`/customers/${uid}`);
 }

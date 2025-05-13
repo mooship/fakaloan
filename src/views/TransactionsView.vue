@@ -115,6 +115,8 @@ const db = getFirestore();
 const { currentUser } = useAuth();
 const { setLoading } = useLoading();
 
+setLoading(true);
+
 function goToAddTransaction() {
   router.push('/add-transaction');
 }

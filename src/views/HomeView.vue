@@ -46,7 +46,7 @@ const handleLogout = async (): Promise<void> => {
 <template>
   <AppLayout>
     <div class="card-main text-center">
-      <h1 class="text-primary text-2xl font-bold">Welcome to Fakaloan!</h1>
+      <h1 class="text-primary mb-4 text-2xl font-bold">Welcome to Fakaloan!</h1>
       <div v-if="currentUser">
         <p class="text-on-surface mb-2">
           Welcome{{
@@ -59,7 +59,7 @@ const handleLogout = async (): Promise<void> => {
       <div v-else-if="isLoading && !currentUser">
         <p class="text-on-surface-60">Loading user information...</p>
       </div>
-      <div>
+      <div class="mt-6">
         <button
           @click="handleLogout"
           class="btn-secondary !w-auto"

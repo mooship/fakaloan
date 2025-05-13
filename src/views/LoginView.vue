@@ -49,8 +49,6 @@ const schema = yup.object({
   password: yup.string().required('Password is required'),
 });
 
-const showPassword = ref(false);
-
 const email = ref('');
 const emailValid = ref(true);
 const emailCheckLoading = ref(false);
@@ -112,9 +110,11 @@ const goToForgotPassword = (): void => {
   <AuthLayout title="Login to Fakaloan">
     <template #errors>
       <div v-if="!isOnline" class="alert-error">
+        <i class="i-heroicons-wifi-off h-5 w-5"></i>
         No internet connection. Please check your network.
       </div>
       <div v-if="authError" class="alert-error">
+        <i class="i-heroicons-exclamation-triangle h-5 w-5"></i>
         {{ authError }}
       </div>
     </template>
@@ -130,24 +130,9 @@ const goToForgotPassword = (): void => {
           id="email"
           name="email"
           type="email"
-          autocomplete="email"
-          v-slot="{ field, errors }"
           :validate-on-input="true"
-        >
-          <input
-            v-bind="field"
-            v-model="email"
-            :class="[
-              'form-input-base',
-              errors.length || !emailValid
-                ? 'form-input-invalid'
-                : 'form-input-valid',
-              'bg-surface text-on-surface placeholder:text-on-surface/60',
-            ]"
-            placeholder="you@example.com"
-            aria-describedby="email-error"
-          />
-        </Field>
+          class="input-material"
+        />
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
 
@@ -164,38 +149,8 @@ const goToForgotPassword = (): void => {
           id="password"
           name="password"
           type="password"
-          autocomplete="current-password"
-          v-slot="{ field, errors }"
-          :validate-on-input="true"
-        >
-          <div class="relative">
-            <input
-              v-bind="field"
-              :type="showPassword ? 'text' : 'password'"
-              :class="[
-                'form-input-base',
-                errors.length ? 'form-input-invalid' : 'form-input-valid',
-                'bg-surface text-on-surface placeholder:text-on-surface/60',
-              ]"
-              placeholder="Password"
-              aria-describedby="password-error"
-            />
-            <button
-              type="button"
-              class="text-on-surface/60 absolute right-2 top-1/2 -translate-y-1/2"
-              @click="showPassword = !showPassword"
-              tabindex="-1"
-              aria-label="Toggle password visibility"
-            >
-              <i
-                :class="
-                  showPassword ? 'i-heroicons-eye-off' : 'i-heroicons-eye'
-                "
-                class="h-5 w-5"
-              ></i>
-            </button>
-          </div>
-        </Field>
+          class="input-material"
+        />
         <ErrorMessage
           name="password"
           id="password-error"

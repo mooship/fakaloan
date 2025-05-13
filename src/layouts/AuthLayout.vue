@@ -6,8 +6,8 @@ defineProps<{ title: string }>();
 
 <template>
   <div class="auth-page-container">
-    <div class="auth-card">
-      <h1 class="auth-title text-primary">{{ title }}</h1>
+    <div class="auth-card elevation-2">
+      <h1 class="auth-title text-primary mb-4">{{ title }}</h1>
       <slot name="errors" />
       <slot />
       <slot name="actions" />

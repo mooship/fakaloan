@@ -21,7 +21,7 @@ const handleAddCustomer = () => {
 </script>
 
 <template>
-  <div class="fixed bottom-6 right-6 flex flex-col items-center space-y-2">
+  <div class="fixed bottom-6 right-6 z-40 flex flex-col items-center space-y-2">
     <transition
       enter-active-class="transition ease-out duration-100 transform"
       enter-from-class="opacity-0 scale-95"
@@ -33,7 +33,7 @@ const handleAddCustomer = () => {
       <div v-if="showSpeedDial" class="flex flex-col items-center space-y-2">
         <button
           @click="handleAddCustomer"
-          class="bg-tertiary text-on-tertiary hover:bg-tertiary/80 focus:ring-tertiary flex items-center space-x-2 rounded-full p-3 shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          class="btn-tertiary flex items-center space-x-2 !rounded-full !px-5 !py-3 shadow-lg"
           aria-label="Add Customer"
         >
           <span class="text-sm font-medium">Customer</span>
@@ -41,7 +41,7 @@ const handleAddCustomer = () => {
         </button>
         <button
           @click="handleAddTransaction"
-          class="bg-lime hover:bg-lime/80 focus:ring-lime flex items-center space-x-2 rounded-full p-3 text-white shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2"
+          class="btn bg-lime hover:bg-lime/80 focus:ring-lime flex items-center space-x-2 !rounded-full !px-5 !py-3 text-white shadow-lg"
           aria-label="Add Transaction"
         >
           <span class="text-sm font-medium">Transaction</span>
@@ -51,7 +51,7 @@ const handleAddCustomer = () => {
     </transition>
     <button
       @click="toggleSpeedDial"
-      class="bg-primary text-on-primary hover:bg-primary-variant focus:ring-primary-variant rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-offset-2"
+      class="btn-primary !rounded-full !p-4 shadow-xl"
       aria-label="Toggle Add Menu"
     >
       <i
