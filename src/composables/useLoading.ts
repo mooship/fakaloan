@@ -1,6 +1,5 @@
 import { ref } from 'vue';
 
-// Global loading state
 const isLoading = ref(false);
 
 /**
