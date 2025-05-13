@@ -1,56 +1,56 @@
 /** * ProfileView.vue * Allows users to view and update their profile, including
 name, email, password, phone, language, and theme. */
 <script setup lang="ts">
-import BackButton from "@/components/BackButton.vue";
-import FabSpeedDial from "@/components/FabSpeedDial.vue";
-import LoadingOverlay from "@/components/LoadingOverlay.vue";
-import { useAuth } from "@/composables/useAuth";
-import { useLoading } from "@/composables/useLoading";
-import { useTheme } from "@/composables/useTheme";
+import BackButton from '@/components/BackButton.vue';
+import FabSpeedDial from '@/components/FabSpeedDial.vue';
+import LoadingOverlay from '@/components/LoadingOverlay.vue';
+import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
+import { useTheme } from '@/composables/useTheme';
 import {
-	EMAIL_REGEX,
-	PHONE_NUMBER_REGEX,
-	SIMPLE_EMAIL_REGEX,
-} from "@/constants/regex.constants";
-import { ToastMessages } from "@/constants/toastMessages.constants";
-import { LanguageCode } from "@/enums/user.enums";
-import { db } from "@/firebase";
-import AppLayout from "@/layouts/AppLayout.vue";
+  EMAIL_REGEX,
+  PHONE_NUMBER_REGEX,
+  SIMPLE_EMAIL_REGEX,
+} from '@/constants/regex.constants';
+import { ToastMessages } from '@/constants/toastMessages.constants';
+import { LanguageCode } from '@/enums/user.enums';
+import { db } from '@/firebase';
+import AppLayout from '@/layouts/AppLayout.vue';
 import {
-	formatDate,
-	formatPhoneNumber,
-	normalizePhoneNumber,
-} from "@/utilities/formatUtils";
-import { useDebounceFn } from "@vueuse/core";
-import { useHead } from "@vueuse/head";
-import { updateEmail } from "firebase/auth";
-import { doc, updateDoc } from "firebase/firestore";
-import { ref, watch } from "vue";
-import { useToast } from "vue-toastification";
+  formatDate,
+  formatPhoneNumber,
+  normalizePhoneNumber,
+} from '@/utilities/formatUtils';
+import { useDebounceFn } from '@vueuse/core';
+import { useHead } from '@vueuse/head';
+import { updateEmail } from 'firebase/auth';
+import { doc, updateDoc } from 'firebase/firestore';
+import { ref, watch } from 'vue';
+import { useToast } from 'vue-toastification';
 
 useHead({
-	title: "Profile | Fakaloan",
-	meta: [
-		{
-			name: "description",
-			content: "View and edit your Fakaloan user profile.",
-		},
-		{ property: "og:title", content: "Profile | Fakaloan" },
-		{
-			property: "og:description",
-			content: "View and edit your Fakaloan user profile.",
-		},
-		{ property: "og:type", content: "website" },
-		{ property: "og:url", content: window.location.href },
-		{ property: "og:site_name", content: "Fakaloan" },
-	],
+  title: 'Profile | Fakaloan',
+  meta: [
+    {
+      name: 'description',
+      content: 'View and edit your Fakaloan user profile.',
+    },
+    { property: 'og:title', content: 'Profile | Fakaloan' },
+    {
+      property: 'og:description',
+      content: 'View and edit your Fakaloan user profile.',
+    },
+    { property: 'og:type', content: 'website' },
+    { property: 'og:url', content: window.location.href },
+    { property: 'og:site_name', content: 'Fakaloan' },
+  ],
 });
 const {
-	currentUser,
-	userProfile,
-	isLoading: authLoading,
-	updatePassword,
-	error: authError,
+  currentUser,
+  userProfile,
+  isLoading: authLoading,
+  updatePassword,
+  error: authError,
 } = useAuth();
 const toast = useToast();
 
@@ -59,11 +59,11 @@ const isEditingEmail = ref(false);
 const isEditingPassword = ref(false);
 const isUpdating = ref(false);
 
-const cellphoneInput = ref(userProfile.value?.cellphone || "");
-const currentPassword = ref("");
-const newPassword = ref("");
-const confirmPassword = ref("");
-const newEmail = ref(userProfile.value?.email || "");
+const cellphoneInput = ref(userProfile.value?.cellphone || '');
+const currentPassword = ref('');
+const newPassword = ref('');
+const confirmPassword = ref('');
+const newEmail = ref(userProfile.value?.email || '');
 
 const { colorMode, isDark, toggleTheme } = useTheme();
 const { setLoading } = useLoading();
@@ -72,106 +72,106 @@ const { setLoading } = useLoading();
  * Update the user's cellphone number in Firestore after validation.
  */
 const updateCellphone = async (): Promise<void> => {
-	if (!currentUser.value || !userProfile.value) {
-		return;
-	}
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
 
-	// Normalize input before validation and saving
-	const trimmedCellphone = normalizePhoneNumber(cellphoneInput.value);
-	if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
-		toast.error(ToastMessages.ValidationError);
-		return;
-	}
+  // Normalize input before validation and saving
+  const trimmedCellphone = normalizePhoneNumber(cellphoneInput.value);
+  if (!PHONE_NUMBER_REGEX.test(trimmedCellphone)) {
+    toast.error(ToastMessages.ValidationError);
+    return;
+  }
 
-	setLoading(true);
-	try {
-		isUpdating.value = true;
-		const userDocRef = doc(db, "users", currentUser.value.uid);
-		await updateDoc(userDocRef, {
-			cellphone: trimmedCellphone,
-		});
-		cellphoneInput.value = trimmedCellphone;
-		isEditingContact.value = false;
-		toast.success(ToastMessages.ProfileUpdateSuccess);
-	} catch (error) {
-		console.error("Failed to update phone number:", error);
-		toast.error(ToastMessages.ProfileUpdateFailed);
-	} finally {
-		isUpdating.value = false;
-		setLoading(false);
-	}
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      cellphone: trimmedCellphone,
+    });
+    cellphoneInput.value = trimmedCellphone;
+    isEditingContact.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update phone number:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
 };
 
 /**
  * Update the user's email address in Firebase Auth and Firestore.
  */
 const updateUserEmail = async (): Promise<void> => {
-	if (!currentUser.value) {
-		return;
-	}
+  if (!currentUser.value) {
+    return;
+  }
 
-	setLoading(true);
-	try {
-		isUpdating.value = true;
-		await updateEmail(currentUser.value, newEmail.value);
-		const userDocRef = doc(db, "users", currentUser.value.uid);
-		await updateDoc(userDocRef, {
-			email: newEmail.value,
-		});
-		isEditingEmail.value = false;
-		toast.success(ToastMessages.ProfileUpdateSuccess);
-	} catch (error) {
-		console.error("Failed to update email:", error);
-		toast.error(ToastMessages.ProfileUpdateFailed);
-	} finally {
-		isUpdating.value = false;
-		setLoading(false);
-	}
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    await updateEmail(currentUser.value, newEmail.value);
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      email: newEmail.value,
+    });
+    isEditingEmail.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update email:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
 };
 
 /**
  * Update the user's password after validation.
  */
 const handlePasswordUpdate = async (): Promise<void> => {
-	if (!currentUser.value) {
-		return;
-	}
+  if (!currentUser.value) {
+    return;
+  }
 
-	if (newPassword.value !== confirmPassword.value) {
-		toast.error(ToastMessages.ValidationError);
+  if (newPassword.value !== confirmPassword.value) {
+    toast.error(ToastMessages.ValidationError);
 
-		return;
-	}
+    return;
+  }
 
-	if (!currentPassword.value) {
-		toast.error(ToastMessages.ValidationError);
+  if (!currentPassword.value) {
+    toast.error(ToastMessages.ValidationError);
 
-		return;
-	}
+    return;
+  }
 
-	if (!newPassword.value) {
-		toast.error(ToastMessages.ValidationError);
+  if (!newPassword.value) {
+    toast.error(ToastMessages.ValidationError);
 
-		return;
-	}
+    return;
+  }
 
-	setLoading(true);
-	isUpdating.value = true;
-	authError.value = null;
-	const success = await updatePassword(
-		currentPassword.value,
-		newPassword.value,
-	);
+  setLoading(true);
+  isUpdating.value = true;
+  authError.value = null;
+  const success = await updatePassword(
+    currentPassword.value,
+    newPassword.value
+  );
 
-	if (success) {
-		currentPassword.value = "";
-		newPassword.value = "";
-		confirmPassword.value = "";
-		isEditingPassword.value = false;
-		toast.success(ToastMessages.PasswordUpdateSuccess);
-	}
-	isUpdating.value = false;
-	setLoading(false);
+  if (success) {
+    currentPassword.value = '';
+    newPassword.value = '';
+    confirmPassword.value = '';
+    isEditingPassword.value = false;
+    toast.success(ToastMessages.PasswordUpdateSuccess);
+  }
+  isUpdating.value = false;
+  setLoading(false);
 };
 
 const debouncedEmailValid = ref(true);
@@ -180,90 +180,90 @@ const emailCheckLoading = ref(false);
 const phoneCheckLoading = ref(false);
 
 const checkEmailValid = useDebounceFn((value: string) => {
-	emailCheckLoading.value = true;
-	debouncedEmailValid.value = EMAIL_REGEX.test(value);
-	emailCheckLoading.value = false;
+  emailCheckLoading.value = true;
+  debouncedEmailValid.value = EMAIL_REGEX.test(value);
+  emailCheckLoading.value = false;
 }, 300);
 
 const checkPhoneValid = useDebounceFn((value: string) => {
-	phoneCheckLoading.value = true;
-	debouncedPhoneValid.value = PHONE_NUMBER_REGEX.test(
-		normalizePhoneNumber(value),
-	);
-	phoneCheckLoading.value = false;
+  phoneCheckLoading.value = true;
+  debouncedPhoneValid.value = PHONE_NUMBER_REGEX.test(
+    normalizePhoneNumber(value)
+  );
+  phoneCheckLoading.value = false;
 }, 300);
 
 watch(newEmail, (val) => {
-	checkEmailValid(val);
+  checkEmailValid(val);
 });
 
 watch(cellphoneInput, (val) => {
-	// Always normalize for validation
-	checkPhoneValid(normalizePhoneNumber(val));
+  // Always normalize for validation
+  checkPhoneValid(normalizePhoneNumber(val));
 });
 
 watch(
-	() => colorMode.value,
-	async (newMode, oldMode) => {
-		if (!currentUser.value || !userProfile.value) {
-			return;
-		}
+  () => colorMode.value,
+  async (newMode, oldMode) => {
+    if (!currentUser.value || !userProfile.value) {
+      return;
+    }
 
-		if (newMode === oldMode) {
-			return;
-		}
+    if (newMode === oldMode) {
+      return;
+    }
 
-		const modeToSave = newMode;
-		isUpdating.value = true;
-		try {
-			const userDocRef = doc(db, "users", currentUser.value.uid);
-			await updateDoc(userDocRef, {
-				"preferences.theme": modeToSave,
-			});
-			toast.success(ToastMessages.ThemeUpdateSuccess);
-		} catch (error) {
-			console.error("Failed to update theme:", error);
-			toast.error(ToastMessages.ThemeUpdateFailed);
-		} finally {
-			isUpdating.value = false;
-		}
-	},
+    const modeToSave = newMode;
+    isUpdating.value = true;
+    try {
+      const userDocRef = doc(db, 'users', currentUser.value.uid);
+      await updateDoc(userDocRef, {
+        'preferences.theme': modeToSave,
+      });
+      toast.success(ToastMessages.ThemeUpdateSuccess);
+    } catch (error) {
+      console.error('Failed to update theme:', error);
+      toast.error(ToastMessages.ThemeUpdateFailed);
+    } finally {
+      isUpdating.value = false;
+    }
+  }
 );
 
 const isEditingName = ref(false);
-const firstNameInput = ref(userProfile.value?.firstName || "");
-const lastNameInput = ref(userProfile.value?.lastName || "");
+const firstNameInput = ref(userProfile.value?.firstName || '');
+const lastNameInput = ref(userProfile.value?.lastName || '');
 
 /**
  * Update the user's name in Firestore.
  */
 const updateName = async (): Promise<void> => {
-	if (!currentUser.value || !userProfile.value) {
-		return;
-	}
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
 
-	if (!firstNameInput.value.trim() || !lastNameInput.value.trim()) {
-		toast.error(ToastMessages.ValidationError);
-		return;
-	}
+  if (!firstNameInput.value.trim() || !lastNameInput.value.trim()) {
+    toast.error(ToastMessages.ValidationError);
+    return;
+  }
 
-	setLoading(true);
-	try {
-		isUpdating.value = true;
-		const userDocRef = doc(db, "users", currentUser.value.uid);
-		await updateDoc(userDocRef, {
-			firstName: firstNameInput.value.trim(),
-			lastName: lastNameInput.value.trim(),
-		});
-		isEditingName.value = false;
-		toast.success(ToastMessages.ProfileUpdateSuccess);
-	} catch (error) {
-		console.error("Failed to update name:", error);
-		toast.error(ToastMessages.ProfileUpdateFailed);
-	} finally {
-		isUpdating.value = false;
-		setLoading(false);
-	}
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      firstName: firstNameInput.value.trim(),
+      lastName: lastNameInput.value.trim(),
+    });
+    isEditingName.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update name:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
 };
 
 // expose LanguageCode to template
@@ -271,32 +271,32 @@ const LanguageCodeEnum = LanguageCode;
 
 const isEditingLanguage = ref(false);
 const languageInput = ref(
-	userProfile.value?.preferences?.preferredLanguage || LanguageCode.English,
+  userProfile.value?.preferences?.preferredLanguage || LanguageCode.English
 );
 
 /**
  * Update the user's preferred language in Firestore.
  */
 const updateLanguage = async (): Promise<void> => {
-	if (!currentUser.value || !userProfile.value) {
-		return;
-	}
-	setLoading(true);
-	try {
-		isUpdating.value = true;
-		const userDocRef = doc(db, "users", currentUser.value.uid);
-		await updateDoc(userDocRef, {
-			"preferences.preferredLanguage": languageInput.value,
-		});
-		isEditingLanguage.value = false;
-		toast.success(ToastMessages.ProfileUpdateSuccess);
-	} catch (error) {
-		console.error("Failed to update language:", error);
-		toast.error(ToastMessages.ProfileUpdateFailed);
-	} finally {
-		isUpdating.value = false;
-		setLoading(false);
-	}
+  if (!currentUser.value || !userProfile.value) {
+    return;
+  }
+  setLoading(true);
+  try {
+    isUpdating.value = true;
+    const userDocRef = doc(db, 'users', currentUser.value.uid);
+    await updateDoc(userDocRef, {
+      'preferences.preferredLanguage': languageInput.value,
+    });
+    isEditingLanguage.value = false;
+    toast.success(ToastMessages.ProfileUpdateSuccess);
+  } catch (error) {
+    console.error('Failed to update language:', error);
+    toast.error(ToastMessages.ProfileUpdateFailed);
+  } finally {
+    isUpdating.value = false;
+    setLoading(false);
+  }
 };
 </script>
 

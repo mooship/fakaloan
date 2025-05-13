@@ -45,6 +45,14 @@
           class="btn-link text-on-primary"
           >Register</router-link
         >
+        <button
+          v-if="currentUser"
+          @click="handleLogout"
+          class="btn-secondary ml-2 !w-auto"
+          :disabled="isLoading"
+        >
+          {{ isLoading ? 'Logging out...' : 'Logout' }}
+        </button>
       </nav>
       <!-- Hamburger (Mobile) -->
       <button
@@ -137,6 +145,15 @@
             <i class="i-heroicons-user-plus text-tertiary h-5 w-5"></i>
             <span>Register</span>
           </router-link>
+          <button
+            v-if="currentUser"
+            @click="handleLogout"
+            class="btn-secondary mx-4 my-2 w-auto"
+            style="width: calc(100%-2rem); min-width: 0"
+            :disabled="isLoading"
+          >
+            {{ isLoading ? 'Logging out...' : 'Logout' }}
+          </button>
         </div>
       </transition>
     </header>
@@ -155,9 +172,23 @@
  * Main application layout with navigation bar and responsive menu.
  */
 import { useAuth } from '@/composables/useAuth';
+import { useLoading } from '@/composables/useLoading';
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
 const { currentUser } = useAuth();
 const showMenu = ref(false);
+const { isLoading } = useLoading();
+const router = useRouter();
+
+const handleLogout = async (): Promise<void> => {
+  isLoading.value = true;
+  try {
+    await import('@/composables/useAuth').then((m) => m.useAuth().logout());
+    router.push({ name: 'login' });
+  } finally {
+    isLoading.value = false;
+  }
+};
 </script>
 
 <style scoped>

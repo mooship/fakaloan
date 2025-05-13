@@ -144,6 +144,11 @@ export default defineConfig({
     'elevation-2': 'shadow-lg',
     'elevation-3': 'shadow-xl',
     ripple: 'relative overflow-hidden',
+    'app-home-hero':
+      'bg-surface text-on-surface shadow-[0_4px_24px_0_rgba(41,121,255,0.10)] mb-8',
+    'app-analytics-card':
+      'rounded-[1.5rem] bg-surface shadow-[0_2px_12px_0_rgba(60,60,60,0.08)] p-8 flex flex-col items-center justify-center',
+    'truncate-ellipsis': 'truncate overflow-hidden whitespace-nowrap',
   },
   presets: [
     presetWind4(),
