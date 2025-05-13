@@ -39,7 +39,7 @@
               {{ formatPhoneNumber(customer.cellphoneNumber) }}
             </div>
             <div class="text-xs text-gray-400">
-              Balance: {{ customer.balance }}
+              Balance: R{{ customer.balance.toFixed(2) }}
             </div>
           </div>
           <button
