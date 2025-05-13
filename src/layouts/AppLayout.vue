@@ -70,56 +70,73 @@
       <transition name="fade">
         <div
           v-if="showMenu"
-          class="bg-surface border-primary-variant animate-fade-in absolute right-4 top-14 z-50 flex w-40 flex-col rounded border shadow-lg md:hidden"
+          class="bg-surface absolute right-4 top-14 z-50 flex w-56 flex-col rounded-xl border border-gray-200 py-2 shadow-xl md:hidden"
         >
           <router-link
             v-if="currentUser"
             to="/"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Home</router-link
           >
+            <i class="i-heroicons-home text-primary h-5 w-5"></i>
+            <span>Home</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/customers"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Customers</router-link
           >
+            <i class="i-heroicons-user-group text-tertiary h-5 w-5"></i>
+            <span>Customers</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/transactions"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Transactions</router-link
           >
+            <i class="i-heroicons-currency-dollar text-lime h-5 w-5"></i>
+            <span>Transactions</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/profile"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Profile</router-link
           >
+            <i class="i-heroicons-user-circle text-primary h-5 w-5"></i>
+            <span>Profile</span>
+          </router-link>
+          <div class="my-1 border-t border-gray-200"></div>
           <router-link
             to="/about"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >About</router-link
           >
+            <i class="i-heroicons-information-circle text-primary h-5 w-5"></i>
+            <span>About</span>
+          </router-link>
           <router-link
             v-if="!currentUser"
             to="/login"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Login</router-link
           >
+            <i
+              class="i-heroicons-arrow-right-on-rectangle text-primary h-5 w-5"
+            ></i>
+            <span>Login</span>
+          </router-link>
           <router-link
             v-if="!currentUser"
             to="/register"
-            class="btn-link text-on-surface px-4 py-3"
+            class="text-on-surface flex items-center gap-3 rounded-none px-4 py-3 transition hover:bg-gray-100 active:bg-gray-200"
             @click="showMenu = false"
-            >Register</router-link
           >
+            <i class="i-heroicons-user-plus text-tertiary h-5 w-5"></i>
+            <span>Register</span>
+          </router-link>
         </div>
       </transition>
     </header>

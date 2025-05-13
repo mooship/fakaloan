@@ -4,10 +4,11 @@
       v-if="visible"
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 backdrop-blur-sm"
     >
-      <div class="flex flex-col items-center">
+      <div
+        class="bg-surface flex flex-col items-center rounded-xl p-8 shadow-xl"
+      >
         <svg
-          class="mb-4 h-12 w-12 animate-spin drop-shadow-lg"
-          :class="isDark ? 'text-primary' : 'text-primary'"
+          class="text-primary mb-4 h-12 w-12 animate-spin drop-shadow-lg"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
@@ -26,10 +27,7 @@
             d="M4 12a8 8 0 018-8v8z"
           ></path>
         </svg>
-        <span
-          class="text-lg font-medium drop-shadow-lg"
-          :class="isDark ? 'text-on-primary' : 'text-on-surface'"
-        >
+        <span class="text-on-surface text-lg font-medium drop-shadow-lg">
           {{ text }}
         </span>
       </div>
@@ -43,10 +41,8 @@
  * Displays a loading overlay with a spinner and optional text.
  */
 import { useLoading } from '@/composables/useLoading';
-import { useTheme } from '@/composables/useTheme';
 import { computed } from 'vue';
 const { isLoading } = useLoading();
-const { isDark } = useTheme();
 const visible = computed(() => isLoading.value);
 
 defineProps({

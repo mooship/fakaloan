@@ -98,35 +98,21 @@ watch(email, (val) => {
       @submit="handlePasswordReset"
       class="space-y-4"
     >
-      <p class="text-on-surface/80 text-sm">
+      <p class="text-on-surface/80 mb-4 text-sm">
         Enter the email address associated with your account, and we'll send you
         a link to reset your password.
       </p>
-
       <div>
         <label for="email" class="form-label">Email address</label>
         <Field
           id="email"
           name="email"
           type="email"
-          autocomplete="email"
-          v-slot="{ field, errors }"
           :validate-on-input="true"
-        >
-          <input
-            v-bind="field"
-            :class="[
-              'form-input-base',
-              errors.length ? 'form-input-invalid' : 'form-input-valid',
-              'bg-surface text-on-surface placeholder:text-on-surface/60',
-            ]"
-            placeholder="you@example.com"
-            aria-describedby="email-error"
-          />
-        </Field>
+          class="input-material"
+        />
         <ErrorMessage name="email" id="email-error" class="form-error-text" />
       </div>
-
       <div>
         <button type="submit" class="btn-primary" :disabled="isLoading">
           {{ isLoading ? 'Sending...' : 'Send Reset Link' }}
