@@ -70,56 +70,71 @@
       <transition name="fade">
         <div
           v-if="showMenu"
-          class="bg-surface border-primary-variant animate-fade-in absolute right-4 top-14 z-50 flex w-40 flex-col rounded border shadow-lg md:hidden"
+          class="bg-surface border border-gray-200 shadow-xl rounded-xl absolute right-4 top-14 z-50 flex w-56 flex-col py-2 md:hidden"
         >
           <router-link
             v-if="currentUser"
             to="/"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Home</router-link
           >
+            <i class="i-heroicons-home h-5 w-5 text-primary"></i>
+            <span>Home</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/customers"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Customers</router-link
           >
+            <i class="i-heroicons-user-group h-5 w-5 text-tertiary"></i>
+            <span>Customers</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/transactions"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Transactions</router-link
           >
+            <i class="i-heroicons-currency-dollar h-5 w-5 text-lime"></i>
+            <span>Transactions</span>
+          </router-link>
           <router-link
             v-if="currentUser"
             to="/profile"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Profile</router-link
           >
+            <i class="i-heroicons-user-circle h-5 w-5 text-primary"></i>
+            <span>Profile</span>
+          </router-link>
+          <div class="my-1 border-t border-gray-200"></div>
           <router-link
             to="/about"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >About</router-link
           >
+            <i class="i-heroicons-information-circle h-5 w-5 text-primary"></i>
+            <span>About</span>
+          </router-link>
           <router-link
             v-if="!currentUser"
             to="/login"
-            class="btn-link text-on-surface border-b border-gray-200 px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Login</router-link
           >
+            <i class="i-heroicons-arrow-right-on-rectangle h-5 w-5 text-primary"></i>
+            <span>Login</span>
+          </router-link>
           <router-link
             v-if="!currentUser"
             to="/register"
-            class="btn-link text-on-surface px-4 py-3"
+            class="flex items-center gap-3 px-4 py-3 text-on-surface hover:bg-gray-100 active:bg-gray-200 transition rounded-none"
             @click="showMenu = false"
-            >Register</router-link
           >
+            <i class="i-heroicons-user-plus h-5 w-5 text-tertiary"></i>
+            <span>Register</span>
+          </router-link>
         </div>
       </transition>
     </header>
