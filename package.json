@@ -58,7 +58,7 @@
     "prettier-plugin-organize-imports": "^4.1.0",
     "prettier-plugin-packagejson": "^2.5.11",
     "prettier-plugin-tailwindcss": "^0.6.11",
-    "terser": "^5.39.0",
+    "terser": "^5.39.2",
     "typescript": "^5.8.0",
     "unocss": "^66.1.1",
     "vite": "^6.3.5",
